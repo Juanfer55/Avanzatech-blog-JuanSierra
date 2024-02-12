@@ -1,0 +1,54 @@
+<header
+>
+  <a href="">
+    <ul
+      class="home"
+    >
+      <li class="logo-img">
+        <img
+          src="./../../../assets/avanzatech-logo.jpg"
+          alt="logo-avanzatech"
+          class=""
+        />
+      </li>
+      <li>
+        <p class="header-text">AvanzaBlog</p>
+      </li>
+    </ul>
+  </a>
+  <ul class="header-nav">
+    <li *ngIf="!(isLoggedIn$ | async)">
+      <button
+        class="header-button"
+        routerLink="/auth/login"
+        class="header-text"
+      >
+        LogIn
+      </button>
+    </li>
+    <li *ngIf="!(isLoggedIn$ | async)">
+      <button
+        routerLink="/auth/register"
+        class="header-text"
+      >
+        Register
+      </button>
+    </li>
+    <li *ngIf="isLoggedIn$ | async">
+      <p
+        class="header-text"
+      >
+        welcome {{ (userProfile$ | async)?.username }}
+    </p>
+    </li>
+    <li *ngIf="isLoggedIn$ | async">
+      <button
+        (click)="logOut()"
+        class="header-text"
+      >
+        Log out
+      </button>
+    </li>
+  </ul>
+</header>
+<router-outlet />

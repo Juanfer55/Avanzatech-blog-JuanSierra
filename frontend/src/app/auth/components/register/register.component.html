@@ -1,0 +1,151 @@
+<div class="register-page">
+  <div class="form-container">
+    <div class="img-container">
+      <img src="./../../../assets/avanzatech-logo.jpg" alt="avanzatech-logo" />
+    </div>
+    <h2 class="text-center text-3xl">Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="form">
+      <div class="form-input">
+        <input
+          type="email"
+          placeholder="Email"
+          formControlName="username"
+          class="w-full p-2 rounded border border-gray-500"
+          [class.valid]="registerForm.get('username')?.valid && formSubmitted"
+          [class.invalid]="
+            registerForm.get('username')?.invalid && formSubmitted
+          "
+          name="username"
+          id="username"
+          autocomplete="username"
+        />
+        <ng-container
+          *ngIf="
+            formSubmitted &&
+            registerForm.get('username')?.invalid &&
+            registerForm.get('username')?.touched
+          "
+        >
+          <small
+            *ngIf="registerForm.get('username')?.hasError('required')"
+            class="error-msg"
+            data-testid="required-email"
+          >
+            *Email required
+          </small>
+          <small
+            *ngIf="registerForm.get('username')?.hasError('email')"
+            class="error-msg"
+            data-testid="invalid-email"
+          >
+            *Invalid email
+          </small>
+          <small
+            *ngIf="registerForm.get('username')?.hasError('not_available')"
+            class="error-msg"
+            data-testid="invalid-email"
+          >
+            *Email already registered
+          </small>
+        </ng-container>
+      </div>
+      <div class="form-input">
+        <input
+          type="password"
+          placeholder="Password"
+          formControlName="password"
+          [class.valid]="registerForm.get('password')?.valid && formSubmitted"
+          [class.invalid]="
+            registerForm.get('password')?.invalid && formSubmitted
+          "
+          name="password"
+          id="password"
+          autocomplete="current-password"
+        />
+        <ng-container
+          *ngIf="
+            formSubmitted &&
+            registerForm.get('password')?.invalid &&
+            (registerForm.get('password')?.dirty ||
+              registerForm.get('password')?.touched)
+          "
+        >
+          <small
+            *ngIf="registerForm.get('password')?.hasError('required')"
+            class="error-msg"
+          >
+            *Password required
+          </small>
+
+          <small
+            *ngIf="registerForm.get('password')?.hasError('minlength')"
+            class="error-msg"
+          >
+            *Password to short
+          </small>
+        </ng-container>
+      </div>
+      <div class="form-input">
+        <input
+          type="password"
+          placeholder="Confirm password"
+          formControlName="passwordConfirm"
+          [class.valid]="
+            registerForm.get('passwordConfirm')?.valid && formSubmitted
+          "
+          [class.invalid]="
+            registerForm.get('passwordConfirm')?.invalid && formSubmitted
+          "
+          name="confirmationPassword"
+          id="confirmationPassword"
+          autocomplete="current-password"
+        />
+        <ng-container
+          *ngIf="
+            formSubmitted &&
+            (registerForm.get('passwordConfirm')?.invalid ||
+              registerForm?.hasError('not_match')) &&
+            (registerForm.get('passwordConfirm')?.dirty ||
+              registerForm.get('passwordConfirm')?.touched)
+          "
+        >
+          <ul class="flex flex-col">
+            <li>
+              <small
+                *ngIf="
+                  registerForm.get('passwordConfirm')?.hasError('required')
+                "
+                class="error-msg"
+              >
+                *Password confirmation is required
+              </small>
+            </li>
+            <li>
+              <small
+                *ngIf="registerForm.hasError('not_match')"
+                class="error-msg"
+              >
+                *Password does not match
+              </small>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+      <button type="submit" data-testid="submit-button">Register</button>
+    </form>
+    <div class="links">
+      <p>
+        Already have an account?
+        <a routerLink="/auth/login" class="link" data-testid="login-link">
+          Log In
+        </a>
+      </p>
+    </div>
+  </div>
+  <div class="links">
+    <p>
+      Go back to
+      <a class="link" [routerLink]="['/']"> home</a>
+    </p>
+  </div>
+</div>

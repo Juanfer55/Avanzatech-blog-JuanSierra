@@ -1,0 +1,99 @@
+<div class="login-page">
+  <div class="form-container">
+    <div class="img-container">
+      <img
+        src="./../../../assets/avanzatech-logo.jpg"
+        alt="avanzatech-logo"
+        class="h-auto w-1/3 rounded-full border-2 border-emerald-500"
+      />
+    </div>
+    <h2>Log In</h2>
+    <form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
+      <div class="form-input">
+        <input
+          type="email"
+          placeholder="Email"
+          formControlName="username"
+          [class.valid]="loginForm.get('username')?.valid"
+          name="username"
+          id="username"
+          autocomplete="username"
+        />
+        <ng-container
+          *ngIf="
+            formSubmitted &&
+            loginForm.get('username')?.invalid &&
+            loginForm.get('username')?.touched
+          "
+        >
+          <small
+            *ngIf="loginForm.get('username')?.hasError('required')"
+            class="error-msg"
+            data-testid="required-email"
+          >
+            *Email required
+          </small>
+          <small
+            *ngIf="loginForm.get('username')?.hasError('email')"
+            class="error-msg"
+            data-testid="invalid-email"
+            >*Invalid email</small
+          >
+        </ng-container>
+      </div>
+      <div class="form-input">
+        <input
+          type="password"
+          placeholder="Password"
+          formControlName="password"
+          class="w-full p-2 rounded border border-gray-500"
+          name="password"
+          id="password"
+          autocomplete="current-password"
+        />
+        <ng-container
+          *ngIf="
+            formSubmitted &&
+            loginForm.get('password')?.invalid &&
+            (loginForm.get('password')?.dirty ||
+              loginForm.get('password')?.touched)
+          "
+        >
+          <small
+            *ngIf="loginForm.get('password')?.hasError('required')"
+            class="error-msg"
+          >
+            *Password required
+          </small>
+
+          <small
+            *ngIf="loginForm.get('password')?.hasError('minlength')"
+            class="error-msg"
+          >
+            *Password to short
+          </small>
+        </ng-container>
+      </div>
+      <ng-container *ngIf="InvalidCredentials">
+        <small class="error-msg" data-testid="invalid-credentials">
+          Inavalid credentials, please try again
+        </small>
+      </ng-container>
+      <button type="submit" data-testid="submit-button">Submit</button>
+    </form>
+    <div class="rlinks">
+      <p>
+        Don't have an account?
+        <a routerLink="/auth/register" class="link" data-testid="register-link">
+          Register
+        </a>
+      </p>
+    </div>
+  </div>
+  <div class="links">
+    <p>
+      Go back to
+      <a class="link" [routerLink]="['/']"> home</a>
+    </p>
+  </div>
+</div>
