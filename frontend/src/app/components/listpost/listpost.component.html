@@ -1,1 +1,38 @@
-<p>listpost works!</p>
+<section class="post">
+  <ul class="post-header">
+    <li>
+      <h1 class="title">
+        {{ post.title }}
+      </h1>
+    </li>
+    <li class="post-info">
+      <p class="info">Team: {{ post.author.team.name }}</p>
+      <p class="info">
+        {{ post.author.username }}
+      </p>
+      <p class="info">
+        {{ post.created_at | date : "dd/MM/yyyy" }}
+      </p>
+    </li>
+  </ul>
+  <ul class="content">
+    <li>
+      {{ post.content_excerpt }}
+    </li>
+  </ul>
+  <ul class="post-info">
+    <ul class="likes-comments">
+      <li>
+        <app-likes [postId]="post.id"></app-likes>
+      </li>
+      <li>
+        <app-comments [postId]="post.id"></app-comments>
+      </li>
+    </ul>
+    <ul *ngIf="user" class="post-interaction">
+      <li>
+        <app-like-post [postId]="post.id" [userId]="user.id"> </app-like-post>
+      </li>
+    </ul>
+  </ul>
+</section>

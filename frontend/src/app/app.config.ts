@@ -9,6 +9,7 @@ import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import {CookieService} from 'ngx-cookie-service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,5 +21,6 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     provideToastr(),
     provideHttpClient(),
+    CookieService,
   ],
 };

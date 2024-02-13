@@ -1,0 +1,8 @@
+<ul>
+  <li *ngIf="postIsLiked">
+    <fa-icon [icon]="solidHeartIcon"></fa-icon>
+  </li>
+  <li *ngIf="!postIsLiked" (click)="LikePost()">
+    <fa-icon [icon]="regularHeartIcon"></fa-icon>
+  </li>
+</ul>

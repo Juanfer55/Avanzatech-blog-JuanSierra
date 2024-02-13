@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 // interfaces
-import { User } from '../../models/user.model';
+import { User } from '../models/user.model';
 // environment
 import { environment } from '../environments/environment.api';
 // rxjs
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

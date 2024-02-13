@@ -1,1 +1,24 @@
-<p>home works!</p>
+<section class="home-section">
+<ng-container *ngIf="posts">
+  <app-listpost
+  *ngFor="let post of posts"
+  [post]="post"
+  > </app-listpost>
+  <div>
+    <ng-container *ngIf="previousPage">
+      <button (click)="getNextPage">Previous</button>
+    </ng-container>
+    <ng-container *ngIf="nextPage">
+      <button (click)="getPreviousPage">Next</button>
+    </ng-container>
+  </div>
+</ng-container>
+<ng-container *ngIf="!posts">
+  <section>
+    <h1>No posts yet</h1>
+  </section>
+</ng-container>
+<div class="create-post">
+  <button>Create a new post</button>
+</div>
+</section>
