@@ -12,8 +12,6 @@ import {
 } from '@angular/forms';
 // router
 import { Router, RouterLink} from '@angular/router';
-// toast
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',

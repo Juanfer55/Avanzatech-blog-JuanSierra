@@ -1,9 +1,13 @@
+// angular
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../../models/user.model';
-import { environment } from '../environments/environment.api';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { Router } from '@angular/router';
+// interfaces
+import { User } from '../../models/user.model';
+// environment
+import { environment } from '../environments/environment.api';
+// rxjs
+import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +24,10 @@ export class AuthService {
     new BehaviorSubject<boolean>(false);
   logStatus$: Observable<boolean> = this.logStatusSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+    ) {}
 
   login(username: string, password: string) {
     return this.http
