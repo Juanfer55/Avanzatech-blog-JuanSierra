@@ -8,7 +8,7 @@ import {
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withFetch, withXsrfConfiguration } from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 
 export const appConfig: ApplicationConfig = {
@@ -20,7 +20,13 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideToastr(),
-    provideHttpClient(),
+    provideHttpClient(
+      withFetch(),
+        withXsrfConfiguration({
+          cookieName: 'csrftoken',
+          headerName: 'X-CSRFToken',
+        })
+    ),
     CookieService,
   ],
 };

@@ -39,18 +39,10 @@ export class LikesService {
   }
 
   likePost(postId: Number) {
-    const csrftoken = this.cookieService.get('csrftoken');
-    console.log(csrftoken);
-
-    const headers = new HttpHeaders({
-      'content-type': 'application/json',
-      'X-CSRFToken': 'fn1gbxaIKtkmS2ObBb7AWBPfGm3UswFy',
-    })
-
     return this.http.post<Like>(
       `${this.apiUrl}/like/`,
       { post: postId },
-      { headers: headers, withCredentials: true }
+      { withCredentials: true }
     );
   }
 
@@ -59,4 +51,5 @@ export class LikesService {
       withCredentials: true
     })
   }
+
 }
