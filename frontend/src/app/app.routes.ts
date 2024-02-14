@@ -5,6 +5,7 @@ import { LayoutComponent } from './shared/components/layout/layout.component';
 import { LoginComponent } from './auth/components/login/login.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
+import { CreatePostComponent } from './components/create-post/create-post.component';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,10 @@ export const routes: Routes = [
       {
         path: '',
         component: HomeComponent
+      },
+      {
+        path: 'create-post',
+        component: CreatePostComponent
       }
     ]
   },

@@ -6,11 +6,16 @@ import { PostserviceService } from '../../services/postservice.service';
 import { PostWithExcerpt } from '../../models/post.model';
 // components
 import { ListpostComponent } from '../listpost/listpost.component';
+// icon
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+// href
+import { RouterLinkWithHref } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ListpostComponent],
+  imports: [CommonModule, ListpostComponent, FontAwesomeModule, RouterLinkWithHref],
   templateUrl: './home.component.html',
   styleUrl: './home.component.sass',
 })
@@ -19,6 +24,8 @@ export class HomeComponent {
   nextPage: string | null = null;
   posts: PostWithExcerpt[] = [];
   totalPost: number = 0
+
+  CreatePostIcon = faCirclePlus;
 
   constructor(
     private postService: PostserviceService

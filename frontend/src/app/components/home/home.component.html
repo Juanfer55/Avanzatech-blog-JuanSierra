@@ -18,7 +18,7 @@
     <h1>No posts yet</h1>
   </section>
 </ng-container>
-<div class="create-post">
-  <button>Create a new post</button>
+<div class="create-post" [routerLink]="['/create-post']">
+  <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
 </div>
 </section>

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // environment
 import { environment } from '../environments/environment.api';
 // models
-import { PostWithExcerpt } from '../models/post.model';
+import { Post, PostWithExcerpt } from '../models/post.model';
 import { ApiResponse } from '../models/api-respond.model';
 
 @Injectable({
@@ -31,6 +31,12 @@ export class PostserviceService {
 
   getPost(id: number) {
     return this.http.get(`${this.apiUrl}/post/${id}/`, {
+      withCredentials: true,
+    });
+  }
+
+  createPost(post: Post) {
+    return this.http.post(`${this.apiUrl}/post/`, post, {
       withCredentials: true,
     });
   }

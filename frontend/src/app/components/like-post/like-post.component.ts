@@ -8,7 +8,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { Like } from '../../models/like.model';
-import { HttpHeaders } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -43,14 +42,14 @@ export class LikePostComponent {
     return this.likeService.getUserLike(this.userId!, this.postId).subscribe({
       next: (response) => {
         if (response.total_count === 1) {
+          this.like = response.results[0];
           this.postIsLiked = true;
         }
       },
     });
   }
 
-  LikePost() {
-
+  likePost() {
     return this.likeService.likePost(this.postId).subscribe({
       next: (response) => {
         this.like = response;
@@ -59,7 +58,8 @@ export class LikePostComponent {
     });
   }
 
-  UnlikePost() {
+  unlikePost() {
+    console.log(this.like!.id);
     return this.likeService.UnlikePost(this.like!.id).subscribe({
       next: () => {
         this.postIsLiked = false;

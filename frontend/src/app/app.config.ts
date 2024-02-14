@@ -20,13 +20,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(),
     provideToastr(),
-    provideHttpClient(
-      withFetch(),
-        withXsrfConfiguration({
-          cookieName: 'csrftoken',
-          headerName: 'X-CSRFToken',
-        })
-    ),
+    provideHttpClient(),
     CookieService,
   ],
 };

@@ -1,0 +1,55 @@
+<div class="create-post">
+  <div>
+    <form class="form" [formGroup]="createPostForm" (ngSubmit)="createPost()">
+      <div>
+        <label for="title">Title </label>
+        <input
+        type="text"
+        formControlName="title"
+        placeholder="Enter the title of the post"
+        id="title"
+        >
+      </div>
+      <div>
+        <label for="content">Content </label>
+        <input
+        type="text"
+        placeholder="Enter the content of the post"
+        formControlName="content"
+        id="content">
+      </div>
+      <div>
+        <p>
+          Public Permission
+        </p>
+        <select id="public" formControlName="public" [ngModel]="permissionOptions">
+          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+      <div>
+        <p>
+          Authenticated Permission
+        </p>
+        <select id="public" formControlName="authenticated" [ngModel]="permissionOptions">
+          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+      <div>
+        <p>
+          Team Permission
+        </p>
+        <select id="public" formControlName="team" [ngModel]="permissionOptions">
+          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+      <div>
+        <p>
+          Author Permission
+        </p>
+        <select id="public" formControlName="author" [ngModel]="permissionOptions">
+          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>

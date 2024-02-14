@@ -25,6 +25,7 @@ class PostCategory(BaseModel, models.Model):
     REQUIRED_FIELDS = ['category', 'permission_level']
 
     class Meta:
+        unique_together = ['post', 'category']
         ordering = ['pk']
         verbose_name = 'Post Category'
         verbose_name_plural = 'Post Category'

@@ -42,12 +42,8 @@
     </p>
     </li>
     <li *ngIf="isLoggedIn$ | async">
-      <button
-        (click)="logOut()"
-        class="header-text"
-      >
-        Log out
-      </button>
+      <fa-icon [icon]="logOutIcon" size="2x" (click)="logOut()">
+      </fa-icon>
     </li>
   </ul>
 </header>
