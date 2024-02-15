@@ -91,10 +91,11 @@
           placeholder="Confirm password"
           formControlName="passwordConfirm"
           [class.valid]="
-            registerForm.get('passwordConfirm')?.valid && formSubmitted
+            registerForm.get('passwordConfirm')?.valid && formSubmitted && !registerForm.hasError('not_match')
           "
           [class.invalid]="
-            registerForm.get('passwordConfirm')?.invalid && formSubmitted
+            formSubmitted && (registerForm.get('passwordConfirm')?.invalid ||
+            registerForm.hasError('not_match'))
           "
           name="confirmationPassword"
           id="confirmationPassword"

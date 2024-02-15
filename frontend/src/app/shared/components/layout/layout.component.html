@@ -41,7 +41,7 @@
         welcome {{ (userProfile$ | async)?.username }}
     </p>
     </li>
-    <li *ngIf="isLoggedIn$ | async">
+    <li *ngIf="isLoggedIn$ | async" class="log-out">
       <fa-icon [icon]="logOutIcon" size="2x" (click)="logOut()">
       </fa-icon>
     </li>
