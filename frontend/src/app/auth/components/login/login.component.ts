@@ -12,17 +12,25 @@ import {
 } from '@angular/forms';
 // router
 import { Router, RouterLink} from '@angular/router';
+// icons
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEye } from '@fortawesome/free-regular-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FontAwesomeModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.sass',
 })
 export class LoginComponent {
   InvalidCredentials = false;
   formSubmitted = false;
+  showPassword = false;
+
+  faEyeIcon = faEye;
+  faEyeSlashIcon = faEyeSlash;
 
   loginForm!: FormGroup;
 
@@ -39,6 +47,10 @@ export class LoginComponent {
       username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   login() {

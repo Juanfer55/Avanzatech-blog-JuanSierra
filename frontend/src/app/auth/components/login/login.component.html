@@ -44,7 +44,7 @@
       </div>
       <div class="form-input">
         <input
-          type="password"
+          [type]="showPassword ? 'text' : 'password'"
           placeholder="Password"
           formControlName="password"
           [class.valid]="loginForm.get('password')?.valid && loginForm.get('password')?.touched"
@@ -53,6 +53,16 @@
           id="password"
           autocomplete="current-password"
         />
+        <fa-icon *ngIf="showPassword"
+        class="show-password"
+        [icon]="faEyeIcon"
+        (click)="togglePasswordVisibility()">
+        </fa-icon>
+        <fa-icon *ngIf="!showPassword"
+        class="show-password"
+        [icon]="faEyeSlashIcon"
+        (click)="togglePasswordVisibility()">
+        </fa-icon>
         <ng-container
           *ngIf="
             formSubmitted &&
