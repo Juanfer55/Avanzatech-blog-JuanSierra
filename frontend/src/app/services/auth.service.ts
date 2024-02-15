@@ -38,12 +38,6 @@ export class AuthService {
           password: password,
         },
         { withCredentials: true }
-      )
-      .pipe(
-        tap(() => {
-          sessionStorage.setItem('avanzablog', 'logged');
-          window.location.replace('/');
-        })
       );
   }
 

@@ -16,22 +16,51 @@
     </li>
   </ul>
   <ul class="content">
-    <li>
-      {{ post.content_excerpt }}
+    <li class="post-content">
+      {{ post.content_excerpt }} <span *ngIf="post.content_excerpt.length === 200" (click)="detailView()" class="link">Show More</span>
     </li>
   </ul>
   <ul class="post-info">
     <ul class="likes-comments">
       <li>
-        <app-likes [postId]="post.id"></app-likes>
+        <p>{{ totalLikes }} Likes</p>
       </li>
       <li>
-        <app-comments [postId]="post.id"></app-comments>
+        <p>{{ commentCount }} Comments</p>
       </li>
     </ul>
     <ul *ngIf="user" class="post-interaction">
+      <li class="like">
+        <fa-icon
+          *ngIf="postIsLiked"
+          (click)="unlikePost()"
+          class="liked"
+          [icon]="solidHeartIcon"
+          size="2x"
+        ></fa-icon>
+        <fa-icon
+          *ngIf="!postIsLiked"
+          (click)="likePost()"
+          class="liked"
+          [icon]="regularHeartIcon"
+          size="2x"
+        ></fa-icon>
+      </li>
       <li>
-        <app-like-post [postId]="post.id" [userId]="user.id"> </app-like-post>
+        <fa-icon (click)="detailView()" [icon]="commentIcon" size="2x"></fa-icon>
+      </li>
+      <li *ngIf="hasEditPermission()">
+        <fa-icon
+        [icon]="editIcon"
+        size="2x"
+        ></fa-icon>
+      </li>
+      <li *ngIf="hasEditPermission()">
+        <fa-icon
+        [icon]="trashIcon"
+        size="2x"
+        (click)="openDeleteDialog()"
+        ></fa-icon>
       </li>
     </ul>
   </ul>

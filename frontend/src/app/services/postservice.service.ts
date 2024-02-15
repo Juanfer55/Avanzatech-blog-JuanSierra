@@ -18,7 +18,6 @@ export class PostserviceService {
     ) {}
 
   getPosts(link?: string){
-
     if (link) {
       return this.http.get<ApiResponse<PostWithExcerpt>>(link, {
         withCredentials: true
@@ -37,6 +36,12 @@ export class PostserviceService {
 
   createPost(post: Post) {
     return this.http.post(`${this.apiUrl}/post/`, post, {
+      withCredentials: true,
+    });
+  }
+
+  deletePost(id: number) {
+    return this.http.delete(`${this.apiUrl}/blog/${id}/`, {
       withCredentials: true,
     });
   }

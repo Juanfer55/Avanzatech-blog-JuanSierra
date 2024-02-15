@@ -1,24 +1,25 @@
 <section class="home-section">
-<ng-container *ngIf="posts">
-  <app-listpost
-  *ngFor="let post of posts"
-  [post]="post"
-  > </app-listpost>
-  <div>
-    <ng-container *ngIf="previousPage">
-      <button (click)="getNextPage">Previous</button>
-    </ng-container>
-    <ng-container *ngIf="nextPage">
-      <button (click)="getPreviousPage">Next</button>
-    </ng-container>
+  <div *ngIf="posts" class="posts-container-wraper">
+    <div class="posts-container">
+      <app-listpost *ngFor="let post of posts" [post]="post"> </app-listpost>
+    </div>
+    <div class="navigation">
+      <ng-container *ngIf="previousPage">
+        <fa-icon [icon]="previousPageIcon" size="3x" (click)="getPreviousPage()"></fa-icon>
+      </ng-container>
+      <p>
+        Page {{ currentPage }} of {{ totalPages }}
+      </p>
+      <ng-container *ngIf="nextPage">
+        <fa-icon [icon]="nextPageIcon" size="3x" (click)="(getNextPage())"></fa-icon>
+      </ng-container>
+    </div>
   </div>
-</ng-container>
-<ng-container *ngIf="!posts">
-  <section>
-    <h1>No posts yet</h1>
-  </section>
-</ng-container>
-<div class="create-post" [routerLink]="['/create-post']">
-  <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
-</div>
+  <div *ngIf="posts.length === 0" class="no-content">
+    <h1 class="title">No posts yet</h1>
+    <p class="invitation">You should create the first post!!</p>
+  </div>
+  <div *ngIf="userProfile" [routerLink]="['/create-post']" class="create-post">
+    <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
+  </div>
 </section>

@@ -24,6 +24,15 @@ export class CustomValidators {
     };
   }
 
+  static validateNumericPassword(control: AbstractControl) {
+    const password = control.value;
+    if (password.match(/^\d+$/)) {
+      return { numeric_password: true };
+    }
+    return null;
+
+  }
+
   static validadePasswords(control: AbstractControl) {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('passwordConfirm')?.value;

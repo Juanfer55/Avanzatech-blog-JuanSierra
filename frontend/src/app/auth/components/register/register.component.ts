@@ -44,7 +44,14 @@ export class RegisterComponent {
           [Validators.required, Validators.email],
           [CustomValidators.validateEmailAsync(this.authService)],
         ],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            CustomValidators.validateNumericPassword,
+          ],
+        ],
         passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
       },
       {
@@ -60,14 +67,12 @@ export class RegisterComponent {
       const password = this.registerForm.value.password!;
 
       this.authService.register(username, password).subscribe({
-        next: (res) => {
+        next: () => {
           this.toastr.success('Registration Successful');
           this.router.navigate(['/auth/login']);
         },
         error: (err) => {
-          if (err.status === 401) {
-            this.InvalidCredentials = true;
-          }
+          this.toastr.error('Registration Failed');
         },
       });
     } else {

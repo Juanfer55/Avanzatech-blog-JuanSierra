@@ -83,6 +83,12 @@
           >
             *Password to short
           </small>
+          <small
+            *ngIf="registerForm.get('password')?.hasError('numeric_password')"
+            class="error-msg"
+          >
+            *Password cannot be numeric
+          </small>
         </ng-container>
       </div>
       <div class="form-input">
@@ -91,11 +97,14 @@
           placeholder="Confirm password"
           formControlName="passwordConfirm"
           [class.valid]="
-            registerForm.get('passwordConfirm')?.valid && formSubmitted && !registerForm.hasError('not_match')
+            registerForm.get('passwordConfirm')?.valid &&
+            formSubmitted &&
+            !registerForm.hasError('not_match')
           "
           [class.invalid]="
-            formSubmitted && (registerForm.get('passwordConfirm')?.invalid ||
-            registerForm.hasError('not_match'))
+            formSubmitted &&
+            (registerForm.get('passwordConfirm')?.invalid ||
+              registerForm.hasError('not_match'))
           "
           name="confirmationPassword"
           id="confirmationPassword"
@@ -110,26 +119,15 @@
               registerForm.get('passwordConfirm')?.touched)
           "
         >
-          <ul class="flex flex-col">
-            <li>
-              <small
-                *ngIf="
-                  registerForm.get('passwordConfirm')?.hasError('required')
-                "
-                class="error-msg"
-              >
-                *Password confirmation is required
-              </small>
-            </li>
-            <li>
-              <small
-                *ngIf="registerForm.hasError('not_match')"
-                class="error-msg"
-              >
-                *Password does not match
-              </small>
-            </li>
-          </ul>
+          <small
+            *ngIf="registerForm.get('passwordConfirm')?.hasError('required')"
+            class="error-msg"
+          >
+            *Password confirmation is required
+          </small>
+          <small *ngIf="registerForm.hasError('not_match')" class="error-msg">
+            *Password does not match
+          </small>
         </ng-container>
       </div>
       <button type="submit" data-testid="submit-button">Register</button>

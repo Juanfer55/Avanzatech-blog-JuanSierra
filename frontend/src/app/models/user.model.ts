@@ -8,4 +8,6 @@ export interface User {
   is_admin: boolean;
 }
 
+export interface UserProfile extends Omit<User, 'password'> {}
+
 export interface Author extends Omit<User, 'password' | 'is_admin'> {}

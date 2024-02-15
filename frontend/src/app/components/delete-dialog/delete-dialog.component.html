@@ -1,0 +1,20 @@
+<div class="modal">
+  <div class="modal-content">
+    <div class="close-icon">
+        <fa-icon (click)="closeModal()" [icon]="closeIcon" size="1x"
+        ></fa-icon>
+    </div>
+    <div class="modal-body">
+      <h1> Are you sure you want to delete {{postInfo.postTitle}}?</h1>
+  <ul class="buttons-container">
+    <li>
+      <button class="action-buttos" (click)="deletePost()">Delete</button>
+    </li>
+    <li>
+      <button (click)="closeModal()" class="action-buttos">Cancel</button>
+    </li>
+  </ul>
+    </div>
+
+  </div>
+</div>

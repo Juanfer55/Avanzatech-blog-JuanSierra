@@ -1,4 +1,7 @@
 <div class="login-page">
+  <div *ngIf="InvalidCredentials" class="invalid-credentials-container">
+    <p class="error-msg">Inavalid credentials, please try again</p>
+  </div>
   <div class="form-container">
     <div class="img-container">
       <img
@@ -14,8 +17,10 @@
           type="email"
           placeholder="Email"
           formControlName="username"
-          [class.valid]="loginForm.get('username')?.valid && loginForm.get('username')?.touched"
-          [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+          [class.valid]="
+            loginForm.get('username')?.valid && formSubmitted"
+          [class.invalid]="
+            loginForm.get('username')?.invalid && formSubmitted"
           name="username"
           id="username"
           autocomplete="username"
@@ -47,21 +52,27 @@
           [type]="showPassword ? 'text' : 'password'"
           placeholder="Password"
           formControlName="password"
-          [class.valid]="loginForm.get('password')?.valid && loginForm.get('password')?.touched"
-          [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          [class.valid]="loginForm.get('password')?.valid && formSubmitted"
+          [class.invalid]="loginForm.get('password')?.invalid && formSubmitted"
           name="password"
           id="password"
           autocomplete="current-password"
         />
-        <fa-icon *ngIf="showPassword"
-        class="show-password"
-        [icon]="faEyeIcon"
-        (click)="togglePasswordVisibility()">
+        <fa-icon
+          *ngIf="showPassword"
+          class="show-password"
+          [icon]="faEyeIcon"
+          size="1x"
+          (click)="togglePasswordVisibility()"
+        >
         </fa-icon>
-        <fa-icon *ngIf="!showPassword"
-        class="show-password"
-        [icon]="faEyeSlashIcon"
-        (click)="togglePasswordVisibility()">
+        <fa-icon
+          *ngIf="!showPassword"
+          class="show-password"
+          [icon]="faEyeSlashIcon"
+          (click)="togglePasswordVisibility()"
+          size="1x"
+        >
         </fa-icon>
         <ng-container
           *ngIf="
@@ -73,24 +84,19 @@
         >
           <small
             *ngIf="loginForm.get('password')?.hasError('required')"
-            class="error-msg"
+            class="password-error"
           >
             *Password required
           </small>
 
           <small
             *ngIf="loginForm.get('password')?.hasError('minlength')"
-            class="error-msg"
+            class="password-error"
           >
             *Password to short
           </small>
         </ng-container>
       </div>
-      <ng-container *ngIf="InvalidCredentials">
-        <small class="error-msg" data-testid="invalid-credentials">
-          Inavalid credentials, please try again
-        </small>
-      </ng-container>
       <button type="submit" data-testid="submit-button">Submit</button>
     </form>
     <div class="links">

@@ -8,7 +8,7 @@ export interface Post {
   public_permission: string;
   authenticated_permission: string;
   team_permission: string;
-  author_permission: number;
+  author_permission: string;
   created_at: string;
 }
 

@@ -11,11 +11,13 @@ import {
   FormBuilder,
 } from '@angular/forms';
 // router
-import { Router, RouterLink} from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEye } from '@fortawesome/free-regular-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faEye as seeIcon} from '@fortawesome/free-regular-svg-icons';
+import { faEye as unSeeIcon} from '@fortawesome/free-solid-svg-icons';
+import { faX } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-login',
@@ -29,15 +31,16 @@ export class LoginComponent {
   formSubmitted = false;
   showPassword = false;
 
-  faEyeIcon = faEye;
-  faEyeSlashIcon = faEyeSlash;
+  errorIcon = faX;
+  faEyeIcon = unSeeIcon;
+  faEyeSlashIcon = seeIcon;
 
   loginForm!: FormGroup;
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder
   ) {
     this.buildForm();
   }
@@ -60,6 +63,10 @@ export class LoginComponent {
       const password = this.loginForm.value.password!;
 
       this.authService.login(username, password).subscribe({
+        next: () => {
+          sessionStorage.setItem('avanzablog', 'logged');
+          this.router.navigate(['/']);
+        },
         error: (err) => {
           if (err.status === 401) {
             this.InvalidCredentials = true;

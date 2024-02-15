@@ -8,6 +8,7 @@
   padding: 1rem
   border-radius: 0.5rem
   box-shadow: 0 0 5px #bdbdbd
+  margin-bottom: 1.2rem
 
 .title
   font-size: 2rem
@@ -20,9 +21,17 @@
   align-items: center
   justify-content: space-between
 
+.post-content
+  white-space: pre-wrap
+  overflow: hidden
+  text-overflow: ellipsis
+  word-wrap: break-word
+
 .post-info
   display: flex
   flex-direction: row
+  align-items: center
+  justify-content: space-between
   gap: 1rem
 
 .info
@@ -32,15 +41,23 @@
   border-radius: 0.5rem
   border: 2px solid #0cd18f
 
-.post-info
-  display: flex
-  flex-direction: row
-  align-items: center
-  justify-content: space-between
-
 .likes-comments
   display: flex
   flex-direction: row
   align-items: center
   gap: 0.5rem
 
+.post-interaction
+  display: flex
+  flex-direction: row
+  gap: 1rem
+
+.link
+  color: #006eff
+  &:hover
+    color: #4897ff
+    cursor: pointer
+
+fa-icon
+  &:hover
+    cursor: pointer

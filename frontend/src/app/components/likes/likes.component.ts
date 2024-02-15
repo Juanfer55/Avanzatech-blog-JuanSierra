@@ -15,7 +15,7 @@ import { Like } from '../../models/like.model';
 export class LikesComponent {
 
   likes: Like[] = [];
-  totalLikes = 0;
+  commentCount!: Number;
 
   @Input() postId!: Number;
 
@@ -31,9 +31,10 @@ export class LikesComponent {
     return this.likeService.getPostLikes(this.postId).subscribe({
       next: (response) => {
         this.likes = response.results
-        this.totalLikes = response.total_count
       }
     });
   }
+
+  
 
 }
