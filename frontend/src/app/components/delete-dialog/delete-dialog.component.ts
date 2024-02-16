@@ -5,7 +5,7 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 // dialog
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 // services
-import { PostserviceService } from '../../services/postservice.service';
+import { PostService } from '../../services/postservice.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -22,7 +22,7 @@ export class DeleteDialogComponent {
   postInfo: any;
 
   constructor(
-    private postService: PostserviceService,
+    private postService: PostService,
     private router: Router,
     private toast: ToastrService,
     private dialogRef: DialogRef<DeleteDialogComponent>,

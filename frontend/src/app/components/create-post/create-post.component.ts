@@ -6,7 +6,7 @@ import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 // validators
 import { Validators } from '@angular/forms';
 // services
-import { PostserviceService } from '../../services/postservice.service';
+import { PostService } from '../../services/postservice.service';
 // toast
 import { ToastrService } from 'ngx-toastr';
 
@@ -29,7 +29,7 @@ export class CreatePostComponent {
   ];
 
   constructor(
-    private postService: PostserviceService,
+    private postService: PostService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService
   ) {

@@ -8,19 +8,32 @@ import { ApiResponse } from '../models/api-respond.model';
 import { Comment } from '../models/comments.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentsService {
+  apiUrl = environment.apiUrl;
 
-  apiUrl = environment.apiUrl
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient
-  ) {}
+  getComments(postId: number) {
+    return this.http.get<ApiResponse<Comment>>(
+      `${this.apiUrl}/comment/?post=${postId}`,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 
-  getComments(postId: Number) {
-    return this.http.get<ApiResponse<Comment>>(`${this.apiUrl}/comment/?post=${postId}`,{
-      withCredentials: true
-    })
+  createComment(postId: number, comment: string) {
+    return this.http.post(
+      `${this.apiUrl}/comment/`,
+      {
+        post: postId,
+        content: comment,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   }
 }

@@ -11,10 +11,10 @@ class CommentsAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'post']
     search_fields = ['user', 'post']
     ordering = ['id']
-    readonly_fields = ('created_at', 'modified_at')
+    readonly_fields = ('created_at',)
     fieldsets = (
         ('Comment Information', {
-            'fields': ('user', 'post', 'content'),
+            'fields': ('user', 'post', 'content', 'created_at'),
         }),
     )
 

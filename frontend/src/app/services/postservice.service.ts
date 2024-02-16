@@ -10,7 +10,7 @@ import { ApiResponse } from '../models/api-respond.model';
 @Injectable({
   providedIn: 'root',
 })
-export class PostserviceService {
+export class PostService {
   private apiUrl = environment.apiUrl;
 
   constructor(
@@ -29,7 +29,7 @@ export class PostserviceService {
   }
 
   getPost(id: number) {
-    return this.http.get(`${this.apiUrl}/post/${id}/`, {
+    return this.http.get<Post>(`${this.apiUrl}/post/${id}/`, {
       withCredentials: true,
     });
   }

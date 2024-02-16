@@ -11,28 +11,39 @@
         {{ post.author.username }}
       </p>
       <p class="info">
-        {{ post.created_at | date : "dd/MM/yyyy" }}
+        {{ post.created_at | date : "dd/MM/yyyy HH:mm" }}
       </p>
     </li>
   </ul>
-  <ul class="content">
+  <ul class="content-container">
     <li class="post-content">
-      <p>
-      {{ post.content_excerpt }} <span *ngIf="post.content_excerpt.length > 200" (click)="detailView()" class="link">Show More</span>
+      <p class="post-excerpt">
+        {{ post.content_excerpt }}
+        <span
+          *ngIf="post.content_excerpt.split(' ').length === 200"
+          (click)="detailView()"
+          class="link"
+          >Show More</span
+        >
       </p>
     </li>
   </ul>
   <ul class="post-info">
     <ul class="likes-comments">
-      <li>
+      <li
+        class="likes"
+        (click)="likesIsOpen = !likesIsOpen"
+        cdkOverlayOrigin
+        #likesOverlay="cdkOverlayOrigin"
+      >
         <p>{{ totalLikes }} Likes</p>
       </li>
-      <li>
+      <li (click)="detailView()">
         <p>{{ commentCount }} Comments</p>
       </li>
     </ul>
-    <ul *ngIf="user" class="post-interaction">
-      <li class="like">
+    <ul class="post-interaction">
+      <li *ngIf="user" class="like">
         <fa-icon
           *ngIf="postIsLiked"
           (click)="unlikePost()"
@@ -48,22 +59,53 @@
           size="2x"
         ></fa-icon>
       </li>
-      <li>
-        <fa-icon (click)="detailView()" [icon]="commentIcon" size="2x"></fa-icon>
-      </li>
-      <li *ngIf="hasEditPermission()">
+      <li *ngIf="user">
         <fa-icon
-        [icon]="editIcon"
-        size="2x"
+          (click)="detailView()"
+          [icon]="commentIcon"
+          size="2x"
         ></fa-icon>
       </li>
       <li *ngIf="hasEditPermission()">
+        <fa-icon [icon]="editIcon" size="2x"></fa-icon>
+      </li>
+      <li *ngIf="hasEditPermission()">
         <fa-icon
-        [icon]="trashIcon"
-        size="2x"
-        (click)="openDeleteDialog()"
+          [icon]="trashIcon"
+          size="2x"
+          (click)="openDeleteDialog()"
         ></fa-icon>
       </li>
     </ul>
   </ul>
 </section>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="likesOverlay"
+  [cdkConnectedOverlayOpen]="likesIsOpen"
+>
+  <div class="likes-container">
+    <ul *ngIf="likes.length === 0">
+      <li>
+        <p>No likes yet</p>
+      </li>
+    </ul>
+    <ul *ngIf="likes.length > 0">
+      <h3>Liked by:</h3>
+      <li>
+        <p *ngFor="let like of likes">{{ like.user.username }}</p>
+      </li>
+      <ul *ngIf="likesTotalPages > 1" class="like-navigation">
+        <li *ngIf="likesPreviousPage">
+          <fa-icon class="like-navigation-icon" [icon]="previousIcon"></fa-icon>
+        </li>
+        <li>
+          <p>{{ likesCurrentPage }}</p>
+        </li>
+        <li *ngIf="likesNextPage">
+          <fa-icon class="like-navigation-icon" [icon]="nextIcon"></fa-icon>
+        </li>
+      </ul>
+    </ul>
+  </div>
+</ng-template>

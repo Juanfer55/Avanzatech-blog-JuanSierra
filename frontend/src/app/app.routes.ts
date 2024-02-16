@@ -6,6 +6,7 @@ import { LoginComponent } from './auth/components/login/login.component';
 import { RegisterComponent } from './auth/components/register/register.component';
 import { HomeComponent } from './components/home/home.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
+import { DetailPostComponent } from './components/detail-post/detail-post.component';
 
 export const routes: Routes = [
   {
@@ -14,13 +15,17 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
+      },
+      {
+        path: 'post/:id',
+        component: DetailPostComponent,
       },
       {
         path: 'create-post',
-        component: CreatePostComponent
-      }
-    ]
+        component: CreatePostComponent,
+      },
+    ],
   },
   {
     path: 'auth',
@@ -31,8 +36,8 @@ export const routes: Routes = [
       },
       {
         path: 'register',
-        component: RegisterComponent
-      }
-    ]
-  }
+        component: RegisterComponent,
+      },
+    ],
+  },
 ];

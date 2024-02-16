@@ -1,0 +1,87 @@
+<div class="post-detail-page">
+  <div class="post-container" *ngIf="post">
+    <div class="back-home-container" [routerLink]="['/']">
+      <fa-icon [icon]="backIcon" size="2x"></fa-icon>
+      <p class="back-text">Back</p>
+    </div>
+    <ul class="post-header">
+      <li>
+        <h1 class="title">
+          {{ post.title }}
+        </h1>
+      </li>
+      <li class="post-info">
+        <p class="info">Team: {{ post.author.team.name }}</p>
+        <p class="info">
+          {{ post.author.username }}
+        </p>
+        <p class="info">
+          {{ post.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
+        </p>
+      </li>
+    </ul>
+    <ul class="content-container">
+      <li>
+        <p class="post-content">{{ post.content }}</p>
+      </li>
+    </ul>
+    <ul class="likes-container">
+      <li>
+        <p>{{ likeCount }} Likes</p>
+      </li>
+    </ul>
+    <ul class="comments-container">
+      <ul class="comments-tile">
+        <li>
+          <h1>Comments</h1>
+        </li>
+      </ul>
+      <ul *ngFor="let comment of comments" class="list-of-comments">
+        <ul class="comment-header">
+          <li class="comment-info">
+            <p class="info">{{ comment.user.username }}</p>
+          </li>
+          <li>
+            <p class="info">
+              {{ comment.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
+            </p>
+          </li>
+        </ul>
+        <ul class="comment-content-container">
+          <li>
+            <p class="comment-content">
+              {{ comment.content }}
+            </p>
+          </li>
+        </ul>
+      </ul>
+    </ul>
+    <ul class="add-comment-container" *ngIf="user !== null">
+      <li>
+        <p class="title">Add new comment:</p>
+      </li>
+      <li class="form-container">
+        <form class="form" [formGroup]="commentForm" (ngSubmit)="addComment()">
+          <textarea
+            formControlName="comment"
+            class="content-input"
+            id="comment"
+            name="comment"
+            rows="4"
+            cols="50"
+            maxlength="1000"
+            placeholder="Escribe tu comentario aquí..."
+          ></textarea>
+          <div class="form-button-container">
+            <button class="form-button" type="submit">
+              Submit
+            </button>
+            <button class="form-button" type="button" (click)="cleanForm()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</div>

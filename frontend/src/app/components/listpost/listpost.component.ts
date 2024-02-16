@@ -17,15 +17,24 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { faComment } from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 // angular cdk dialog
 import { Dialog } from '@angular/cdk/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+// angular cdk overlay
+import { OverlayModule } from '@angular/cdk/overlay';
+// components
+import { LikesComponent } from '../likes/likes.component';
+// icons
+
 
 
 @Component({
   selector: 'app-listpost',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, OverlayModule, LikesComponent],
   templateUrl: './listpost.component.html',
   styleUrl: './listpost.component.sass',
 })
@@ -36,13 +45,19 @@ export class ListpostComponent {
 
   likes: Like[] = [];
   totalLikes: number = 0;
+  likesIsOpen = false;
+  likesTotalPages!: number;
+  likesCurrentPage!: number;
+  likesPreviousPage: string | null = null;
+  likesNextPage: string | null = null;
+
+  previousIcon = faAnglesLeft;
+  nextIcon = faAnglesRight;
 
   like: Like | null = null;
   postIsLiked = false;
 
   commentCount!: number;
-
-  editPermission = false;
 
   solidHeartIcon = solidHeart;
   regularHeartIcon = regularHeart;
@@ -69,7 +84,6 @@ export class ListpostComponent {
     if (this.user) {
       this.getUserLike();
     }
-    this.editPermission = this.hasEditPermission();
   }
 
   getLikes() {
@@ -77,6 +91,10 @@ export class ListpostComponent {
       next: (response) => {
         this.likes = response.results;
         this.totalLikes = response.total_count;
+        this.likesTotalPages = response.total_pages;
+        this.likesCurrentPage = response.current_page;
+        this.likesPreviousPage = response.previous;
+        this.likesNextPage = response.next;
       },
     });
   }
@@ -107,18 +125,17 @@ export class ListpostComponent {
       next: (response) => {
         this.like = response;
         this.postIsLiked = true;
-        this.totalLikes += 1;
+        this.getLikes();
       },
     });
   }
 
   unlikePost() {
-    console.log(this.like!.id);
     return this.likeService.UnlikePost(this.like!.id).subscribe({
       next: () => {
         this.postIsLiked = false;
         this.like = null;
-        this.totalLikes -= 1;
+        this.getLikes();
       },
     });
   }
@@ -133,35 +150,29 @@ export class ListpostComponent {
   }
 
   hasEditPermission() {
+    if (!this.user) {
+      return this.post.public_permission === 'read-and-edit';
+    }
+
+    if (this.user.id === this.post.author.id) {
+      return this.post.author_permission === 'read-and-edit';
+    }
+
     if (
-      this.user?.id === this.post.author.id &&
-      this.post.author_permission === 'read-and-edit'
-    ) {
-      return true;
-    } else if (
-      this.user?.id !== this.post.author.id &&
       this.post.team_permission === 'read-and-edit' &&
-      this.user?.team.id === this.post.author.team.id
-    ) {
-      return true;
-    } else if (
-      this.post.authenticated_permission === 'read-and-edit' &&
-      this.user?.id !== this.post.author.id &&
-      this.user?.team.id !== this.post.author.team.id
-    ) {
-      return true;
-    } else if (
-      this.user?.id === null &&
-      this.post.public_permission === 'read-and-edit-and-delete'
+      this.user.team.id === this.post.author.team.id
     ) {
       return true;
     }
-    return false;
+
+    return (
+      this.post.authenticated_permission === 'read-and-edit' &&
+      this.user.team.id !== this.post.author.team.id &&
+      this.user.id !== this.post.author.id
+    );
   }
 
   detailView() {
-    this.router.navigate(['/detailpost'], {
-      queryParams: { postId: this.post.id },
-    });
+    this.router.navigate(['/post', this.post.id]);
   }
 }

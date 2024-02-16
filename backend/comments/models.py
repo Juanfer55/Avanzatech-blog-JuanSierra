@@ -20,13 +20,13 @@ class Comments(BaseModel, models.Model):
     """
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE)
-    content = models.TextField(max_length=200, validators=[
-                               validators.MinLengthValidator(1), validators.MaxLengthValidator(500)])
+    content = models.TextField(max_length=1000, validators=[
+                               validators.MinLengthValidator(1), validators.MaxLengthValidator(1000)])
 
     REQUIRED_FIELDS = ['user', 'post', 'content']
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['created_at']
         verbose_name = 'Comments'
         verbose_name_plural = 'Comments'
 

@@ -1,7 +1,8 @@
-<ul class="like-section">
-  <li class="total-likes">
-    <p>
-      Likes: {{ likes.length }}
-    </p>
+<ul class="likes-container">
+  <h3>
+    Liked by:
+  </h3>
+  <li>
+    <p *ngFor="let like of likes">{{ like.user.username }}</p>
   </li>
 </ul>

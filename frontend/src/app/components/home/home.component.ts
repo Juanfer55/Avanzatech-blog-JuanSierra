@@ -2,13 +2,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // services
-import { PostserviceService } from '../../services/postservice.service';
+import { PostService } from '../../services/postservice.service';
 import { AuthService } from '../../services/auth.service';
 // models
 import { PostWithExcerpt } from '../../models/post.model';
 // components
 import { ListpostComponent } from '../listpost/listpost.component';
-// icon
+// icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
@@ -39,7 +39,7 @@ export class HomeComponent {
   nextPageIcon = faAnglesRight;
 
   constructor(
-    private postService: PostserviceService,
+    private postService: PostService,
     private authService: AuthService,
     ) {}
 

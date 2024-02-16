@@ -2,7 +2,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // services
-import { LikesService } from '../../services/likes.service';
 import { Like } from '../../models/like.model';
 
 @Component({
@@ -14,27 +13,6 @@ import { Like } from '../../models/like.model';
 })
 export class LikesComponent {
 
-  likes: Like[] = [];
-  commentCount!: Number;
-
-  @Input() postId!: Number;
-
-  constructor(
-    private likeService: LikesService,
-  ) {}
-
-  ngOnInit() {
-    this.getLikes();
-  }
-
-  getLikes() {
-    return this.likeService.getPostLikes(this.postId).subscribe({
-      next: (response) => {
-        this.likes = response.results
-      }
-    });
-  }
-
-  
+  @Input() likes: Like[] = [];
 
 }
