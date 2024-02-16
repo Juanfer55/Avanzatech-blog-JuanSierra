@@ -7,7 +7,7 @@ from posts.models import Posts
 from postCategory.models import PostCategory
 
 # create a default team
-Teams.objects.create(name='default')
+Teams.objects.create(name='Default')
 
 # create the permission levels
 none = PermissionLevels.objects.create(permission_level='none')

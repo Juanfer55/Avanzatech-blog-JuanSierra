@@ -2,7 +2,9 @@
 
 def create_content_excerpt(content):
     
-    if len(content) > 200:
-        return content[:197] + "..."
+    words = content.split()
+
+    if len(words) >= 200:
+        return ' '.join(words[:200]) + '...'
     else:
         return content

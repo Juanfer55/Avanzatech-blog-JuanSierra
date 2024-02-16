@@ -71,6 +71,7 @@ export class HomeComponent {
           this.posts = response.results;
           this.previousPage = response.previous;
           this.nextPage = response.next;
+          this.currentPage = response.current_page;
           window.scrollTo(0, 0);
         },
       });
@@ -84,6 +85,7 @@ export class HomeComponent {
           this.posts = response.results;
           this.previousPage = response.previous;
           this.nextPage = response.next;
+          this.currentPage = response.current_page;
           window.scrollTo(0, 0);
         },
       });

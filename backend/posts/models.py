@@ -18,8 +18,8 @@ class Posts(BaseModel, models.Model):
     title = models.CharField(_('title'), max_length=50, validators=[
                              validators.MinLengthValidator(1), validators.MaxLengthValidator(50)])
 
-    content = models.TextField(_('content'), max_length=1000, validators=[
-                               validators.MinLengthValidator(1), validators.MaxLengthValidator(1000)])
+    content = models.TextField(_('content'), max_length=10000, validators=[
+                               validators.MinLengthValidator(1), validators.MaxLengthValidator(10000)])
 
     content_excerpt = models.TextField(
         _('content excerpt'), max_length=200, blank=True)

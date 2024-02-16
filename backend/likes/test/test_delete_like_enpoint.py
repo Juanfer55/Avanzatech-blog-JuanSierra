@@ -38,7 +38,7 @@ class UnLikeEndpointTests(APITestCase):
 
         response = self.client.delete(endpoint)
         
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unlike_post_with_public_read_and_edit_permission_unauthenticated_user_fail(self):
 
@@ -55,7 +55,7 @@ class UnLikeEndpointTests(APITestCase):
 
         response = self.client.delete(endpoint)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unlike_post_with_public_none_read_or_edit_permission_unauthenticated_user_fail(self):
 
@@ -72,7 +72,7 @@ class UnLikeEndpointTests(APITestCase):
 
         response = self.client.delete(endpoint)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_unlike_post_with_authenticated_read_only_permission_authenticated_user_success(self):
 

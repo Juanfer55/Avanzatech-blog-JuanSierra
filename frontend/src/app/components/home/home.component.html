@@ -1,5 +1,5 @@
 <section class="home-section">
-  <div *ngIf="posts" class="posts-container-wraper">
+  <div *ngIf="posts.length >= 1" class="posts-container-wraper">
     <div class="posts-container">
       <app-listpost *ngFor="let post of posts" [post]="post"> </app-listpost>
     </div>

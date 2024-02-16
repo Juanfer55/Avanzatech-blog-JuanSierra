@@ -67,7 +67,7 @@ class CreatePostsEndpoint(APITestCase):
         response = self.client.post(self.endpoint, data=json.dumps(data), content_type='application/json')
 
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_post_blank_title_with_authenticated_user_fail(self):
 
@@ -167,7 +167,7 @@ class CreatePostsEndpoint(APITestCase):
 
         data = {
             'title': 'Test title',
-            'content': 'a' * 1001,
+            'content': 'a' * 10001,
             'public_permission': 1,
             'authenticated_permission': 2,
             'team_permission': 3,
@@ -181,7 +181,7 @@ class CreatePostsEndpoint(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response_data['content'][0], 'Ensure this field has no more than 1000 characters.')
+            response_data['content'][0], 'Ensure this field has no more than 10000 characters.')
 
     def test_create_post_no_public_permission_with_authenticated_user_fail(self):
 

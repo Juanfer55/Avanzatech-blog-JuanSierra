@@ -1,6 +1,6 @@
 <div class="login-page">
   <div *ngIf="InvalidCredentials" class="invalid-credentials-container">
-    <p class="error-msg">Inavalid credentials, please try again</p>
+    <p class="error-msg">Invalid credentials, please try again</p>
   </div>
   <div class="form-container">
     <div class="img-container">
@@ -17,8 +17,6 @@
           type="email"
           placeholder="Email"
           formControlName="username"
-          [class.valid]="
-            loginForm.get('username')?.valid && formSubmitted"
           [class.invalid]="
             loginForm.get('username')?.invalid && formSubmitted"
           name="username"
@@ -52,7 +50,6 @@
           [type]="showPassword ? 'text' : 'password'"
           placeholder="Password"
           formControlName="password"
-          [class.valid]="loginForm.get('password')?.valid && formSubmitted"
           [class.invalid]="loginForm.get('password')?.invalid && formSubmitted"
           name="password"
           id="password"

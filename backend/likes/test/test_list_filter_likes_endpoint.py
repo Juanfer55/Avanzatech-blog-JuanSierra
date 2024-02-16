@@ -619,16 +619,21 @@ class ListFilterLikesEndpointTests(TestCase):
 
         post_1 = PostFactory()
         post_2 = PostFactory()
+        PostsCategoryFactory(
+                post=post_1,
+                category=self.authenticated_category,
+                permission=self.read_and_edit_permission
+            )
+        PostsCategoryFactory(
+                post=post_2,
+                category=self.authenticated_category,
+                permission=self.read_and_edit_permission
+            )
         for i in range(20):
             if i % 2 == 0:
                 post = post_1
             else:
                 post = post_2
-            PostsCategoryFactory(
-                post=post,
-                category=self.authenticated_category,
-                permission=self.read_and_edit_permission
-            )
             user = UserFactory(username=f'user_{i}@gmail.com')
             LikesFactory(post=post, user=user)
 

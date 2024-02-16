@@ -17,7 +17,9 @@
   </ul>
   <ul class="content">
     <li class="post-content">
-      {{ post.content_excerpt }} <span *ngIf="post.content_excerpt.length === 200" (click)="detailView()" class="link">Show More</span>
+      <p>
+      {{ post.content_excerpt }} <span *ngIf="post.content_excerpt.length > 200" (click)="detailView()" class="link">Show More</span>
+      </p>
     </li>
   </ul>
   <ul class="post-info">

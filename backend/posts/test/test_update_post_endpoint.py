@@ -638,7 +638,7 @@ class EditPostsEndpoint(APITestCase):
 
         data = {
             'title': 'Test title',
-            'content': 'a' * 1001,
+            'content': 'a' * 10001,
             'public_permission': 1,
             'authenticated_permission': 2,
             'team_permission': 3,
@@ -654,7 +654,7 @@ class EditPostsEndpoint(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            response_data['content'][0], 'Ensure this field has no more than 1000 characters.')
+            response_data['content'][0], 'Ensure this field has no more than 10000 characters.')
 
     def test_update_post_no_public_permission_fail(self):
 
