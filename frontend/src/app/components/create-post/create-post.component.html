@@ -1,63 +1,85 @@
-<div class="create-post">
-  <div>
-    <form class="form" [formGroup]="createPostForm" (ngSubmit)="createPost()">
-      <div>
-        <label for="title">Title </label>
-        <input
+<div class="create-post-container">
+  <div class="back-home-container" [routerLink]="['/']">
+    <fa-icon [icon]="backIcon" size="2x"></fa-icon>
+    <p class="back-text">Back</p>
+  </div>
+  <form class="form" [formGroup]="createPostForm" (ngSubmit)="createPost()">
+    <div class="title-container">
+      <label for="title" class="labels">Title*:</label>
+      <input
+        class="title-input"
         type="text"
         formControlName="title"
         placeholder="Enter the title of the post"
         id="title"
-        >
-      </div>
-      <div>
-        <label for="content">Content </label>
-        <input
-        type="text"
+      />
+    </div>
+    <div class="content-container">
+      <label for="content" class="labels">Content*:</label>
+      <textarea
+        type=""
         placeholder="Enter the content of the post"
         formControlName="content"
-        id="content">
+        id="content"
+      >
+      </textarea>
+    </div>
+    <h3>Permissions</h3>
+    <div class="permission-container">
+      <div class="permission-titles">
+        <h4>Category</h4>
+        <h4>Access</h4>
       </div>
-      <div>
-        <p>
-          Public Permission
-        </p>
-        <select id="public" formControlName="public" [ngModel]="permissionOptions">
-          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+      <div class="permission-option">
+        <p class="category-name">Public Permission</p>
+        <select id="public" formControlName="public" class="access-options">
+          <option *ngFor="let option of permissionOptions" [value]="option.value" >
+            {{ option.label }}
+          </option>
         </select>
       </div>
-      <div>
-        <p>
-          Authenticated Permission
-        </p>
-        <select id="public" formControlName="authenticated" [ngModel]="permissionOptions">
-          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+      <div class="permission-option">
+        <p class="category-name">Authenticated Permission</p>
+        <select
+          id="public"
+          formControlName="authenticated"
+          class="access-options"
+        >
+          <option
+            class="form-options"
+            *ngFor="let option of permissionOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
         </select>
       </div>
-      <div>
-        <p>
-          Team Permission
-        </p>
-        <select id="public" formControlName="team" [ngModel]="permissionOptions">
-          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+      <div class="permission-option">
+        <p class="category-name">Team Permission</p>
+        <select id="public" formControlName="team" class="access-options">
+          <option
+            *ngFor="let option of permissionOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
         </select>
       </div>
-      <div>
-        <p>
-          Author Permission
-        </p>
-        <select id="public" formControlName="author" [ngModel]="permissionOptions">
-          <option *ngFor="let option of permissionOptions" [value]="option.value">{{ option.label }}</option>
+      <div class="permission-option">
+        <p class="category-name">Author Permission</p>
+        <select id="public" formControlName="author" class="access-options">
+          <option
+            *ngFor="let option of permissionOptions"
+            [value]="option.value"
+          >
+            {{ option.label }}
+          </option>
         </select>
       </div>
-      <div>
-        <button>
-          Create Post
-        </button>
-        <button>
-          Cancel
-        </button>
-      </div>
-    </form>
-  </div>
+    </div>
+    <div>
+      <button type="submit">Create Post</button>
+      <button type="button">Cancel</button>
+    </div>
+  </form>
 </div>

@@ -6,8 +6,6 @@ import { environment } from '../environments/environment.api';
 // models
 import { ApiResponse } from '../models/api-respond.model';
 import { Like } from '../models/like.model';
-// cookie service
-import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,10 +15,9 @@ export class LikesService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
     ) {}
 
-  getPostLikes(postId: Number) {
+  getPostLikes(postId: number) {
     return this.http.get<ApiResponse<Like>>(
       `${this.apiUrl}/like/?post=${postId}`,
       {
@@ -29,7 +26,7 @@ export class LikesService {
     );
   }
 
-  getUserLike(userId: Number, postId: Number) {
+  getUserLike(userId: number, postId: number) {
     return this.http.get<ApiResponse<Like>>(
       `${this.apiUrl}/like/?user=${userId}&post=${postId}`,
       {
@@ -38,7 +35,13 @@ export class LikesService {
     );
   }
 
-  likePost(postId: Number) {
+  getLikePage(link: string) {
+    return this.http.get<ApiResponse<Like>>(link, {
+      withCredentials: true,
+    });
+  }
+
+  likePost(postId: number) {
     return this.http.post<Like>(
       `${this.apiUrl}/like/`,
       { post: postId },
@@ -46,7 +49,7 @@ export class LikesService {
     );
   }
 
-  UnlikePost(likeId: Number) {
+  UnlikePost(likeId: number) {
     return this.http.delete(`${this.apiUrl}/like/${likeId}`,{
       withCredentials: true
     })

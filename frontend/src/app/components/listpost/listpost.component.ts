@@ -17,7 +17,6 @@ import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { faComment } from '@fortawesome/free-regular-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 // angular cdk dialog
@@ -27,8 +26,6 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { OverlayModule } from '@angular/cdk/overlay';
 // components
 import { LikesComponent } from '../likes/likes.component';
-// icons
-
 
 
 @Component({
@@ -86,8 +83,12 @@ export class ListpostComponent {
     }
   }
 
-  getLikes() {
-    return this.likeService.getPostLikes(this.post.id).subscribe({
+  getLikes(link?: string) {
+    const observable = link
+      ? this.likeService.getLikePage(link)
+      : this.likeService.getPostLikes(this.post.id);
+
+    return observable.subscribe({
       next: (response) => {
         this.likes = response.results;
         this.totalLikes = response.total_count;

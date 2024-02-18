@@ -55,6 +55,29 @@
           </li>
         </ul>
       </ul>
+      <div>
+        <ul *ngIf="commentsTotalPages > 1" class="comments-navigation">
+          <li *ngIf="commentsPreviousPage">
+            <fa-icon
+              class="navigation-icon"
+              [icon]="previousIcon"
+              size="2x"
+              (click)="getComments(commentsPreviousPage)"
+            ></fa-icon>
+          </li>
+          <li>
+            <p>Page {{ commentsCurrentPage }} of {{ commentsTotalPages }}</p>
+          </li>
+          <li *ngIf="commentsNextPage">
+            <fa-icon
+              class="navigation-icon"
+              [icon]="nextIcon"
+              size="2x"
+              (click)="getComments(commentsNextPage)"
+            ></fa-icon>
+          </li>
+        </ul>
+      </div>
     </ul>
     <ul class="add-comment-container" *ngIf="user !== null">
       <li>
@@ -73,9 +96,7 @@
             placeholder="Escribe tu comentario aquí..."
           ></textarea>
           <div class="form-button-container">
-            <button class="form-button" type="submit">
-              Submit
-            </button>
+            <button class="form-button" type="submit">Submit</button>
             <button class="form-button" type="button" (click)="cleanForm()">
               Cancel
             </button>

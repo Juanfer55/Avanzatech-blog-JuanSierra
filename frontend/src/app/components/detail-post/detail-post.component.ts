@@ -6,7 +6,6 @@ import { Post } from '../../models/post.model';
 import { RouterLinkWithHref } from '@angular/router';
 // reactive forms
 import {
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
   FormBuilder,
@@ -16,6 +15,7 @@ import {
 import { PostService } from '../../services/postservice.service';
 import { LikesService } from '../../services/likes.service';
 import { CommentsService } from '../../services/comments.service';
+import { ToastrService } from 'ngx-toastr';
 // model
 import { User } from '../../models/user.model';
 import { Comment } from '../../models/comments.model';
@@ -23,6 +23,8 @@ import { Comment } from '../../models/comments.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
+import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-detail-post',
@@ -52,11 +54,14 @@ export class DetailPostComponent {
   commentsNextPage: string | null = null;
 
   backIcon = faCircleChevronLeft;
+  previousIcon = faAnglesLeft;
+  nextIcon = faAnglesRight;
 
   commentForm!: FormGroup;
 
   constructor(
     private authService: AuthService,
+    private toastService: ToastrService,
     private route: ActivatedRoute,
     private postService: PostService,
     private likeService: LikesService,
@@ -72,7 +77,9 @@ export class DetailPostComponent {
         this.user = user;
       }
     });
-    this.postId = this.route.snapshot.params['id'];
+    this.route.paramMap.subscribe(params => {
+      this.postId = Number(params.get('id'));
+    });
     this.getPost();
     this.getLikes();
     this.getComments();
@@ -95,7 +102,6 @@ export class DetailPostComponent {
     this.postService.getPost(this.postId).subscribe({
       next: (response) => {
         this.post = response;
-        console.log(this.post);
       },
     });
   }
@@ -108,10 +114,13 @@ export class DetailPostComponent {
     });
   }
 
-  getComments() {
-    this.commentService.getComments(this.postId).subscribe({
+  getComments(link?: string) {
+    const comments = link
+      ? this.commentService.getCommentPage(link)
+      : this.commentService.getComments(this.postId);
+
+    return comments.subscribe({
       next: (response) => {
-        console.log(response);
         this.comments = response.results;
         this.commentCount = response.total_count;
         this.commentsTotalPages = response.total_pages;
@@ -123,20 +132,21 @@ export class DetailPostComponent {
   }
 
   addComment() {
-    const content = this.commentForm.get('comment')?.value;
-    console.log(content);
-    if (this.commentForm.invalid) {
+    if (this.commentForm.valid) {
+      const content = this.commentForm.get('comment')?.value;
       return this.commentService.createComment(this.postId, content).subscribe({
         next: () => {
           this.getComments();
+          this.cleanForm();
         },
       });
     }
-    return;
+    return this.toastService.error('Please, fill in the form correctly', 'Error', {
+      positionClass: 'toast-top-full-width',
+    });
   }
 
   cleanForm() {
-    console.log('clean form');
     this.commentForm.controls['comment'].setValue('');
   }
 }

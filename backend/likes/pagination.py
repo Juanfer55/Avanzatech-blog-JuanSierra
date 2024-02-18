@@ -6,7 +6,7 @@ class LikesPagination(PageNumberPagination):
     """
     Custom pagination class for paginating posts requests.
     """
-    page_size = 20
+    page_size = 15
     max_page_size = 100
 
     def get_paginated_response(self, data):

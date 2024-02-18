@@ -24,6 +24,12 @@ export class CommentsService {
     );
   }
 
+  getCommentPage(link: string) {
+    return this.http.get<ApiResponse<Comment>>(link, {
+      withCredentials: true,
+    });
+  }
+
   createComment(postId: number, comment: string) {
     return this.http.post(
       `${this.apiUrl}/comment/`,

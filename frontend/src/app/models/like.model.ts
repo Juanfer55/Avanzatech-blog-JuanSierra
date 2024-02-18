@@ -2,7 +2,7 @@
 import { Author } from "./user.model";
 
 export interface Like {
-  id: Number
+  id: number
   user: Author
   post: number
 }

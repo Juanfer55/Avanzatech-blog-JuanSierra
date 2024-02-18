@@ -20,7 +20,12 @@ import { UserProfile } from '../../models/user.model';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ListpostComponent, FontAwesomeModule, RouterLinkWithHref],
+  imports: [
+    CommonModule,
+    ListpostComponent,
+    FontAwesomeModule,
+    RouterLinkWithHref,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.sass',
 })
@@ -32,7 +37,8 @@ export class HomeComponent {
   currentPage!: number;
   totalPages!: number;
   posts: PostWithExcerpt[] = [];
-  totalPost: number = 0
+
+  requestStatus: 'loading' | 'error' | 'success' = 'loading';
 
   CreatePostIcon = faCirclePlus;
   previousPageIcon = faAnglesLeft;
@@ -40,55 +46,37 @@ export class HomeComponent {
 
   constructor(
     private postService: PostService,
-    private authService: AuthService,
-    ) {}
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.authService.userProfile$.subscribe((userProfile) => {
       if (userProfile) {
         this.userProfile = userProfile;
       }
-    })
+    });
     this.getPosts();
   }
 
-  getPosts() {
-    this.postService.getPosts().subscribe({
+  getPosts(link?: string) {
+    this.requestStatus = 'loading'
+    const posts = link
+      ? this.postService.getPosts(link)
+      : this.postService.getPosts();
+
+    return posts.subscribe({
       next: (response) => {
         this.posts = response.results;
         this.previousPage = response.previous;
         this.nextPage = response.next;
         this.currentPage = response.current_page;
         this.totalPages = response.total_pages;
+        this.requestStatus = 'success';
+        window.scrollTo(0, 0);
+      },
+      error: () => {
+        this.requestStatus = 'error';
       },
     });
-  }
-
-  getNextPage() {
-    if (this.nextPage) {
-      this.postService.getPosts(this.nextPage).subscribe({
-        next: (response) => {
-          this.posts = response.results;
-          this.previousPage = response.previous;
-          this.nextPage = response.next;
-          this.currentPage = response.current_page;
-          window.scrollTo(0, 0);
-        },
-      });
-    }
-  }
-
-  getPreviousPage() {
-    if (this.previousPage) {
-      this.postService.getPosts(this.previousPage).subscribe({
-        next: (response) => {
-          this.posts = response.results;
-          this.previousPage = response.previous;
-          this.nextPage = response.next;
-          this.currentPage = response.current_page;
-          window.scrollTo(0, 0);
-        },
-      });
-    }
   }
 }

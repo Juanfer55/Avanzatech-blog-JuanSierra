@@ -1,25 +1,25 @@
-<section class="home-section">
+<div class="home-section">
   <div *ngIf="posts.length >= 1" class="posts-container-wraper">
     <div class="posts-container">
       <app-listpost *ngFor="let post of posts" [post]="post"> </app-listpost>
     </div>
     <div class="navigation">
       <ng-container *ngIf="previousPage">
-        <fa-icon [icon]="previousPageIcon" size="3x" (click)="getPreviousPage()"></fa-icon>
+        <fa-icon [icon]="previousPageIcon" size="3x" (click)="getPosts(previousPage)"></fa-icon>
       </ng-container>
       <p>
         Page {{ currentPage }} of {{ totalPages }}
       </p>
       <ng-container *ngIf="nextPage">
-        <fa-icon [icon]="nextPageIcon" size="3x" (click)="(getNextPage())"></fa-icon>
+        <fa-icon [icon]="nextPageIcon" size="3x" (click)="(getPosts(nextPage))"></fa-icon>
       </ng-container>
     </div>
   </div>
-  <div *ngIf="posts.length === 0" class="no-content">
+  <div *ngIf="posts.length === 0 && requestStatus === 'success'" class="no-content">
     <h1 class="title">No posts yet</h1>
     <p class="invitation">You should create the first post!!</p>
   </div>
   <div *ngIf="userProfile" [routerLink]="['/create-post']" class="create-post">
     <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
   </div>
-</section>
+</div>
