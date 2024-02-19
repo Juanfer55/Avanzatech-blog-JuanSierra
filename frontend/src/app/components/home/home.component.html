@@ -19,7 +19,7 @@
     <h1 class="title">No posts yet</h1>
     <p class="invitation">You should create the first post!!</p>
   </div>
-  <div *ngIf="userProfile" [routerLink]="['/create-post']" class="create-post">
+  <div *ngIf="(logStatus$ | async)" [routerLink]="['/create-post']" class="create-post">
     <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
   </div>
 </div>

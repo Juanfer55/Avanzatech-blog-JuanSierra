@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 // models
 import { PostWithExcerpt } from '../../models/post.model';
 import { Like } from '../../models/like.model';
-import { User } from '../../models/user.model';
+import { User, UserProfile } from '../../models/user.model';
 // services
 import { AuthService } from '../../services/auth.service';
 import { LikesService } from '../../services/likes.service';
@@ -36,7 +36,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 export class ListpostComponent {
   @Input() post!: PostWithExcerpt;
 
-  user: User | null = null;
+  user: UserProfile | null = null;
 
   likes: Like[] = [];
   totalLikes: number = 0;

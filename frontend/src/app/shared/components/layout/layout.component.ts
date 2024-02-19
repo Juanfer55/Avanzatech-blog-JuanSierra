@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { UserProfile } from '../../../models/user.model';
 
 @Component({
   selector: 'app-layout',
@@ -18,7 +19,7 @@ import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './layout.component.sass',
 })
 export class LayoutComponent {
-  userProfile$: Observable<any> = this.authService.userProfile$;
+  userProfile$: Observable<UserProfile | null> = this.authService.userProfile$;
   isLoggedIn$: Observable<boolean> = this.authService.logStatus$;
 
   showLogoutPopup = false;

@@ -19,7 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 // components
 import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
 // model
-import { User } from '../../models/user.model';
+import { UserProfile } from '../../models/user.model';
 import { Comment } from '../../models/comments.model';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -42,7 +42,7 @@ import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './detail-post.component.sass',
 })
 export class DetailPostComponent {
-  user: User | null = null;
+  user: UserProfile | null = null;
 
   postId!: number;
   post: Post | null = null;

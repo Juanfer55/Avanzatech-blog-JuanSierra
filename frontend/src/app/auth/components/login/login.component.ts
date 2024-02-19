@@ -27,7 +27,8 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './login.component.sass',
 })
 export class LoginComponent {
-  InvalidCredentials = false;
+
+  invalidCredentials = false;
   formSubmitted = false;
   showPassword = false;
 
@@ -64,12 +65,11 @@ export class LoginComponent {
 
       this.authService.login(username, password).subscribe({
         next: () => {
-          sessionStorage.setItem('avanzablog', 'logged');
           this.router.navigate(['/']);
         },
         error: (err) => {
           if (err.status === 401) {
-            this.InvalidCredentials = true;
+            this.invalidCredentials = true;
           }
         },
       });

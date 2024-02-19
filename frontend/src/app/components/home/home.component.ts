@@ -16,6 +16,7 @@ import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 // href
 import { RouterLinkWithHref } from '@angular/router';
 import { UserProfile } from '../../models/user.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +31,7 @@ import { UserProfile } from '../../models/user.model';
   styleUrl: './home.component.sass',
 })
 export class HomeComponent {
-  userProfile: UserProfile | null = null;
+  logStatus$: Observable<boolean> = this.authService.logStatus$;
 
   previousPage: string | null = null;
   nextPage: string | null = null;
@@ -50,11 +51,6 @@ export class HomeComponent {
   ) {}
 
   ngOnInit() {
-    this.authService.userProfile$.subscribe((userProfile) => {
-      if (userProfile) {
-        this.userProfile = userProfile;
-      }
-    });
     this.getPosts();
   }
 

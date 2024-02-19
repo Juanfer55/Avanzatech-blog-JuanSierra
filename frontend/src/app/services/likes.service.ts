@@ -13,9 +13,7 @@ import { Like } from '../models/like.model';
 export class LikesService {
   apiUrl = environment.apiUrl;
 
-  constructor(
-    private http: HttpClient,
-    ) {}
+  constructor(private http: HttpClient) {}
 
   getPostLikes(postId: number) {
     return this.http.get<ApiResponse<Like>>(
@@ -50,9 +48,8 @@ export class LikesService {
   }
 
   UnlikePost(likeId: number) {
-    return this.http.delete(`${this.apiUrl}/like/${likeId}`,{
-      withCredentials: true
-    })
+    return this.http.delete(`${this.apiUrl}/like/${likeId}`, {
+      withCredentials: true,
+    });
   }
-
 }

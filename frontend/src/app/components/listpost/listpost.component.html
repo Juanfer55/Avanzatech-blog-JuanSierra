@@ -1,11 +1,9 @@
-<section class="post">
-  <ul class="post-header">
-    <li>
-      <h1 class="title">
-        {{ post.title }}
-      </h1>
-    </li>
-    <li class="post-info">
+<div class="post">
+  <div class="post-header">
+    <h1 class="title">
+      {{ post.title }}
+    </h1>
+    <div class="post-info">
       <p class="info">Team: {{ post.author.team.name }}</p>
       <p class="info">
         {{ post.author.username }}
@@ -13,10 +11,10 @@
       <p class="info">
         {{ post.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
       </p>
-    </li>
-  </ul>
-  <ul class="content-container">
-    <li class="post-content">
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="post-content">
       <p class="post-excerpt">
         {{ post.content_excerpt }}
         <span
@@ -26,24 +24,24 @@
           >Show More</span
         >
       </p>
-    </li>
-  </ul>
-  <ul class="post-info">
-    <ul class="likes-comments">
-      <li
+    </div>
+  </div>
+  <div class="post-info">
+    <div class="likes-comments">
+      <div
         class="likes"
         (click)="likesIsOpen = !likesIsOpen"
         cdkOverlayOrigin
         #likesOverlay="cdkOverlayOrigin"
       >
         <p>{{ totalLikes }} Likes</p>
-      </li>
-      <li class="comments" (click)="detailView()">
+      </div>
+      <div class="comments" (click)="detailView()">
         <p>{{ commentCount }} Comments</p>
-      </li>
-    </ul>
-    <ul class="post-interaction">
-      <li *ngIf="user" class="like">
+      </div>
+    </div>
+    <div class="post-interaction">
+      <div *ngIf="user" class="like">
         <fa-icon
           *ngIf="postIsLiked"
           (click)="unlikePost()"
@@ -58,54 +56,48 @@
           [icon]="regularHeartIcon"
           size="2x"
         ></fa-icon>
-      </li>
-      <li *ngIf="user">
+      </div>
+      <div *ngIf="user">
         <fa-icon
           (click)="detailView()"
           [icon]="commentIcon"
           size="2x"
         ></fa-icon>
-      </li>
-      <li *ngIf="hasEditPermission()">
+      </div>
+      <div *ngIf="hasEditPermission()">
         <fa-icon [icon]="editIcon" size="2x" (click)="editView()"></fa-icon>
-      </li>
-      <li *ngIf="hasEditPermission()">
+      </div>
+      <div *ngIf="hasEditPermission()">
         <fa-icon
           [icon]="trashIcon"
           size="2x"
           (click)="openDeleteDialog()"
         ></fa-icon>
-      </li>
-    </ul>
-  </ul>
-</section>
+      </div>
+    </div>
+  </div>
+</div>
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="likesOverlay"
   [cdkConnectedOverlayOpen]="likesIsOpen"
 >
   <div class="likes-container">
-    <ul *ngIf="likes.length === 0">
-      <li>
-        <p>No likes yet</p>
-      </li>
-    </ul>
-    <ul *ngIf="likes.length > 0">
+    <div *ngIf="likes.length === 0">
+      <p>No likes yet</p>
+    </div>
+    <div *ngIf="likes.length > 0">
       <h3>Liked by:</h3>
-      <li>
-        <p *ngFor="let like of likes">{{ like.user.username }}</p>
-      </li>
-      <ul *ngIf="likesTotalPages > 1" class="like-navigation">
-        <li *ngIf="likesPreviousPage" (click)="getLikes(likesPreviousPage)">
+      <p *ngFor="let like of likes">{{ like.user.username }}</p>
+      <div *ngIf="likesTotalPages > 1" class="like-navigation">
+        <div *ngIf="likesPreviousPage" (click)="getLikes(likesPreviousPage)">
           <fa-icon class="like-navigation-icon" [icon]="previousIcon"></fa-icon>
-        </li>
-        <li>
-          <p>{{ likesCurrentPage }}</p>
-        </li>
-        <li *ngIf="likesNextPage" (click)="getLikes(likesNextPage)">
+        </div>
+        <p>{{ likesCurrentPage }}</p>
+        <div *ngIf="likesNextPage" (click)="getLikes(likesNextPage)">
           <fa-icon class="like-navigation-icon" [icon]="nextIcon"></fa-icon>
-        </li>
-      </ul>
-    </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
