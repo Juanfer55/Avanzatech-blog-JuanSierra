@@ -1,23 +1,18 @@
-<header
->
+<header>
   <a href="">
-    <ul
-      class="home"
-    >
-      <li class="logo-img">
+    <div class="home">
+      <div class="logo-img">
         <img
           src="./../../../assets/avanzatech-logo.jpg"
           alt="logo-avanzatech"
           class=""
         />
-      </li>
-      <li>
-        <p class="header-text">AvanzaBlog</p>
-      </li>
-    </ul>
+      </div>
+      <p class="header-text">AvanzaBlog</p>
+    </div>
   </a>
-  <ul class="header-nav">
-    <li *ngIf="!(isLoggedIn$ | async)">
+  <div class="header-nav">
+    <div *ngIf="!(isLoggedIn$ | async)">
       <button
         class="header-button"
         routerLink="/auth/login"
@@ -25,26 +20,30 @@
       >
         LogIn
       </button>
-    </li>
-    <li *ngIf="!(isLoggedIn$ | async)">
-      <button
-        routerLink="/auth/register"
-        class="header-text"
-      >
-        Register
-      </button>
-    </li>
-    <li *ngIf="isLoggedIn$ | async">
-      <p
-        class="header-text"
-      >
-        welcome {{ (userProfile$ | async)?.username }}
-    </p>
-    </li>
-    <li *ngIf="isLoggedIn$ | async" class="log-out">
-      <fa-icon [icon]="logOutIcon" size="2x" (click)="logOut()">
+    </div>
+    <div *ngIf="!(isLoggedIn$ | async)">
+      <button routerLink="/auth/register" class="header-text">Register</button>
+    </div>
+    <div *ngIf="isLoggedIn$ | async">
+      <p class="header-text">welcome {{ (userProfile$ | async)?.username }}</p>
+    </div>
+    <div *ngIf="isLoggedIn$ | async" class="log-out">
+      <fa-icon [icon]="logOutIcon" size="2x" (click)="showLogoutPopup = true">
       </fa-icon>
-    </li>
-  </ul>
+    </div>
+  </div>
 </header>
+<div *ngIf="showLogoutPopup" class="logout-popup-container">
+  <div class="logout-popup-info">
+    <div>
+      <p class="logout-text">Are you sure you want to log out?</p>
+    </div>
+    <div class="logout-buttons">
+      <button class="logout-button" (click)="logOut()">Log Out</button>
+      <button class="logout-button" (click)="showLogoutPopup = false">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
 <router-outlet />

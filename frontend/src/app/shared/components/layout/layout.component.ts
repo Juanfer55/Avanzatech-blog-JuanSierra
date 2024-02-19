@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 // services
 import { AuthService } from '../../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -20,11 +21,14 @@ export class LayoutComponent {
   userProfile$: Observable<any> = this.authService.userProfile$;
   isLoggedIn$: Observable<boolean> = this.authService.logStatus$;
 
+  showLogoutPopup = false;
+
   logOutIcon = faArrowRightFromBracket;
 
   constructor(
     private router: Router,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private toast: ToastrService) {}
 
   ngOnInit() {
     if (sessionStorage.getItem('avanzablog')) {
@@ -35,7 +39,11 @@ export class LayoutComponent {
   logOut() {
     this.authService.logout().subscribe({
       next: (res) => {
-        window.location.replace('/');
+        this.showLogoutPopup = false;
+        window.location.reload();
+        this.toast.success('Logged out successfully', 'Success', {
+          positionClass: 'toast-top-full-width',
+        });
       },
       error: (err) => {},
     });

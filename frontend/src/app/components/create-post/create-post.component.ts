@@ -59,12 +59,13 @@ export class CreatePostComponent {
 
       return this.postService.createPost(this.createPostForm.value).subscribe({
         next: (response) => {
-          this.toastr.success('The post has been created!');
+          this.toastr.success('The post has been created!', 'Success');
           this.router.navigate(['/']);
-          console.log(response);
         },
         error: (error) => {
-          this.toastr.error('Something went wrong!');
+          this.toastr.error('Something went wrong!', 'Error', {
+            positionClass: 'toast-top-full-width',
+          });;
           console.log(error);
         }
       })

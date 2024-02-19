@@ -1,7 +1,7 @@
 // angular
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterLinkWithHref } from '@angular/router';
 // reactive forms
 import {
@@ -52,6 +52,7 @@ export class UpdatePostComponent {
     private postService: PostService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private toastr: ToastrService
   ) {}
 
@@ -130,7 +131,7 @@ export class UpdatePostComponent {
       return this.postService.updatePost(this.postId, post).subscribe({
         next: () => {
           this.toastr.success('The post has been updated!', 'Success');
-          this.post = post;
+          this.router.navigate(['/post', this.postId]);
         },
         error: (error) => {
           console.log(error);

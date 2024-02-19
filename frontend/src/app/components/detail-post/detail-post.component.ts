@@ -92,7 +92,7 @@ export class DetailPostComponent {
       comment: [
         '',
         [
-          Validators.required,
+          Validators.requiredTrue,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
