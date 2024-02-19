@@ -45,4 +45,10 @@ export class PostService {
       withCredentials: true,
     });
   }
+
+  updatePost(id: number, post: Post) {
+    return this.http.put<Post>(`${this.apiUrl}/blog/${id}/`, post, {
+      withCredentials: true,
+    });
+  }
 }

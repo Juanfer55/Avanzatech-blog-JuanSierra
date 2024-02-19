@@ -4,13 +4,11 @@
       <fa-icon [icon]="backIcon" size="2x"></fa-icon>
       <p class="back-text">Back</p>
     </div>
-    <ul class="post-header">
-      <li>
-        <h1 class="title">
-          {{ post.title }}
-        </h1>
-      </li>
-      <li class="post-info">
+    <div class="post-header">
+      <h1 class="title">
+        {{ post.title }}
+      </h1>
+      <div class="post-info">
         <p class="info">Team: {{ post.author.team.name }}</p>
         <p class="info">
           {{ post.author.username }}
@@ -18,74 +16,61 @@
         <p class="info">
           {{ post.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
         </p>
-      </li>
-    </ul>
-    <ul class="content-container">
-      <li>
-        <p class="post-content">{{ post.content }}</p>
-      </li>
-    </ul>
-    <ul class="likes-container">
-      <li>
-        <p>{{ likeCount }} Likes</p>
-      </li>
-    </ul>
-    <ul class="comments-container">
-      <ul class="comments-tile">
-        <li>
-          <h1>Comments</h1>
-        </li>
-      </ul>
-      <ul *ngFor="let comment of comments" class="list-of-comments">
-        <ul class="comment-header">
-          <li class="comment-info">
+      </div>
+    </div>
+    <div class="content-container">
+      <p class="post-content" [innerText]="post.content"></p>
+    </div>
+    <div class="likes-container">
+      <p>{{ likeCount }} Likes</p>
+    </div>
+    <div class="comments-container">
+      <div class="comments-tile">
+        <h1>Comments</h1>
+      </div>
+      <div *ngFor="let comment of comments" class="list-of-comments">
+        <div class="comment-header">
+          <div class="comment-info">
             <p class="info">{{ comment.user.username }}</p>
-          </li>
-          <li>
-            <p class="info">
-              {{ comment.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
-            </p>
-          </li>
-        </ul>
-        <ul class="comment-content-container">
-          <li>
-            <p class="comment-content">
-              {{ comment.content }}
-            </p>
-          </li>
-        </ul>
-      </ul>
+          </div>
+          <p class="info">
+            {{ comment.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
+          </p>
+        </div>
+        <div class="comment-content-container">
+          <p class="comment-content">
+            {{ comment.content }}
+          </p>
+        </div>
+      </div>
       <div>
-        <ul *ngIf="commentsTotalPages > 1" class="comments-navigation">
-          <li *ngIf="commentsPreviousPage">
+        <div *ngIf="commentsTotalPages > 1" class="comments-navigation">
+          <div *ngIf="commentsPreviousPage">
             <fa-icon
               class="navigation-icon"
               [icon]="previousIcon"
               size="2x"
               (click)="getComments(commentsPreviousPage)"
             ></fa-icon>
-          </li>
-          <li>
-            <p>Page {{ commentsCurrentPage }} of {{ commentsTotalPages }}</p>
-          </li>
-          <li *ngIf="commentsNextPage">
+          </div>
+          <p>Page {{ commentsCurrentPage }} of {{ commentsTotalPages }}</p>
+          <div *ngIf="commentsNextPage">
             <fa-icon
               class="navigation-icon"
               [icon]="nextIcon"
               size="2x"
               (click)="getComments(commentsNextPage)"
             ></fa-icon>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
-    </ul>
-    <ul class="add-comment-container" *ngIf="user !== null">
-      <li>
-        <p class="title">Add new comment:</p>
-      </li>
-      <li class="form-container">
+    </div>
+    <div class="add-comment-container" *ngIf="user !== null">
+      <h4 class="title">Add new comment:</h4>
+      <div class="form-container">
         <form class="form" [formGroup]="commentForm" (ngSubmit)="addComment()">
           <textarea
+            [class.invalid]="commentForm.invalid && commentFormSubmitted"
             formControlName="comment"
             class="content-input"
             id="comment"
@@ -95,14 +80,24 @@
             maxlength="1000"
             placeholder="Escribe tu comentario aquí..."
           ></textarea>
+          <div
+            *ngIf="commentForm.invalid && commentFormSubmitted"
+          >
+            <small *ngIf="commentForm.get('comment')?.hasError('required')" class="error-msg"
+              >*Comment cannot be empty</small
+            >
+            <small *ngIf="commentForm.get('comment')?.hasError('maxlength')" class="error-msg"
+              >*Comment cannot be more than 1000 characters</small
+            >
+          </div>
           <div class="form-button-container">
-            <button class="form-button" type="submit">Submit</button>
-            <button class="form-button" type="button" (click)="cleanForm()">
+            <button class="submit-button" type="submit">Submit</button>
+            <button class="cancel-button" type="button" (click)="cleanForm()">
               Cancel
             </button>
           </div>
         </form>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </div>

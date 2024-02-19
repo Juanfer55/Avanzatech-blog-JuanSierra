@@ -26,14 +26,5 @@ CustomUser.objects.create_superuser(username='super@gmail.com', password='test12
 #create user
 user = CustomUser.objects.create_user(username='user1@gmail.com', password='test123456')
 
-#create default post
-post = Posts.objects.create(title='default post', content='default post content', author=user)
-
-# permission for the posts
-PostCategory.objects.create(post=post, category=public, permission=read_and_edit)
-PostCategory.objects.create(post=post, category=authenticated, permission=read_and_edit)
-PostCategory.objects.create(post=post, category=team, permission=read_and_edit)
-PostCategory.objects.create(post=post, category=author, permission=read_and_edit)
-
 # to run on the django shell is :
 # python manage.py shell < create_default_data.py

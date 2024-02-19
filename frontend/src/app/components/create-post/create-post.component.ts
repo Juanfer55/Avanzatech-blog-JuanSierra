@@ -1,7 +1,7 @@
 // angular
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLinkWithHref } from '@angular/router';
+import { Router, RouterLinkWithHref } from '@angular/router';
 // forms
 import { ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
 // validators
@@ -30,12 +30,12 @@ export class CreatePostComponent {
     { value: 3, label: 'read-and-edit' },
   ];
 
-  formSubmitted = false;
   createPostForm!: FormGroup;
 
   backIcon = faCircleChevronLeft;
 
   constructor(
+    private router: Router,
     private postService: PostService,
     private formBuilder: FormBuilder,
     private toastr: ToastrService
@@ -46,21 +46,21 @@ export class CreatePostComponent {
   private buildForm() {
     this.createPostForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-      content: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(1000)]],
-      public: [2, [Validators.required]],
-      authenticated: [2, [Validators.required]],
-      team: [3, [Validators.required]],
-      author: [3, [Validators.required]]
+      content: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10000)]],
+      public_permission: [2, [Validators.required]],
+      authenticated_permission: [2, [Validators.required]],
+      team_permission: [3, [Validators.required]],
+      author_permission: [3, [Validators.required]]
     });
   }
 
   createPost() {
-    this.formSubmitted = true;
-    if (this.createPostForm.invalid) {
+    if (this.createPostForm.valid) {
 
       return this.postService.createPost(this.createPostForm.value).subscribe({
         next: (response) => {
           this.toastr.success('The post has been created!');
+          this.router.navigate(['/']);
           console.log(response);
         },
         error: (error) => {
@@ -69,6 +69,8 @@ export class CreatePostComponent {
         }
       })
     }
-    return this.toastr.error('The post has not been created!');
+    this.createPostForm.markAllAsTouched();
+    return this.toastr.error('Fill out the form properly', 'Error');
   }
+
 }

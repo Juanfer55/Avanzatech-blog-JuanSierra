@@ -59,6 +59,8 @@ export class DetailPostComponent {
 
   commentForm!: FormGroup;
 
+  commentFormSubmitted = false;
+
   constructor(
     private authService: AuthService,
     private toastService: ToastrService,
@@ -132,12 +134,14 @@ export class DetailPostComponent {
   }
 
   addComment() {
+    this.commentFormSubmitted = true;
     if (this.commentForm.valid) {
       const content = this.commentForm.get('comment')?.value;
       return this.commentService.createComment(this.postId, content).subscribe({
         next: () => {
           this.getComments();
           this.cleanForm();
+          this.commentFormSubmitted = false;
         },
       });
     }
@@ -147,6 +151,6 @@ export class DetailPostComponent {
   }
 
   cleanForm() {
-    this.commentForm.controls['comment'].setValue('');
+    this.commentForm.controls['comment'].reset();
   }
 }

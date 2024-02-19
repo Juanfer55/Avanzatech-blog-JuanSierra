@@ -67,7 +67,7 @@
         ></fa-icon>
       </li>
       <li *ngIf="hasEditPermission()">
-        <fa-icon [icon]="editIcon" size="2x"></fa-icon>
+        <fa-icon [icon]="editIcon" size="2x" (click)="editView()"></fa-icon>
       </li>
       <li *ngIf="hasEditPermission()">
         <fa-icon

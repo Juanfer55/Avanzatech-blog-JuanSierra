@@ -1,20 +1,20 @@
-<div class="create-post-container">
+<div class="update-post-container">
   <div class="back-home-container" [routerLink]="['/']">
     <fa-icon [icon]="backIcon" size="2x"></fa-icon>
     <p class="back-text">Back</p>
   </div>
-  <form class="form" [formGroup]="createPostForm" (ngSubmit)="createPost()">
+  <form class="form" [formGroup]="updatePostForm" (ngSubmit)="updatePost()">
     <div class="title-container">
       <div class="title-input-container">
         <label for="title" class="labels">Title*:</label>
         <input
           [class.valid]="
-            createPostForm.get('title')?.valid &&
-            createPostForm.get('title')?.touched
+            updatePostForm.get('title')?.valid &&
+            updatePostForm.get('title')?.touched
           "
           [class.invalid]="
-            createPostForm.get('title')?.invalid &&
-            createPostForm.get('title')?.touched
+            updatePostForm.get('title')?.invalid &&
+            updatePostForm.get('title')?.touched
           "
           class="title-input"
           type="text"
@@ -25,17 +25,17 @@
       </div>
       <div
         *ngIf="
-          createPostForm.get('title')?.invalid &&
-          createPostForm.get('title')?.touched
+          updatePostForm.get('title')?.invalid &&
+          updatePostForm.get('title')?.touched
         "
       >
         <small
-          *ngIf="createPostForm.get('title')?.hasError('required')"
+          *ngIf="updatePostForm.get('title')?.hasError('required')"
           class="error-msg"
           >*Title cannot be empty</small
         >
         <small
-          *ngIf="createPostForm.get('title')?.hasError('maxlength')"
+          *ngIf="updatePostForm.get('title')?.hasError('maxlength')"
           class="error-msg"
           >*Title cannot be longer than 50 characters</small
         >
@@ -45,12 +45,12 @@
       <label for="content" class="labels">Content*:</label>
       <textarea
         [class.valid]="
-          createPostForm.controls['content'].valid &&
-          createPostForm.controls['content'].touched
+          updatePostForm.controls['content'].valid &&
+          updatePostForm.controls['content'].touched
         "
         [class.invalid]="
-          createPostForm.controls['content'].invalid &&
-          createPostForm.controls['content'].touched
+          updatePostForm.controls['content'].invalid &&
+          updatePostForm.controls['content'].touched
         "
         class="content-input"
         placeholder="Enter the content of the post"
@@ -60,17 +60,17 @@
       </textarea>
       <div
         *ngIf="
-          createPostForm.get('content')?.invalid &&
-          createPostForm.get('content')?.touched
+          updatePostForm.get('content')?.invalid &&
+          updatePostForm.get('content')?.touched
         "
       >
         <small
-          *ngIf="createPostForm.get('content')?.hasError('required')"
+          *ngIf="updatePostForm.get('content')?.hasError('required')"
           class="error-msg"
           >*Content cannot be empty</small
         >
         <small
-          *ngIf="createPostForm.get('content')?.hasError('maxlength')"
+          *ngIf="updatePostForm.get('content')?.hasError('maxlength')"
           class="error-msg"
           >*Content cannot be longer than 10.000 characters</small
         >

@@ -24,14 +24,12 @@ import { Dialog } from '@angular/cdk/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 // angular cdk overlay
 import { OverlayModule } from '@angular/cdk/overlay';
-// components
-import { LikesComponent } from '../likes/likes.component';
 
 
 @Component({
   selector: 'app-listpost',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, OverlayModule, LikesComponent],
+  imports: [CommonModule, FontAwesomeModule, OverlayModule],
   templateUrl: './listpost.component.html',
   styleUrl: './listpost.component.sass',
 })
@@ -175,5 +173,9 @@ export class ListpostComponent {
 
   detailView() {
     this.router.navigate(['/post', this.post.id]);
+  }
+
+  editView() {
+    this.router.navigate(['/update-post', this.post.id]);
   }
 }

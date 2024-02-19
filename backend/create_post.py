@@ -15,7 +15,7 @@ def create_default_post(itn: int):
         post = Posts.objects.create(title=f'Default post {i}', content=text, author_id=2)
         for j in range(1, 5):
             PostCategory.objects.create(post=post, category_id=j, permission_id=3)
-        for k in range(10):
+        for _ in range(2):
             Comments.objects.create(post=post, user_id=1, content=comment)
 
 

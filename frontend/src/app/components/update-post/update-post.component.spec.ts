@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LikesComponent } from './likes.component';
+import { UpdatePostComponent } from './update-post.component';
 
-describe('LikesComponent', () => {
-  let component: LikesComponent;
-  let fixture: ComponentFixture<LikesComponent>;
+describe('UpdatePostComponent', () => {
+  let component: UpdatePostComponent;
+  let fixture: ComponentFixture<UpdatePostComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LikesComponent]
+      imports: [UpdatePostComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LikesComponent);
+    fixture = TestBed.createComponent(UpdatePostComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
