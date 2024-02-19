@@ -1,9 +1,9 @@
 <div class="post-detail-page">
-  <div class="post-container" *ngIf="post">
-    <div class="back-home-container" [routerLink]="['/']">
-      <fa-icon [icon]="backIcon" size="2x"></fa-icon>
-      <p class="back-text">Back</p>
-    </div>
+  <div class="back-home-container" [routerLink]="['/']">
+    <fa-icon [icon]="backIcon" size="2x"></fa-icon>
+    <p class="back-text">Back</p>
+  </div>
+  <div class="post-container" *ngIf="post && requestStatus === 'success'">
     <div class="post-header">
       <h1 class="title">
         {{ post.title }}
@@ -80,13 +80,15 @@
             maxlength="1000"
             placeholder="Escribe tu comentario aquí..."
           ></textarea>
-          <div
-            *ngIf="commentForm.invalid && commentFormSubmitted"
-          >
-            <small *ngIf="commentForm.get('comment')?.hasError('required')" class="error-msg"
+          <div *ngIf="commentForm.invalid && commentFormSubmitted">
+            <small
+              *ngIf="commentForm.get('comment')?.hasError('required') || commentForm.get('comment')?.hasError('pattern')"
+              class="error-msg"
               >*Comment cannot be empty</small
             >
-            <small *ngIf="commentForm.get('comment')?.hasError('maxlength')" class="error-msg"
+            <small
+              *ngIf="commentForm.get('comment')?.hasError('maxlength')"
+              class="error-msg"
               >*Comment cannot be more than 1000 characters</small
             >
           </div>
@@ -100,4 +102,5 @@
       </div>
     </div>
   </div>
+  <app-post-not-found *ngIf="!post && requestStatus === 'error'"></app-post-not-found>
 </div>

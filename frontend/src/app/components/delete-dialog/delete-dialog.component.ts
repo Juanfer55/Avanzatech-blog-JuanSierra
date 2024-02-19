@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 // dialog
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 // services
@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './delete-dialog.component.sass'
 })
 export class DeleteDialogComponent {
-  closeIcon = faClose;
+  warningIcon = faTriangleExclamation;
 
   postInfo: any;
 

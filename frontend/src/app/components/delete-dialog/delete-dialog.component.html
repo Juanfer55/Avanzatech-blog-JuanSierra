@@ -1,20 +1,15 @@
 <div class="modal">
   <div class="modal-content">
-    <div class="close-icon">
-        <fa-icon (click)="closeModal()" [icon]="closeIcon" size="1x"
-        ></fa-icon>
-    </div>
     <div class="modal-body">
-      <h1> Are you sure you want to delete {{postInfo.postTitle}}?</h1>
-  <ul class="buttons-container">
-    <li>
-      <button class="action-buttos" (click)="deletePost()">Delete</button>
-    </li>
-    <li>
-      <button (click)="closeModal()" class="action-buttos">Cancel</button>
-    </li>
-  </ul>
+      <div class="modal-header">
+        <fa-icon [icon]="warningIcon" size="4x"></fa-icon>
+        <h1>Are you sure you want to delete the post:</h1>
+        <h2 class="post-title">{{ postInfo.postTitle }}?</h2>
+      </div>
+      <div class="buttons-container">
+          <button class="action-buttos" (click)="deletePost()">Delete</button>
+          <button (click)="closeModal()" class="action-buttos">Cancel</button>
+      </div>
     </div>
-
   </div>
 </div>

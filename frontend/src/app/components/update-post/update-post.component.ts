@@ -17,13 +17,15 @@ import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { PostService } from '../../services/postservice.service';
 import { Post } from '../../models/post.model';
 import { ToastrService } from 'ngx-toastr';
-
+// components
+import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
 
 @Component({
   selector: 'app-update-post',
   standalone: true,
   imports: [
     CommonModule,
+    PostNotFoundComponent,
     FontAwesomeModule,
     ReactiveFormsModule,
     RouterLinkWithHref,
@@ -109,8 +111,9 @@ export class UpdatePostComponent {
         this.requestStatus = 'success';
       },
       error: (error) => {
-        this.requestStatus = 'error';
-        console.log(error);
+        if (error.status === 404) {
+          this.requestStatus = 'error';
+        }
       },
     });
   }

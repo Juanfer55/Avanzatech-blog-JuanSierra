@@ -3,7 +3,11 @@
     <fa-icon [icon]="backIcon" size="2x"></fa-icon>
     <p class="back-text">Back</p>
   </div>
-  <form class="form" [formGroup]="updatePostForm" (ngSubmit)="updatePost()">
+  <form *ngIf="post && requestStatus === 'success'" class="form" [formGroup]="updatePostForm" (ngSubmit)="updatePost()">
+    <div class="Author-container">
+      <h1 class="labels">Author:</h1>
+      <p>{{post.author.username}}</p>
+    </div>
     <div class="title-container">
       <div class="title-input-container">
         <label for="title" class="labels">Title*:</label>
@@ -149,4 +153,5 @@
       <button class="cancel-button" type="button" routerLink="/">Cancel</button>
     </div>
   </form>
+  <app-post-not-found *ngIf="!post && requestStatus === 'error'"></app-post-not-found>
 </div>

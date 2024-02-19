@@ -153,6 +153,10 @@ export class ListpostComponent {
       return this.post.public_permission === 'read-and-edit';
     }
 
+    if (this.user.is_admin) {
+      return true;
+    }
+
     if (this.user.id === this.post.author.id) {
       return this.post.author_permission === 'read-and-edit';
     }
@@ -166,8 +170,8 @@ export class ListpostComponent {
 
     return (
       this.post.authenticated_permission === 'read-and-edit' &&
-      this.user.team.id !== this.post.author.team.id &&
-      this.user.id !== this.post.author.id
+      (this.user.team.id !== this.post.author.team.id) &&
+      (this.user.id !== this.post.author.id)
     );
   }
 

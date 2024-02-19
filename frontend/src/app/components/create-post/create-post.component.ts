@@ -71,7 +71,8 @@ export class CreatePostComponent {
       })
     }
     this.createPostForm.markAllAsTouched();
-    return this.toastr.error('Fill out the form properly', 'Error');
+    return this.toastr.error('Fill out the form properly', 'Error',
+    { positionClass: 'toast-top-full-width' });
   }
 
 }

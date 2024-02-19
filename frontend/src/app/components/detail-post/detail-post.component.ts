@@ -16,6 +16,8 @@ import { PostService } from '../../services/postservice.service';
 import { LikesService } from '../../services/likes.service';
 import { CommentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr';
+// components
+import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
 // model
 import { User } from '../../models/user.model';
 import { Comment } from '../../models/comments.model';
@@ -31,6 +33,7 @@ import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [
     CommonModule,
+    PostNotFoundComponent,
     FontAwesomeModule,
     RouterLinkWithHref,
     ReactiveFormsModule,
@@ -43,6 +46,8 @@ export class DetailPostComponent {
 
   postId!: number;
   post: Post | null = null;
+
+  requestStatus!: 'loading' | 'success' | 'error';
 
   likeCount!: number;
 
@@ -93,6 +98,7 @@ export class DetailPostComponent {
         '',
         [
           Validators.requiredTrue,
+          Validators.pattern(/[^\s]/),
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
@@ -101,10 +107,17 @@ export class DetailPostComponent {
   }
 
   getPost() {
+    this.requestStatus = 'loading';
     this.postService.getPost(this.postId).subscribe({
       next: (response) => {
         this.post = response;
+        this.requestStatus = 'success';
       },
+      error: (response) => {
+        if (response.status === 404) {
+          this.requestStatus = 'error';
+        }
+      }
     });
   }
 
@@ -141,10 +154,10 @@ export class DetailPostComponent {
         next: () => {
           this.getComments();
           this.cleanForm();
-          this.commentFormSubmitted = false;
         },
       });
     }
+    console.log(this.commentForm.errors);
     return this.toastService.error('Please, fill in the form correctly', 'Error', {
       positionClass: 'toast-top-full-width',
     });
@@ -152,5 +165,6 @@ export class DetailPostComponent {
 
   cleanForm() {
     this.commentForm.controls['comment'].reset();
+    this.commentFormSubmitted = false;
   }
 }

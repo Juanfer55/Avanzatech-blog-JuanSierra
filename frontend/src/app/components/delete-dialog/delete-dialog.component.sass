@@ -9,6 +9,16 @@
   align-items: center
   justify-content: center
 
+.modal-header
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 0.5rem
+
+.post-title
+  text-decoration: underline
+
 .modal-content
   background-color: #fefefe
   border-radius: 1rem
@@ -36,11 +46,15 @@
     cursor: pointer
 
 .action-buttos
-  padding: 0.5rem
-  border: 0.1rem solid #000000
-  border-radius: 0.2rem
   background-color: #e6e6e6
+  border-radius: 0.5rem
+  border: 0.2rem solid #000000
+  padding: 0.5rem
+  font-weight: 600
+  font-family: 'Roboto', sans-serif
   font-size: 1rem
   &:hover
-    cursor: pointer
-    background-color: #03c77c
+    border-color: #16c976
+
+fa-icon
+  color: #dfc13d
