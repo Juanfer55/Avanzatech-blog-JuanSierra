@@ -1,5 +1,5 @@
-<header>
-  <a href="">
+<header data-testid="header">
+  <a href="" data-testid="home-button">
     <div class="home">
       <div class="logo-img">
         <img
@@ -13,7 +13,7 @@
   </a>
   <div class="header-nav">
     <div *ngIf="!(isLoggedIn$ | async)">
-      <button
+      <button data-testid="login-button"
         class="header-button"
         routerLink="/auth/login"
         class="header-text"
@@ -22,12 +22,12 @@
       </button>
     </div>
     <div *ngIf="!(isLoggedIn$ | async)">
-      <button routerLink="/auth/register" class="header-text">Register</button>
+      <button routerLink="/auth/register" class="header-text" data-testid="register-button">Register</button>
     </div>
     <div *ngIf="isLoggedIn$ | async">
-      <p class="header-text">welcome {{ (userProfile$ | async)?.username }}</p>
+      <p class="header-text" data-testid="user-username">welcome {{ (userProfile$ | async)?.username }}</p>
     </div>
-    <div *ngIf="isLoggedIn$ | async" class="log-out">
+    <div *ngIf="isLoggedIn$ | async" class="log-out" data-testid="logout-button">
       <fa-icon [icon]="logOutIcon" size="2x" (click)="showLogoutPopup = true">
       </fa-icon>
     </div>

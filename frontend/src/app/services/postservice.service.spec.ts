@@ -8,7 +8,6 @@ import {
 import { PostService } from './postservice.service';
 // mocks
 import { PostMock, PostWithExcerptMock } from '../testing/mocks/post.mocks';
-import { de } from '@faker-js/faker';
 
 fdescribe('PostserviceService', () => {
   let service: PostService;
