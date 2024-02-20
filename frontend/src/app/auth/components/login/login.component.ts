@@ -74,7 +74,7 @@ export class LoginComponent {
         },
       });
     } else {
-      this.loginForm.markAllAsTouched();
+      return this.loginForm.markAllAsTouched();
     }
   }
 }

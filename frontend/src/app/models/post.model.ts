@@ -1,4 +1,4 @@
-import { Author } from "./user.model";
+import { Author } from './user.model';
 
 export interface Post {
   id: number;
@@ -12,7 +12,15 @@ export interface Post {
   created_at: string;
 }
 
-
 export interface PostWithExcerpt extends Omit<Post, 'content'> {
   content_excerpt: string;
 }
+
+export interface PostWithoutPermission
+  extends Omit<
+    Post,
+    | 'public_permission'
+    | 'authenticated_permission'
+    | 'team_permission'
+    | 'author_permission'
+  > {}

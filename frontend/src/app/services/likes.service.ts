@@ -24,6 +24,12 @@ export class LikesService {
     );
   }
 
+  getLikePage(link: string) {
+    return this.http.get<ApiResponse<Like>>(link, {
+      withCredentials: true,
+    });
+  }
+
   getUserLike(userId: number, postId: number) {
     return this.http.get<ApiResponse<Like>>(
       `${this.apiUrl}/like/?user=${userId}&post=${postId}`,
@@ -31,12 +37,6 @@ export class LikesService {
         withCredentials: true,
       }
     );
-  }
-
-  getLikePage(link: string) {
-    return this.http.get<ApiResponse<Like>>(link, {
-      withCredentials: true,
-    });
   }
 
   likePost(postId: number) {

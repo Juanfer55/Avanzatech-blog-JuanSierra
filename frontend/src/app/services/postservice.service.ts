@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 // environment
 import { environment } from '../environments/environment.api';
 // models
-import { Post, PostWithExcerpt } from '../models/post.model';
+import { Post, PostWithExcerpt, PostWithoutPermission } from '../models/post.model';
 import { ApiResponse } from '../models/api-respond.model';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class PostService {
 
   constructor(
     private http: HttpClient
-    ) {}
+  ) {}
 
   getPosts(link?: string){
     if (link) {
@@ -35,7 +35,7 @@ export class PostService {
   }
 
   createPost(post: Post) {
-    return this.http.post(`${this.apiUrl}/post/`, post, {
+    return this.http.post<PostWithoutPermission>(`${this.apiUrl}/post/`, post, {
       withCredentials: true,
     });
   }
@@ -47,7 +47,7 @@ export class PostService {
   }
 
   updatePost(id: number, post: Post) {
-    return this.http.put<Post>(`${this.apiUrl}/blog/${id}/`, post, {
+    return this.http.put<PostWithoutPermission>(`${this.apiUrl}/blog/${id}/`, post, {
       withCredentials: true,
     });
   }

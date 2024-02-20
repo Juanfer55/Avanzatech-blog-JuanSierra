@@ -24,10 +24,7 @@ export class AuthService {
     new BehaviorSubject<boolean>(false);
   public logStatus$ = this.logStatusSubject.asObservable();
 
-  constructor(
-    private http: HttpClient,
-    private cookieService: CookieService
-  ) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   login(username: string, password: string) {
     return this.http
