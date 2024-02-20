@@ -1,26 +1,33 @@
+// angular
 import { TestBed } from '@angular/core/testing';
-import { AuthService } from './auth.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+// services
+import { AuthService } from './auth.service';
+import { CookieService } from 'ngx-cookie-service';
+// mocks
 import { UserProfileMock } from '../testing/mocks/user.mocks';
 
 fdescribe('AuthService', () => {
   let service: AuthService;
+  let cookieService: CookieService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService],
+      providers: [AuthService, CookieService],
     });
     service = TestBed.inject(AuthService);
+    cookieService = TestBed.inject(CookieService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
     httpMock.verify();
+    cookieService.deleteAll();
   });
 
   it('should be created', () => {
@@ -44,9 +51,25 @@ fdescribe('AuthService', () => {
       const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
+    });
 
-      const sesionStorageToken = sessionStorage.getItem('avanzablog');
-      expect(sesionStorageToken).toEqual('true');
+    it('It should set the authentication cookie if the login is successful', (doneFn) => {
+      const username = 'test@test.com';
+      const password = 'test123456';
+      const responseMsg = {
+        status: 200,
+        success: 'Logged in successfully',
+      };
+
+      service.login(username, password).subscribe(() => {
+        const sessionCookie = cookieService.get('avanzablog');
+        expect(sessionCookie).toEqual('true');
+        doneFn();
+      });
+
+      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      expect(req.request.method).toBe('POST');
+      req.flush(responseMsg);
     });
 
     it('should return error on login failure', (doneFn) => {
@@ -70,6 +93,29 @@ fdescribe('AuthService', () => {
       expect(req.request.method).toBe('POST');
       req.flush(errormsg, error);
     });
+
+    it('It should not set the authentication cookie if login fails', (doneFn) => {
+      const username = 'test@test.com';
+      const password = 'test123456';
+      const errormsg = 'Invalid credentials';
+      const error = {
+        status: 400,
+        statusText: errormsg,
+      };
+
+      service.login(username, password).subscribe({
+        error: (err) => {
+          const sessionCookie = cookieService.get('avanzablog');
+          expect(sessionCookie).toBeFalsy();
+          doneFn();
+        },
+      });
+
+      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      expect(req.request.method).toBe('POST');
+      req.flush(errormsg, error);
+    });
+
   });
 
   describe('Register Tests', () => {
@@ -119,10 +165,11 @@ fdescribe('AuthService', () => {
   });
 
   describe('Get Profile Tests', () => {
-    it('should return an Observable when succesfully get profile', (doneFn) => {
+    it('should return an Observable when succesfully get profile and sesion cookie is set', (doneFn) => {
+      service.setSesionCookie();
       const responseMsg = UserProfileMock();
 
-      service.getProfile().subscribe((response: any) => {
+      service.getProfile()?.subscribe((response: any) => {
         expect(response).toEqual(responseMsg);
         doneFn();
       });
@@ -133,13 +180,14 @@ fdescribe('AuthService', () => {
     });
 
     it('should return an error if user is not log in', (doneFn) => {
+      service.setSesionCookie();
       const errormsg = 'Authentication credentials were not provided';
       const error = {
         status: 400,
         statusText: errormsg,
       };
 
-      service.getProfile().subscribe({
+      service.getProfile()?.subscribe({
         error: (err) => {
           expect(err.status).toEqual(error.status);
           expect(err.statusText).toEqual(error.statusText);
@@ -153,8 +201,9 @@ fdescribe('AuthService', () => {
     });
 
     it('should save the user profile and update the login status if user is logged in', () => {
+      service.setSesionCookie();
       const responseMsg = UserProfileMock();
-      service.getProfile().subscribe();
+      service.getProfile()?.subscribe();
 
       const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/user/');
       expect(req.request.method).toBe('GET');
@@ -170,6 +219,7 @@ fdescribe('AuthService', () => {
 
   describe('Logout Tests', () => {
     it('should return an Observable when succesfully logout and reset observables', (doneFn) => {
+      service.setSesionCookie();
       const responseMsg = {
         succes: 'Logged out successfully',
       };
@@ -186,11 +236,11 @@ fdescribe('AuthService', () => {
 
       const userProfile = service.getUserProfile();
       const logStatus = service.getLogStatus();
-      const sesionStorageToken = sessionStorage.getItem('avanzablog');
+      const sesionCookie = cookieService.get('avanzablog');
 
       expect(userProfile).toEqual(null);
       expect(logStatus).toBe(false);
-      expect(sesionStorageToken).toBe(null);
+      expect(sesionCookie).toBeFalsy();
     });
 
     it('should return an error if user is not log in', (doneFn) => {
