@@ -7,6 +7,10 @@ import { User, UserProfile } from '../models/user.model';
 import { environment } from '../environments/environment.api';
 // rxjs
 import { BehaviorSubject, tap } from 'rxjs';
+// cookie service
+import { CookieService } from 'ngx-cookie-service';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +26,7 @@ export class AuthService {
     new BehaviorSubject<boolean>(false);
   public logStatus$ = this.logStatusSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   login(username: string, password: string) {
     return this.http.post(
@@ -35,7 +39,11 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
-          localStorage.setItem('avanzablog', 'true');
+          const expirationDate = new Date();
+          expirationDate.setDate(expirationDate.getDate() + 1)
+          this.cookieService.set('avanzablog', 'true', {
+            expires: expirationDate,
+          });
         })
       );
   }
@@ -52,7 +60,9 @@ export class AuthService {
   }
 
   getProfile() {
-    return this.http
+    const avanzatechCookie = this.cookieService.get('avanzablog');
+    if (avanzatechCookie) {
+      return this.http
       .get<UserProfile>(`${this.apiUrl}/auth/user/`, {
         withCredentials: true,
       })
@@ -62,6 +72,8 @@ export class AuthService {
           this.logStatusSubject.next(true);
         })
       );
+    }
+    return
   }
 
   logout() {
@@ -71,7 +83,7 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          localStorage.removeItem('avanzablog');
+          this.cookieService.delete('avanzablog');
           this.userProfileSubject.next(null);
           this.logStatusSubject.next(false);
         })

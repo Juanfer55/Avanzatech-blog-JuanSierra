@@ -68,7 +68,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'avanzatech_blog.urls'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-SESSION_COOKIE_AGE = 1209600  # 2 weeks, in seconds
+SESSION_COOKIE_AGE = 86400  # 2 weeks, in seconds
+CSRF_COOKIE_AGE = 86400  # 2 weeks, in seconds
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 

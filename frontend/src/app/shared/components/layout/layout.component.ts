@@ -27,24 +27,18 @@ export class LayoutComponent {
   logOutIcon = faArrowRightFromBracket;
 
   constructor(
-    private router: Router,
-    private authService: AuthService,
-    private toast: ToastrService) {}
+    private authService: AuthService
+    ) {}
 
   ngOnInit() {
-    if (localStorage.getItem('avanzablog')) {
-      this.authService.getProfile().subscribe();
-    }
+    this.authService.getProfile()?.subscribe();
   }
 
   logOut() {
     this.authService.logout().subscribe({
-      next: (res) => {
+      next: () => {
         this.showLogoutPopup = false;
         window.location.reload();
-        this.toast.success('Logged out successfully', 'Success', {
-          positionClass: 'toast-top-full-width',
-        });
       },
       error: (err) => {},
     });
