@@ -1,0 +1,25 @@
+<div class="logout-popup-container" data-testid="logout-popup-container">
+  <div class="logout-popup-info">
+    <div>
+      <p class="logout-text" data-testid="logout-text">
+        Are you sure you want to log out?
+      </p>
+    </div>
+    <div class="logout-buttons">
+      <button
+        class="logout-button"
+        data-testid="logout-button"
+        (click)="sendConfirmationToComponent(true)"
+      >
+        Log Out
+      </button>
+      <button
+        class="logout-button"
+        data-testid="cancel-button"
+        (click)="sendConfirmationToComponent(false)"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
