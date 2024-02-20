@@ -32,7 +32,7 @@ export class LayoutComponent {
     private toast: ToastrService) {}
 
   ngOnInit() {
-    if (sessionStorage.getItem('avanzablog')) {
+    if (localStorage.getItem('avanzablog')) {
       this.authService.getProfile().subscribe();
     }
   }

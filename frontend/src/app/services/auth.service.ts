@@ -35,7 +35,7 @@ export class AuthService {
       )
       .pipe(
         tap(() => {
-          sessionStorage.setItem('avanzablog', 'true');
+          localStorage.setItem('avanzablog', 'true');
         })
       );
   }
@@ -71,7 +71,7 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          sessionStorage.removeItem('avanzablog');
+          localStorage.removeItem('avanzablog');
           this.userProfileSubject.next(null);
           this.logStatusSubject.next(false);
         })

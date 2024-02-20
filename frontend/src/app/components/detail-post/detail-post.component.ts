@@ -97,8 +97,7 @@ export class DetailPostComponent {
       comment: [
         '',
         [
-          Validators.requiredTrue,
-          Validators.pattern(/[^\s]/),
+          Validators.required,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],
