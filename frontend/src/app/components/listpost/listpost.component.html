@@ -82,22 +82,8 @@
   [cdkConnectedOverlayOrigin]="likesOverlay"
   [cdkConnectedOverlayOpen]="likesIsOpen"
 >
-  <div class="likes-container">
-    <div *ngIf="likes.length === 0">
-      <p>No likes yet</p>
-    </div>
-    <div *ngIf="likes.length > 0">
-      <h3>Liked by:</h3>
-      <p *ngFor="let like of likes">{{ like.user.username }}</p>
-      <div *ngIf="likesTotalPages > 1" class="like-navigation">
-        <div *ngIf="likesPreviousPage" (click)="getLikes(likesPreviousPage)">
-          <fa-icon class="like-navigation-icon" [icon]="previousIcon"></fa-icon>
-        </div>
-        <p>{{ likesCurrentPage }}</p>
-        <div *ngIf="likesNextPage" (click)="getLikes(likesNextPage)">
-          <fa-icon class="like-navigation-icon" [icon]="nextIcon"></fa-icon>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-list-likes
+    [likesResponse]="likesResponse"
+    (pageChange)="getLikes($event)"
+  ></app-list-likes>
 </ng-template>

@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 // models
 import { PostWithExcerpt } from '../../models/post.model';
 import { Like } from '../../models/like.model';
-import { User, UserProfile } from '../../models/user.model';
+import { UserProfile } from '../../models/user.model';
 // services
 import { AuthService } from '../../services/auth.service';
 import { LikesService } from '../../services/likes.service';
@@ -24,12 +24,15 @@ import { Dialog } from '@angular/cdk/dialog';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 // angular cdk overlay
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ApiResponse } from '../../models/api-respond.model';
+// component
+import { ListLikesComponent } from '../list-likes/list-likes.component';
 
 
 @Component({
   selector: 'app-listpost',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, OverlayModule],
+  imports: [CommonModule, FontAwesomeModule, OverlayModule, ListLikesComponent],
   templateUrl: './listpost.component.html',
   styleUrl: './listpost.component.sass',
 })
@@ -38,13 +41,10 @@ export class ListpostComponent {
 
   user: UserProfile | null = null;
 
-  likes: Like[] = [];
-  totalLikes: number = 0;
+  totalLikes!: number;
+  likesResponse: ApiResponse<Like> | null = null;
+
   likesIsOpen = false;
-  likesTotalPages!: number;
-  likesCurrentPage!: number;
-  likesPreviousPage: string | null = null;
-  likesNextPage: string | null = null;
 
   previousIcon = faAnglesLeft;
   nextIcon = faAnglesRight;
@@ -88,12 +88,8 @@ export class ListpostComponent {
 
     return observable.subscribe({
       next: (response) => {
-        this.likes = response.results;
+        this.likesResponse = response;
         this.totalLikes = response.total_count;
-        this.likesTotalPages = response.total_pages;
-        this.likesCurrentPage = response.current_page;
-        this.likesPreviousPage = response.previous;
-        this.likesNextPage = response.next;
       },
     });
   }
