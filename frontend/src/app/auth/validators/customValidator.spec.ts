@@ -35,7 +35,7 @@ fdescribe('CustomValidators', () => {
   });
 
   describe('validateNumericPassword', () => {
-    it('should return null if password is numeric', () => {
+    it('should return  { numeric_password: true } if password is numeric', () => {
       const control = { value: '123456' } as AbstractControl;
 
       const result = CustomValidators.validateNumericPassword(control);
@@ -43,7 +43,7 @@ fdescribe('CustomValidators', () => {
       expect(result).toEqual({ numeric_password: true });
     });
 
-    it('should return { numeric_password: true } if password is not numeric', () => {
+    it('should return null if password is not numeric', () => {
       const control = { value: 'password' } as AbstractControl;
 
       const result = CustomValidators.validateNumericPassword(control);
@@ -61,7 +61,7 @@ fdescribe('CustomValidators', () => {
           } else if (fieldName === 'passwordConfirm') {
             return { value: 'password' };
           }
-          return null; // Add a return statement for all possible code paths
+          return null;
         },
       } as AbstractControl;
 
@@ -78,7 +78,7 @@ fdescribe('CustomValidators', () => {
           } else if (fieldName === 'passwordConfirm') {
             return { value: 'differentPassword' };
           }
-          return null; // Add a return statement for all possible code paths
+          return null;
         },
       } as AbstractControl;
 

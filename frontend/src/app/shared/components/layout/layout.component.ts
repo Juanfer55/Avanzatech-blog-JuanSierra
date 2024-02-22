@@ -5,7 +5,6 @@ import { RouterModule, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 // services
 import { AuthService } from '../../../services/auth.service';
-import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -33,7 +32,7 @@ export class LayoutComponent {
   }
 
   logOut() {
-    this.authService.logout().subscribe({
+    return this.authService.logout().subscribe({
       next: () => {
         this.showLogoutPopup = false;
         window.location.reload();

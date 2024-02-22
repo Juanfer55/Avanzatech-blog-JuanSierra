@@ -5,13 +5,13 @@
     </div>
     <div class="navigation">
       <ng-container *ngIf="previousPage">
-        <fa-icon [icon]="previousPageIcon" size="3x" (click)="getPosts(previousPage)"></fa-icon>
+        <fa-icon [icon]="previousPageIcon" size="3x" (click)="getPosts(previousPage)" data-testid="previous-page-button"></fa-icon>
       </ng-container>
       <p>
         Page {{ currentPage }} of {{ totalPages }}
       </p>
       <ng-container *ngIf="nextPage">
-        <fa-icon [icon]="nextPageIcon" size="3x" (click)="(getPosts(nextPage))"></fa-icon>
+        <fa-icon [icon]="nextPageIcon" size="3x" (click)="(getPosts(nextPage))" data-testid="next-page-button"></fa-icon>
       </ng-container>
     </div>
   </div>
@@ -20,6 +20,6 @@
     <p class="invitation">You should create the first post!!</p>
   </div>
   <div *ngIf="(logStatus$ | async)" [routerLink]="['/create-post']" class="create-post">
-    <fa-icon [icon]="CreatePostIcon" size="5x"></fa-icon>
+    <fa-icon [icon]="CreatePostIcon" size="5x" data-testid="create-post-button"></fa-icon>
   </div>
 </div>

@@ -1,21 +1,23 @@
-<div class="post">
+<div class="post" data-testid="page-container">
   <div class="post-header">
-    <h1 class="title">
+    <h1 class="title" data-testid="post-title">
       {{ post.title }}
     </h1>
     <div class="post-info">
-      <p class="info">Team: {{ post.author.team.name }}</p>
-      <p class="info">
+      <p class="info" data-testid="team-name">
+        Team: {{ post.author.team.name }}
+      </p>
+      <p class="info" data-testid="author-username">
         {{ post.author.username }}
       </p>
-      <p class="info">
+      <p class="info" data-testid="post-date">
         {{ post.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
       </p>
     </div>
   </div>
   <div class="content-container">
     <div class="post-content">
-      <p class="post-excerpt">
+      <p class="post-excerpt" data-testid="post-excerpt">
         {{ post.content_excerpt }}
         <span
           *ngIf="post.content_excerpt.split(' ').length === 200"
@@ -34,15 +36,16 @@
         cdkOverlayOrigin
         #likesOverlay="cdkOverlayOrigin"
       >
-        <p>{{ totalLikes }} Likes</p>
+        <p data-testid="like-count">{{ totalLikes }} Likes</p>
       </div>
       <div class="comments" (click)="detailView()">
-        <p>{{ commentCount }} Comments</p>
+        <p data-testid="comment-count">{{ commentCount }} Comments</p>
       </div>
     </div>
     <div class="post-interaction">
       <div *ngIf="user" class="like">
         <fa-icon
+          data-testid="like-button"
           *ngIf="postIsLiked"
           (click)="unlikePost()"
           class="liked"
@@ -50,6 +53,7 @@
           size="2x"
         ></fa-icon>
         <fa-icon
+          data-testid="unlike-button"
           *ngIf="!postIsLiked"
           (click)="likePost()"
           class="liked"
@@ -59,16 +63,23 @@
       </div>
       <div *ngIf="user">
         <fa-icon
+          data-testid="comment-button"
           (click)="detailView()"
           [icon]="commentIcon"
           size="2x"
         ></fa-icon>
       </div>
       <div *ngIf="hasEditPermission()">
-        <fa-icon [icon]="editIcon" size="2x" (click)="editView()"></fa-icon>
+        <fa-icon
+          [icon]="editIcon"
+          size="2x"
+          (click)="editView()"
+          data-testid="edit-button"
+        ></fa-icon>
       </div>
       <div *ngIf="hasEditPermission()">
         <fa-icon
+          data-testid="delete-button"
           [icon]="trashIcon"
           size="2x"
           (click)="openDeleteDialog()"

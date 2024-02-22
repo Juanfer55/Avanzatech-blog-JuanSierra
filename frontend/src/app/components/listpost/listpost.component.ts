@@ -81,6 +81,12 @@ export class ListpostComponent {
     }
   }
 
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
+  }
+
   getLikes(link?: string) {
     const observable = link
       ? this.likeService.getLikePage(link)
@@ -91,6 +97,9 @@ export class ListpostComponent {
         this.likesResponse = response;
         this.totalLikes = response.total_count;
       },
+      error: (err) => {
+        this.handleErrors(err);
+      }
     });
   }
 
@@ -99,6 +108,9 @@ export class ListpostComponent {
       next: (response) => {
         this.commentCount = response.total_count;
       },
+      error: (err) => {
+        this.handleErrors(err);
+      }
     });
   }
 
@@ -112,6 +124,9 @@ export class ListpostComponent {
             this.postIsLiked = true;
           }
         },
+        error: (err) => {
+          this.handleErrors(err);
+        }
       });
   }
 
@@ -122,6 +137,9 @@ export class ListpostComponent {
         this.postIsLiked = true;
         this.getLikes();
       },
+      error: (err) => {
+        this.handleErrors(err);
+      }
     });
   }
 
@@ -132,6 +150,9 @@ export class ListpostComponent {
         this.like = null;
         this.getLikes();
       },
+      error: (err) => {
+        this.handleErrors(err);
+      }
     });
   }
 
@@ -159,7 +180,7 @@ export class ListpostComponent {
 
     if (
       this.post.team_permission === 'read-and-edit' &&
-      this.user.team.id === this.post.author.team.id
+      (this.user.team.id === this.post.author.team.id)
     ) {
       return true;
     }

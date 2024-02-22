@@ -14,7 +14,7 @@ import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
 // href
-import { RouterLinkWithHref } from '@angular/router';
+import { Router, RouterLinkWithHref } from '@angular/router';
 import { UserProfile } from '../../models/user.model';
 import { Observable } from 'rxjs';
 
@@ -47,7 +47,8 @@ export class HomeComponent {
 
   constructor(
     private postService: PostService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -70,8 +71,11 @@ export class HomeComponent {
         this.requestStatus = 'success';
         window.scrollTo(0, 0);
       },
-      error: () => {
+      error: (err) => {
         this.requestStatus = 'error';
+        if (err.status === 0 || err.status === 500) {
+          this.router.navigate(['/server-error']);
+        }
       },
     });
   }
