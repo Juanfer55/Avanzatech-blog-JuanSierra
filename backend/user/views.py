@@ -27,7 +27,7 @@ class LoginView(APIView):
             login(request, user)
             return Response({'success': 'Successful login'}, status=status.HTTP_200_OK)
         else:
-            return Response({"error": "Incorrect username or password"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Incorrect username or password"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 

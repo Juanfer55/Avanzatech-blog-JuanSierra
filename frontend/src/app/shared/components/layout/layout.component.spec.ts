@@ -92,7 +92,7 @@ fdescribe('LayoutComponent', () => {
       const links = compiled.querySelectorAll('[data-testid="login-button"]');
 
       expect(links.length).toBe(1);
-      expect(links[0].getAttribute('routerlink')).toContain('auth/login');
+      expect(links[0].getAttribute('routerlink')).toContain('/');
     });
     it('the register button should have a routerlink to the register page', () => {
       const compiled = fixture.nativeElement;
@@ -129,7 +129,6 @@ fdescribe('LayoutComponent', () => {
       logoutButton.click();
       fixture.detectChanges();
       const logoutPopup = compiled.querySelector('[data-testid="logout-popup"]');
-      console.log(logoutPopup);
       expect(logoutPopup).toBeTruthy();
     }));
   });

@@ -47,6 +47,7 @@ fdescribe('RegisterComponent', () => {
     toast = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     authService.validateEmail.and.returnValue(of(false));
+    spyOn(router, 'navigate');
     fixture.detectChanges();
   });
 
@@ -99,6 +100,7 @@ fdescribe('RegisterComponent', () => {
       const registerButton = compiled.querySelector(
         '[data-testid="register-button"]'
       );
+      authService.register.and.returnValue(of(UserProfileMock()));
       registerButton.click();
       expect(authService.register).toHaveBeenCalled();
     });
@@ -113,9 +115,8 @@ fdescribe('RegisterComponent', () => {
       expect(authService.register).toHaveBeenCalled();
     });
   });
-  describe('router test', () => {
+  describe('routing test', () => {
     it('should navigate to the login page', () => {
-      spyOn(router, 'navigate');
       component.registerForm.setValue({
         username: 'test1@gmail.com',
         password: 'test123456',
@@ -125,16 +126,35 @@ fdescribe('RegisterComponent', () => {
       component.register();
       expect(router.navigate).toHaveBeenCalledWith(['/auth/login']);
     });
+    it('should have a link to the home page', () => {
+      const compiled = fixture.nativeElement;
+      const homeLink = compiled.querySelector('a[data-testid="home-link"]');
+
+      expect(homeLink).toBeTruthy();
+      expect(homeLink.getAttribute('href')).toEqual('/');
+    });
+    it('should have a link to the login page', () => {
+      const compiled = fixture.nativeElement;
+      const loginLink = compiled.querySelector('a[data-testid="login-link"]');
+
+      expect(loginLink).toBeTruthy();
+      expect(loginLink.getAttribute('href')).toEqual('/auth/login');
+    });
     it('if the auth service throws an error, should navigate to the server error page', () => {
-      spyOn(router, 'navigate');
       component.registerForm.setValue({
         username: 'test1@gmail.com',
         password: 'test123456',
         passwordConfirm: 'test123456',
       });
-      authService.register.and.returnValue(throwError(() => { status: 500 }));
+      authService.register.and.returnValue(
+        throwError(() => {
+          const error = new Error('Server Error');
+          (error as any).status = 500;
+          return error;
+        })
+      );
       component.register();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
-    })
+    });
   });
 });

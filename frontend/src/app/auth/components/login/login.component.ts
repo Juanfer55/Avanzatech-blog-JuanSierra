@@ -68,8 +68,11 @@ export class LoginComponent {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          if (err.status === 401) {
+          if (err.status === 400) {
             this.invalidCredentials = true;
+          }
+          if (err.status === 500 || err.status === 0) {
+            this.router.navigate(['/server-error']);
           }
         },
       });
