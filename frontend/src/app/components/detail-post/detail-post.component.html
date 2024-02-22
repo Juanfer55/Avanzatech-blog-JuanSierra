@@ -25,45 +25,10 @@
       <p>{{ likeCount }} Likes</p>
     </div>
     <div class="comments-container">
-      <div class="comments-tile">
-        <h1>Comments</h1>
-      </div>
-      <div *ngFor="let comment of comments" class="list-of-comments">
-        <div class="comment-header">
-          <div class="comment-info">
-            <p class="info">{{ comment.user.username }}</p>
-          </div>
-          <p class="info">
-            {{ comment.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
-          </p>
-        </div>
-        <div class="comment-content-container">
-          <p class="comment-content">
-            {{ comment.content }}
-          </p>
-        </div>
-      </div>
-      <div>
-        <div *ngIf="commentsTotalPages > 1" class="comments-navigation">
-          <div *ngIf="commentsPreviousPage">
-            <fa-icon
-              class="navigation-icon"
-              [icon]="previousIcon"
-              size="2x"
-              (click)="getComments(commentsPreviousPage)"
-            ></fa-icon>
-          </div>
-          <p>Page {{ commentsCurrentPage }} of {{ commentsTotalPages }}</p>
-          <div *ngIf="commentsNextPage">
-            <fa-icon
-              class="navigation-icon"
-              [icon]="nextIcon"
-              size="2x"
-              (click)="getComments(commentsNextPage)"
-            ></fa-icon>
-          </div>
-        </div>
-      </div>
+      <app-list-comments
+      [commentsResponse]="commentsResponse"
+      (pageChange)="getComments($event)"
+      ></app-list-comments>
     </div>
     <div class="add-comment-container" *ngIf="user !== null">
       <h4 class="title">Add new comment:</h4>

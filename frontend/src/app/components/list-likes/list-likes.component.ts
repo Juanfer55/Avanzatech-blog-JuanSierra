@@ -18,7 +18,6 @@ export class ListLikesComponent {
   @Output() pageChange = new EventEmitter<string>();
 
   likes: Like[] = [];
-  totalLikes: number = 0;
   likesIsOpen = false;
   likesTotalPages!: number;
   likesCurrentPage!: number;
@@ -31,9 +30,8 @@ export class ListLikesComponent {
   constructor() {
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.likes = this.likesResponse?.results || [];
-    this.totalLikes = this.likesResponse?.total_count || 0;
     this.likesTotalPages = this.likesResponse?.total_pages || 0;
     this.likesCurrentPage = this.likesResponse?.current_page || 0;
     this.likesPreviousPage = this.likesResponse?.previous || null;

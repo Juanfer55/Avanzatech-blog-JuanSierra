@@ -1,7 +1,7 @@
 // angular
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../../models/post.model';
 import { RouterLinkWithHref } from '@angular/router';
 // reactive forms
@@ -18,6 +18,7 @@ import { CommentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr';
 // components
 import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
+import { ListCommentsComponent } from '../list-comments/list-comments.component';
 // model
 import { UserProfile } from '../../models/user.model';
 import { Comment } from '../../models/comments.model';
@@ -25,8 +26,7 @@ import { Comment } from '../../models/comments.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
-import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
-import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
+import { ApiResponse } from '../../models/api-respond.model';
 
 @Component({
   selector: 'app-detail-post',
@@ -37,6 +37,7 @@ import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
     FontAwesomeModule,
     RouterLinkWithHref,
     ReactiveFormsModule,
+    ListCommentsComponent,
   ],
   templateUrl: './detail-post.component.html',
   styleUrl: './detail-post.component.sass',
@@ -51,16 +52,9 @@ export class DetailPostComponent {
 
   likeCount!: number;
 
-  comments: Comment[] = [];
-  commentCount!: number;
-  commentsTotalPages!: number;
-  commentsCurrentPage!: number;
-  commentsPreviousPage: string | null = null;
-  commentsNextPage: string | null = null;
+  commentsResponse!: ApiResponse<Comment>;
 
   backIcon = faCircleChevronLeft;
-  previousIcon = faAnglesLeft;
-  nextIcon = faAnglesRight;
 
   commentForm!: FormGroup;
 
@@ -73,7 +67,8 @@ export class DetailPostComponent {
     private postService: PostService,
     private likeService: LikesService,
     private commentService: CommentsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private router: Router
   ) {
     this.buildForm();
   }
@@ -83,6 +78,7 @@ export class DetailPostComponent {
       if (user) {
         this.user = user;
       }
+
     });
     this.route.paramMap.subscribe(params => {
       this.postId = Number(params.get('id'));
@@ -90,6 +86,12 @@ export class DetailPostComponent {
     this.getPost();
     this.getLikes();
     this.getComments();
+  }
+
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
   }
 
   buildForm() {
@@ -113,9 +115,8 @@ export class DetailPostComponent {
         this.requestStatus = 'success';
       },
       error: (response) => {
-        if (response.status === 404) {
           this.requestStatus = 'error';
-        }
+          this.handleErrors(response);
       }
     });
   }
@@ -124,6 +125,9 @@ export class DetailPostComponent {
     this.likeService.getPostLikes(this.postId).subscribe({
       next: (response) => {
         this.likeCount = response.total_count;
+      },
+      error: (err) => {
+        this.handleErrors(err);
       },
     });
   }
@@ -135,12 +139,10 @@ export class DetailPostComponent {
 
     return comments.subscribe({
       next: (response) => {
-        this.comments = response.results;
-        this.commentCount = response.total_count;
-        this.commentsTotalPages = response.total_pages;
-        this.commentsCurrentPage = response.current_page;
-        this.commentsPreviousPage = response.previous;
-        this.commentsNextPage = response.next;
+        this.commentsResponse = response;
+      },
+      error: (err) => {
+        this.handleErrors(err);
       },
     });
   }
@@ -154,9 +156,11 @@ export class DetailPostComponent {
           this.getComments();
           this.cleanForm();
         },
+        error: (err) => {
+          this.handleErrors(err);
+        },
       });
     }
-    console.log(this.commentForm.errors);
     return this.toastService.error('Please, fill in the form correctly', 'Error', {
       positionClass: 'toast-top-full-width',
     });

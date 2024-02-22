@@ -1,0 +1,41 @@
+<div class="comments-container">
+  <div class="comments-tile">
+    <h1>Comments</h1>
+  </div>
+  <div *ngFor="let comment of comments" class="list-of-comments">
+    <div class="comment-header">
+      <div class="comment-info">
+        <p class="info">{{ comment.user.username }}</p>
+      </div>
+      <p class="info">
+        {{ comment.created_at | date : "dd/MM/yyyy HH:mm:ss" }}
+      </p>
+    </div>
+    <div class="comment-content-container">
+      <p class="comment-content">
+        {{ comment.content }}
+      </p>
+    </div>
+  </div>
+  <div>
+    <div *ngIf="commentsTotalPages > 1" class="comments-navigation">
+      <div *ngIf="commentsPreviousPage">
+        <fa-icon
+          class="navigation-icon"
+          [icon]="previousIcon"
+          size="2x"
+          (click)="commentPageChange(commentsPreviousPage)"
+        ></fa-icon>
+      </div>
+      <p>Page {{ commentsCurrentPage }} of {{ commentsTotalPages }}</p>
+      <div *ngIf="commentsNextPage">
+        <fa-icon
+          class="navigation-icon"
+          [icon]="nextIcon"
+          size="2x"
+          (click)="commentPageChange(commentsNextPage)"
+        ></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>

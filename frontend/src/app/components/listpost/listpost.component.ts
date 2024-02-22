@@ -66,7 +66,8 @@ export class ListpostComponent {
     private commentService: CommentsService,
     private dialog: Dialog,
     private router: Router
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
     this.authService.userProfile$.subscribe((userProfile) => {
