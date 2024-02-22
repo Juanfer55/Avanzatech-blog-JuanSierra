@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { CustomValidators } from '../customValidators/customValidators';
 
 
 @Component({
@@ -45,8 +46,8 @@ export class CreatePostComponent {
 
   private buildForm() {
     this.createPostForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-      content: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10000)]],
+      title: ['', [Validators.required, CustomValidators.fieldIsNotEmpty, Validators.minLength(1), Validators.maxLength(50)]],
+      content: ['', [Validators.required, CustomValidators.fieldIsNotEmpty, Validators.minLength(1), Validators.maxLength(10000)]],
       public_permission: [2, [Validators.required]],
       authenticated_permission: [2, [Validators.required]],
       team_permission: [3, [Validators.required]],
@@ -61,10 +62,11 @@ export class CreatePostComponent {
           this.toastr.success('The post has been created!', 'Success');
           this.router.navigate(['/']);
         },
-        error: () => {
-          this.toastr.error('Something went wrong!', 'Error', {
-            positionClass: 'toast-top-full-width',
-          });
+        error: (err) => {
+          if (err.status=== 500 || err.status === 0) {
+            this.router.navigate(['/server-error']);
+          }
+
         }
       })
     }

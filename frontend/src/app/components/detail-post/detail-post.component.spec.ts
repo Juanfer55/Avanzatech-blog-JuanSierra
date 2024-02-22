@@ -105,7 +105,7 @@ fdescribe('DetailPostComponent', () => {
     it('should set requestStatus', () => {
       expect(component.requestStatus).toEqual('success');
     });
-    it('should call router.navigate', () => {
+    it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
       postService.getPost.and.returnValue(throwError({status: 0}));
       component.getPost();
@@ -116,7 +116,7 @@ fdescribe('DetailPostComponent', () => {
     it('should set totalLikes', () => {
       expect(component.likeCount).toEqual(1);
     });
-    it('should call router.navigate', () => {
+    it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
       LikeService.getPostLikes.and.returnValue(throwError({status: 0}));
       component.getLikes();
@@ -130,11 +130,66 @@ fdescribe('DetailPostComponent', () => {
       component.getComments();
       expect(component.commentsResponse).toEqual(response);
     });
-    it('should call router.navigate', () => {
+    it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
       commentsService.getComments.and.returnValue(throwError({status: 0}));
       component.getComments();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    });
+    it('should call getCommentPage if link', () => {
+      const response = ApiResponseMock([CommentMock()]);
+      commentsService.getCommentPage.and.returnValue(of(response));
+      component.getComments('link');
+      expect(commentsService.getCommentPage).toHaveBeenCalledWith('link');
+    });
+    it('should call createComment', () => {
+      const response = CommentMock();
+      commentsService.createComment.and.returnValue(of(response));
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      component.addComment();
+      expect(commentsService.createComment).toHaveBeenCalledWith(1, 'comment');
+    });
+  });
+  describe('form tests', () => {
+    it('should build form', () => {
+      component.buildForm();
+      expect(component.commentForm).toBeTruthy();
+    });
+    it('should set comment', () => {
+      component.commentForm.get('comment')?.setValue('comment');
+      expect(component.commentForm.get('comment')?.value).toEqual('comment');
+    });
+    it('should call addComment', () => {
+      spyOn(component, 'addComment');
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      component.addComment();
+      expect(component.addComment).toHaveBeenCalled();
+    });
+    it('should call getComments', () => {
+      spyOn(component, 'getComments');
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      commentsService.createComment.and.returnValue(of(CommentMock()));
+      component.addComment();
+      expect(component.getComments).toHaveBeenCalled();
+    });
+    it('should mark form as invalid if field is empty', () => {
+      component.commentForm.get('comment')?.setValue('');
+      expect(component.commentForm.get('comment')?.invalid).toBeTruthy();
+    });
+    it('should mark form as invalid if field is too long', () => {
+      component.commentForm.get('comment')?.setValue('a'.repeat(1001));
+      expect(component.commentForm.get('comment')?.invalid).toBeTruthy();
+    });
+    it('should mark form as invalid if field is full with white spaces', () => {
+      component.commentForm.get('comment')?.setValue(' '.repeat(1000));
+      expect(component.commentForm.get('comment')?.invalid).toBeTruthy();
+    });
+    it('should mark form as valid if field is valid', () => {
+      component.commentForm.get('comment')?.setValue('comment');
+      expect(component.commentForm.get('comment')?.valid).toBeTruthy();
     });
   });
 });

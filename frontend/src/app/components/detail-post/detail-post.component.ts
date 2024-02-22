@@ -27,6 +27,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../models/api-respond.model';
+// custom validators
+import { CustomValidators } from '../customValidators/customValidators';
+
 
 @Component({
   selector: 'app-detail-post',
@@ -100,6 +103,7 @@ export class DetailPostComponent {
         '',
         [
           Validators.required,
+          CustomValidators.fieldIsNotEmpty,
           Validators.minLength(1),
           Validators.maxLength(1000),
         ],

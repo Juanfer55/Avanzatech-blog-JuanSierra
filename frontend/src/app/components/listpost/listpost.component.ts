@@ -73,13 +73,11 @@ export class ListpostComponent {
     this.authService.userProfile$.subscribe((userProfile) => {
       if (userProfile) {
         this.user = userProfile;
+        this.getUserLike();
       }
     });
     this.getLikes();
     this.getComments();
-    if (this.user) {
-      this.getUserLike();
-    }
   }
 
   private handleErrors(err: any) {
@@ -158,7 +156,7 @@ export class ListpostComponent {
   }
 
   openDeleteDialog() {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+    return this.dialog.open(DeleteDialogComponent, {
       data: {
         postId: this.post.id,
         postTitle: this.post.title,

@@ -30,7 +30,7 @@
         "
       >
         <small
-          *ngIf="createPostForm.get('title')?.hasError('required')"
+          *ngIf="createPostForm.get('title')?.hasError('required') || createPostForm.get('title')?.hasError('fieldIsNotEmpty')"
           class="error-msg"
           >*Title cannot be empty</small
         >
@@ -65,7 +65,7 @@
         "
       >
         <small
-          *ngIf="createPostForm.get('content')?.hasError('required')"
+          *ngIf="createPostForm.get('content')?.hasError('required') || createPostForm.get('content')?.hasError('fieldIsNotEmpty')"
           class="error-msg"
           >*Content cannot be empty</small
         >

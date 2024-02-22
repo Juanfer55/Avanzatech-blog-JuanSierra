@@ -47,7 +47,7 @@
           ></textarea>
           <div *ngIf="commentForm.invalid && commentFormSubmitted">
             <small
-              *ngIf="commentForm.get('comment')?.hasError('required') || commentForm.get('comment')?.hasError('pattern')"
+              *ngIf="commentForm.get('comment')?.hasError('required') || commentForm.get('comment')?.hasError('fieldIsNotEmpty')"
               class="error-msg"
               >*Comment cannot be empty</small
             >

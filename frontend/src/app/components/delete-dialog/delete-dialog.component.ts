@@ -25,7 +25,7 @@ export class DeleteDialogComponent {
     private postService: PostService,
     private router: Router,
     private toast: ToastrService,
-    private dialogRef: DialogRef<DeleteDialogComponent>,
+    private dialogRef: DialogRef<string>,
     @Inject(DIALOG_DATA) public data: any
   ) {
     this.postInfo = data;
