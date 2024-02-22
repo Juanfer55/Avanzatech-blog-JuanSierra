@@ -1,5 +1,5 @@
 <header data-testid="header">
-  <a href="" data-testid="home-button">
+  <a href="/" data-testid="home-button">
     <div class="home">
       <div class="logo-img">
         <img
@@ -27,20 +27,22 @@
     <div *ngIf="isLoggedIn$ | async">
       <p class="header-text" data-testid="user-username">welcome {{ (userProfile$ | async)?.username }}</p>
     </div>
-    <div *ngIf="isLoggedIn$ | async" class="log-out" data-testid="logout-button">
-      <fa-icon [icon]="logOutIcon" size="2x" (click)="showLogoutPopup = true">
+    <div *ngIf="isLoggedIn$ | async" class="log-out" (click)="showLogoutPopup = true">
+      <fa-icon [icon]="logOutIcon" size="2x" data-testid="logout-button">
       </fa-icon>
     </div>
   </div>
 </header>
-<div *ngIf="showLogoutPopup" class="logout-popup-container">
+<div *ngIf="showLogoutPopup" class="logout-popup-container" data-testid="logout-popup">
   <div class="logout-popup-info">
     <div>
       <p class="logout-text">Are you sure you want to log out?</p>
     </div>
     <div class="logout-buttons">
-      <button class="logout-button" (click)="logOut()">Log Out</button>
-      <button class="logout-button" (click)="showLogoutPopup = false">
+      <button class="logout-button" (click)="logOut()" data-testid="logout-action">
+        Log Out
+      </button>
+      <button class="logout-button" (click)="showLogoutPopup = false" data-testid="cancel-button">
         Cancel
       </button>
     </div>

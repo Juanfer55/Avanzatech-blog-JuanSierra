@@ -8,6 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { DetailPostComponent } from './components/detail-post/detail-post.component';
 import { UpdatePostComponent } from './components/update-post/update-post.component';
+import { ServerErrorComponent } from './shared/components/server-error/server-error.component';
 
 export const routes: Routes = [
   {
@@ -45,4 +46,8 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'server-error',
+    component: ServerErrorComponent,
+  }
 ];

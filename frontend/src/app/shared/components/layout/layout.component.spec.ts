@@ -11,7 +11,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 // services
 import { AuthService } from '../../../services/auth.service';
 // rxjs
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { LayoutComponent } from './layout.component';
 import { UserProfileMock } from '../../../testing/mocks/user.mocks';
@@ -102,5 +102,80 @@ fdescribe('LayoutComponent', () => {
       expect(links.length).toBe(1);
       expect(links[0].getAttribute('routerlink')).toContain('auth/register');
     });
+    it('the home button should have a href to the home page', () => {
+      const compiled = fixture.nativeElement;
+      const links = compiled.querySelectorAll('[data-testid="home-button"]');
+      expect(links.length).toBe(1);
+      expect(links[0].getAttribute('href')).toContain('/');
+    })
+    it('if the logout button has not been clicked, the logout pop-up window will not be displayed.', fakeAsync(() => {
+      component.isLoggedIn$ = of(true);
+      component.userProfile$ = of(UserProfileMock());
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement;
+      const logoutPopup = compiled.querySelector('[data-testid="logout-popup"]');
+      expect(logoutPopup).toBeFalsy();
+    }));
+    it('if the log out button is pressed, the logout popup should be shown',  fakeAsync(() => {
+      component.isLoggedIn$ = of(true);
+      component.userProfile$ = of(UserProfileMock());
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement;
+      const logoutButton = compiled.querySelector('[data-testid="logout-button"]');
+      logoutButton.click();
+      fixture.detectChanges();
+      const logoutPopup = compiled.querySelector('[data-testid="logout-popup"]');
+      console.log(logoutPopup);
+      expect(logoutPopup).toBeTruthy();
+    }));
+  });
+  describe('behaviour tests', () => {
+    it('the showLogoutPopup should be false by default', () => {
+      expect(component.showLogoutPopup).toBeFalsy();
+    });
+
+    it('the showLogoutPopup should be true when the logout button is pressed', () => {
+      component.isLoggedIn$ = of(true);
+      component.userProfile$ = of(UserProfileMock());
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement;
+      const logoutButton = compiled.querySelector(
+        '[data-testid="logout-button"]'
+      );
+      logoutButton.click();
+      fixture.detectChanges();
+      expect(component.showLogoutPopup).toBeTruthy();
+    });
+
+    it('the showLogoutPopup should be false when the cancel button in the log out popup is pressed', () => {
+      component.isLoggedIn$ = of(true);
+      component.userProfile$ = of(UserProfileMock());
+      fixture.detectChanges();
+      const compiled = fixture.nativeElement;
+      const logoutButton = compiled.querySelector(
+        '[data-testid="logout-button"]'
+      );
+      logoutButton.click();
+      fixture.detectChanges();
+      const cancelButton = compiled.querySelector(
+        '[data-testid="cancel-button"]'
+      );
+      cancelButton.click();
+      fixture.detectChanges();
+      expect(component.showLogoutPopup).toBeFalsy();
+    });
+
+    it('the authService should be called when the component is initialized', fakeAsync(() => {
+      component.isLoggedIn$ = of(true);
+      component.userProfile$ = of(UserProfileMock());
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+      expect(authService.getProfile).toHaveBeenCalled();
+    }));
   });
 });

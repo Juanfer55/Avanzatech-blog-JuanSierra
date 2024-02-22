@@ -44,7 +44,7 @@ export class AuthService {
   }
 
   register(username: string, password: string) {
-    return this.http.post<User>(
+    return this.http.post<UserProfile>(
       `${this.apiUrl}/auth/register/`,
       {
         username: username,

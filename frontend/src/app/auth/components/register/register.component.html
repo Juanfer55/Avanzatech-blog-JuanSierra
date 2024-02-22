@@ -1,12 +1,13 @@
 <div class="register-page">
   <div class="form-container">
     <div class="img-container">
-      <img src="./../../../assets/avanzatech-logo.jpg" alt="avanzatech-logo" />
+      <img src="./../../../assets/avanzatech-logo.jpg" alt="avanzatech-logo"/>
     </div>
     <h2 class="text-center text-3xl">Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="register()" class="form">
       <div class="form-input">
         <input
+          data-testid="username-input"
           type="email"
           placeholder="Email"
           formControlName="username"
@@ -51,6 +52,7 @@
       </div>
       <div class="form-input">
         <input
+          data-testid="password-input"
           type="password"
           placeholder="Password"
           formControlName="password"
@@ -93,6 +95,7 @@
       </div>
       <div class="form-input">
         <input
+          data-testid="confirm-password-input"
           type="password"
           placeholder="Confirm password"
           formControlName="passwordConfirm"
@@ -130,7 +133,7 @@
           </small>
         </ng-container>
       </div>
-      <button type="submit" data-testid="submit-button">Register</button>
+      <button type="submit" data-testid="register-button">Register</button>
     </form>
     <div class="links">
       <p>

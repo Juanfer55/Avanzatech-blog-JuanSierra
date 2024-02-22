@@ -26,9 +26,7 @@ export class LayoutComponent {
 
   logOutIcon = faArrowRightFromBracket;
 
-  constructor(
-    private authService: AuthService
-    ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.authService.getProfile()?.subscribe();
@@ -40,7 +38,15 @@ export class LayoutComponent {
         this.showLogoutPopup = false;
         window.location.reload();
       },
-      error: (err) => {},
+      error: (err) => {
+        this.showLogoutPopup = false;
+        if (err.status === 401) {
+          window.location.reload();
+        }
+        if (err.status === 0 || err.status === 500) {
+          this.router.navigate(['/server-error']);
+        }
+      },
     });
   }
 }

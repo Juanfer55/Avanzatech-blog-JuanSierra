@@ -72,7 +72,9 @@ export class RegisterComponent {
           this.router.navigate(['/auth/login']);
         },
         error: (err) => {
-          this.toastr.error('Registration Failed');
+          if (err.status === 0 || err.status === 500) {
+            this.router.navigate(['/server-error']);
+          }
         },
       });
     } else {
