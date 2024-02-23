@@ -29,7 +29,7 @@ class PostsBaseModelSerializer(serializers.ModelSerializer):
         """Get the permission level for the given category."""
         category_permission = PostCategory.objects.filter(post=obj, category__id=category).first()
         if category_permission:
-            return category_permission.permission.permission_level
+            return category_permission.permission.id
         return None
 
     def get_public_permission(self, obj):
