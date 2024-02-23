@@ -6,6 +6,7 @@ import { environment } from '../environments/environment.api';
 // models
 import { Post, PostWithExcerpt, PostWithoutPermission } from '../models/post.model';
 import { ApiResponse } from '../models/api-respond.model';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,12 +19,9 @@ export class PostService {
   ) {}
 
   getPosts(link?: string){
-    if (link) {
-      return this.http.get<ApiResponse<PostWithExcerpt>>(link, {
-        withCredentials: true
-      })
-    }
-    return this.http.get<ApiResponse<PostWithExcerpt>>(`${this.apiUrl}/post/`, {
+    const requestLink = link ? link : `${this.apiUrl}/post/`;
+
+    return this.http.get<ApiResponse<PostWithExcerpt>>(requestLink, {
       withCredentials: true,
     });
   }
@@ -43,7 +41,7 @@ export class PostService {
   deletePost(id: number) {
     return this.http.delete(`${this.apiUrl}/blog/${id}/`, {
       withCredentials: true,
-    });
+    })
   }
 
   updatePost(id: number, post: Post) {

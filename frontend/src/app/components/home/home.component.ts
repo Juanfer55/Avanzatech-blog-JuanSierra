@@ -57,11 +57,11 @@ export class HomeComponent {
 
   getPosts(link?: string) {
     this.requestStatus = 'loading'
-    const posts = link
+    const postsRequest = link
       ? this.postService.getPosts(link)
       : this.postService.getPosts();
 
-    return posts.subscribe({
+    return postsRequest.subscribe({
       next: (response) => {
         this.posts = response.results;
         this.previousPage = response.previous;
