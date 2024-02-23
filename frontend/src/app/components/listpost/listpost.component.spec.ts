@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PostWithExcerptMock } from '../../testing/mocks/post.mocks';
 import { UserProfileMock } from '../../testing/mocks/user.mocks';
-import { of, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { LikeMock } from '../../testing/mocks/like.mocks';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
 import { CommentMock } from '../../testing/mocks/comment.mocks';
@@ -175,10 +175,11 @@ fdescribe('ListpostComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     }));
   });
-  describe('opendDeleteDialog() tests', () => {
-    it('should open the delete dialog', () => {
-      component.openDeleteDialog();
-      expect(dialog.open).toHaveBeenCalled();
+  describe('deletePost() tests', () => {
+    it('should emmit and event with the post id', () => {
+      spyOn(component.deletePostId, 'emit');
+      component.deletePost();
+      expect(component.deletePostId.emit).toHaveBeenCalledWith(component.post.id);
     });
   });
   describe('hasEditPermission() tests', () => {
@@ -337,7 +338,7 @@ fdescribe('ListpostComponent', () => {
       );
       expect(commentButton).toBeTruthy();
     });
-    it('should render the edit button',  () => {
+    it('should render the edit button', () => {
       const compiled = fixture.nativeElement;
       const editButton = compiled.querySelector('[data-testid="edit-button"]');
       expect(editButton).toBeTruthy();

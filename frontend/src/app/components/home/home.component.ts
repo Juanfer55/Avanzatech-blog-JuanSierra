@@ -1,9 +1,11 @@
 // angular
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterLinkWithHref } from '@angular/router';
 // services
 import { PostService } from '../../services/postservice.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 // models
 import { PostWithExcerpt } from '../../models/post.model';
 // components
@@ -13,9 +15,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesLeft } from '@fortawesome/free-solid-svg-icons';
 import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
-// href
-import { Router, RouterLinkWithHref } from '@angular/router';
-import { UserProfile } from '../../models/user.model';
+// rxjs
 import { Observable } from 'rxjs';
 
 @Component({
@@ -48,11 +48,18 @@ export class HomeComponent {
   constructor(
     private postService: PostService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toast: ToastrService
   ) {}
 
   ngOnInit() {
     this.getPosts();
+  }
+
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
   }
 
   getPosts(link?: string) {
@@ -73,9 +80,20 @@ export class HomeComponent {
       },
       error: (err) => {
         this.requestStatus = 'error';
-        if (err.status === 0 || err.status === 500) {
-          this.router.navigate(['/server-error']);
-        }
+        this.handleErrors(err);
+      },
+    });
+  }
+
+  deletePost(postId: number) {
+    return this.postService.deletePost(postId).subscribe({
+      next: () => {
+        this.toast.success('The Post was deleted successfully!');
+        this.getPosts();
+      },
+      error: (err) => {
+        this.toast.error('Something went wrong!');
+        this.handleErrors(err);
       },
     });
   }

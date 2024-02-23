@@ -12,19 +12,22 @@ import { PostService } from '../../services/postservice.service';
 import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons'
+import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { CustomValidators } from '../customValidators/customValidators';
-
 
 @Component({
   selector: 'app-create-post',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule, RouterLinkWithHref],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FontAwesomeModule,
+    RouterLinkWithHref,
+  ],
   templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.sass'
+  styleUrl: './create-post.component.sass',
 })
 export class CreatePostComponent {
-
   permissionOptions = [
     { value: 1, label: 'None' },
     { value: 2, label: 'read-only' },
@@ -46,12 +49,28 @@ export class CreatePostComponent {
 
   private buildForm() {
     this.createPostForm = this.formBuilder.group({
-      title: ['', [Validators.required, CustomValidators.fieldIsNotEmpty, Validators.minLength(1), Validators.maxLength(50)]],
-      content: ['', [Validators.required, CustomValidators.fieldIsNotEmpty, Validators.minLength(1), Validators.maxLength(10000)]],
+      title: [
+        '',
+        [
+          Validators.required,
+          CustomValidators.fieldIsNotEmpty,
+          Validators.minLength(1),
+          Validators.maxLength(50),
+        ],
+      ],
+      content: [
+        '',
+        [
+          Validators.required,
+          CustomValidators.fieldIsNotEmpty,
+          Validators.minLength(1),
+          Validators.maxLength(10000),
+        ],
+      ],
       public_permission: [2, [Validators.required]],
       authenticated_permission: [2, [Validators.required]],
       team_permission: [3, [Validators.required]],
-      author_permission: [3, [Validators.required]]
+      author_permission: [3, [Validators.required]],
     });
   }
 
@@ -63,16 +82,15 @@ export class CreatePostComponent {
           this.router.navigate(['/']);
         },
         error: (err) => {
-          if (err.status=== 500 || err.status === 0) {
+          if (err.status === 500 || err.status === 0) {
             this.router.navigate(['/server-error']);
           }
-
-        }
-      })
+        },
+      });
     }
     this.createPostForm.markAllAsTouched();
-    return this.toastr.error('Fill out the form properly', 'Error',
-    { positionClass: 'toast-top-full-width' });
+    return this.toastr.error('Fill out the form properly', 'Error', {
+      positionClass: 'toast-top-full-width',
+    });
   }
-
 }

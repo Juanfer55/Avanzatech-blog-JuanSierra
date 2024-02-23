@@ -1,5 +1,5 @@
 // angular
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 // models
@@ -38,6 +38,7 @@ import { ListLikesComponent } from '../list-likes/list-likes.component';
 })
 export class ListpostComponent {
   @Input() post!: PostWithExcerpt;
+  @Output() deletePostId: EventEmitter<number> = new EventEmitter<number>();
 
   user: UserProfile | null = null;
 
@@ -156,13 +157,24 @@ export class ListpostComponent {
   }
 
   openDeleteDialog() {
-    return this.dialog.open(DeleteDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
         postId: this.post.id,
         postTitle: this.post.title,
       },
     });
+
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+        this.deletePost();
+      }
+    })
   }
+
+  deletePost() {
+    this.deletePostId.emit(this.post.id);
+  }
+
 
   hasEditPermission() {
     if (!this.user) {

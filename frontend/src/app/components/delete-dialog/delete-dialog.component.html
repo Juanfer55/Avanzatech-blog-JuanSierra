@@ -7,8 +7,8 @@
         <h2 class="post-title">{{ postInfo.postTitle }}?</h2>
       </div>
       <div class="buttons-container">
-          <button class="action-buttos" (click)="deletePost()">Delete</button>
-          <button (click)="closeModal()" class="action-buttos">Cancel</button>
+          <button class="action-buttos" (click)="delete(true)">Delete</button>
+          <button (click)="delete(false)" class="action-buttos">Cancel</button>
       </div>
     </div>
   </div>

@@ -14,6 +14,7 @@ import { LikeMock } from '../../testing/mocks/like.mocks';
 import { By } from '@angular/platform-browser';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-listpost',
@@ -27,6 +28,7 @@ fdescribe('HomeComponent', () => {
   let authService: jasmine.SpyObj<AuthService>;
   let postService: jasmine.SpyObj<PostService>;
   let likesService: jasmine.SpyObj<LikesService>;
+  let toastService: jasmine.SpyObj<ToastrService>;
   let commentsService: jasmine.SpyObj<CommentsService>;
   let router: jasmine.SpyObj<Router>;
   const postWithExcerptMock = PostWithExcerptMock();
@@ -65,6 +67,10 @@ fdescribe('HomeComponent', () => {
           provide: CommentsService,
           useValue: jasmine.createSpyObj('CommentService', ['getComments']),
         },
+        {
+          provide: ToastrService,
+          useValue: jasmine.createSpyObj('ToastrService', ['error', 'success']),
+        },
       ],
     }).compileComponents();
 
@@ -73,6 +79,7 @@ fdescribe('HomeComponent', () => {
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>;
     likesService = TestBed.inject(LikesService) as jasmine.SpyObj<LikesService>;
+    toastService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
     commentsService = TestBed.inject(
       CommentsService
     ) as jasmine.SpyObj<CommentsService>;
