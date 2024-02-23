@@ -145,19 +145,19 @@ class CreateUpdateModelSerializer(serializers.ModelSerializer):
 
         If something goes wrong, the transaction is rolled back.
         """
-        # Take the user from the context
+        # I get the request user
         user = self.context['request'].user
 
-        # Take the permissions from the validated data
+        # I take the permissions from the validated data
         public = validated_data.pop('public_permission')
         authenticated = validated_data.pop('authenticated_permission')
         team = validated_data.pop('team_permission')
         author = validated_data.pop('author_permission')
 
-        # Create the post with the request user as the author
+        # First, create the post with the request user as the author
         post = Posts.objects.create(author=user, **validated_data)
 
-        # Set the permissions for the post
+        # Second, set the permissions for the post
         PostCategory.objects.bulk_create([
             PostCategory(post=post, category_id=Category.PUBLIC, permission=public),
             PostCategory(post=post, category_id=Category.AUTHENTICATED, permission=authenticated),
@@ -174,18 +174,18 @@ class CreateUpdateModelSerializer(serializers.ModelSerializer):
 
         If something goes wrong, the transaction is rolled back.
         """
-        # Update post title and content
+        # I update the post title and content
         instance.title = validated_data.get('title', instance.title)
         instance.content = validated_data.get('content', instance.content)
         instance.save()
 
-        # Take the permissions from the validated data
+        # I take the permissions from the validated data
         public = validated_data.pop('public_permission')
         authenticated = validated_data.pop('authenticated_permission')
         team = validated_data.pop('team_permission')
         author = validated_data.pop('author_permission')
 
-        # Update the permissions
+        # Finally, Update the permissions
         PostCategory.objects.filter(
             Q(post=instance, category_id=Category.PUBLIC) |
             Q(post=instance, category_id=Category.AUTHENTICATED) |

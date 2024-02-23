@@ -44,7 +44,7 @@ class CommentModelTests(TestCase):
     def test_create_comment_with_long_content_fail(self):
 
         with self.assertRaises(ValidationError):
-            Comments.objects.create(user=self.user, post=PostFactory(author=self.user), content='a'* 501)
+            Comments.objects.create(user=self.user, post=PostFactory(author=self.user), content='a'* 1001)
 
         comments_count = Comments.objects.count()
 

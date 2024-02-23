@@ -25,7 +25,7 @@ class LogOutViewTests(APITestCase):
         
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.post(self.url)
+        response = self.client.get(self.url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(response.data['success'])
@@ -33,7 +33,7 @@ class LogOutViewTests(APITestCase):
 
     def test_logout_with_unauthenticated_user_fail(self):
 
-        response = self.client.post(self.url)
+        response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertTrue(response.data['error'])
@@ -43,6 +43,6 @@ class LogOutViewTests(APITestCase):
 
         self.client.force_authenticate(user=self.user)
 
-        response = self.client.get(self.url)
+        response = self.client.delete(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

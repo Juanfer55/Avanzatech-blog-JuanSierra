@@ -45,7 +45,7 @@ class LoginViewTests(APITestCase):
 
         response = self.client.post(self.url, json.dumps(data), content_type='application/json')
         
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue(response.data['error'])
         self.assertEqual(response.data['error'], 'Incorrect username or password')
 
@@ -58,7 +58,7 @@ class LoginViewTests(APITestCase):
 
         response = self.client.post(self.url, json.dumps(data), content_type='application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue(response.data['error'])
         self.assertEqual(response.data['error'], 'Incorrect username or password')
 
@@ -73,7 +73,7 @@ class LoginViewTests(APITestCase):
 
         response = self.client.post(self.url, json.dumps(data), content_type='application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue(response.data['error'])
         self.assertEqual(response.data['error'], 'Incorrect username or password')
 
@@ -88,6 +88,6 @@ class LoginViewTests(APITestCase):
 
         response = self.client.post(self.url, json.dumps(data), content_type='application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertTrue(response.data['error'])
         self.assertEqual(response.data['error'], 'Incorrect username or password')

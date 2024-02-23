@@ -17,8 +17,8 @@
   </div>
   <div class="content-container">
     <div class="post-content">
-      <p class="post-excerpt" data-testid="post-excerpt" [innerText]="post.content_excerpt">
-        {{ post.content_excerpt }}
+      <p class="post-excerpt" data-testid="post-excerpt">
+        <span [innerText]="post.content_excerpt"></span>
         <span
           *ngIf="post.content_excerpt.split(' ').length === 200"
           (click)="detailView()"

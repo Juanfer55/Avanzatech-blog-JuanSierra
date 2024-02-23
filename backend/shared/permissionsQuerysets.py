@@ -12,7 +12,6 @@ def read_permission_querySet(user):
     that the request user has read permission for.
     """
     if user.is_authenticated:
-        print(user)
         if user.is_admin:
             return Posts.objects.all()
 
