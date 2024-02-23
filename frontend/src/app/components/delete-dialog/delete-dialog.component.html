@@ -3,12 +3,28 @@
     <div class="modal-body">
       <div class="modal-header">
         <fa-icon [icon]="warningIcon" size="4x"></fa-icon>
-        <h1>Are you sure you want to delete the post:</h1>
-        <h2 class="post-title">{{ postInfo.postTitle }}?</h2>
+        <h1 data-testid="warning-msg">
+          Are you sure you want to delete the post:
+        </h1>
+        <h2 class="post-title" data-testid="post-info">
+          {{ postInfo.postTitle }}?
+        </h2>
       </div>
       <div class="buttons-container">
-          <button class="action-buttos" (click)="delete(true)">Delete</button>
-          <button (click)="delete(false)" class="action-buttos">Cancel</button>
+        <button
+          class="action-buttos"
+          (click)="delete(true)"
+          data-testid="delete-btn"
+        >
+          Delete
+        </button>
+        <button
+          class="action-buttos"
+          (click)="delete(false)"
+          data-testid="cancel-btn"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   </div>

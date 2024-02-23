@@ -19,6 +19,7 @@ import { Post } from '../../models/post.model';
 import { ToastrService } from 'ngx-toastr';
 // components
 import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
+import { CustomValidators } from '../../shared/customValidators/customValidators';
 
 @Component({
   selector: 'app-update-post',
@@ -71,6 +72,7 @@ export class UpdatePostComponent {
         post.title,
         [
           Validators.required,
+          CustomValidators.fieldIsNotEmpty,
           Validators.minLength(1),
           Validators.maxLength(50),
         ],
@@ -79,27 +81,25 @@ export class UpdatePostComponent {
         post.content,
         [
           Validators.required,
+          CustomValidators.fieldIsNotEmpty,
           Validators.minLength(1),
           Validators.maxLength(10000),
         ],
       ],
-      public_permission: [
-        this.findPermission(post.public_permission),
-        [Validators.required],
-      ],
+      public_permission: [post.public_permission, [Validators.required]],
       authenticated_permission: [
-        this.findPermission(post.authenticated_permission),
+        post.authenticated_permission,
         [Validators.required],
       ],
-      team_permission: [
-        this.findPermission(post.team_permission),
-        [Validators.required],
-      ],
-      author_permission: [
-        this.findPermission(post.author_permission),
-        [Validators.required],
-      ],
+      team_permission: [post.team_permission, [Validators.required]],
+      author_permission: [post.author_permission, [Validators.required]],
     });
+  }
+
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
   }
 
   getPost() {
@@ -111,37 +111,29 @@ export class UpdatePostComponent {
         this.requestStatus = 'success';
       },
       error: (error) => {
-        if (error.status === 404) {
-          this.requestStatus = 'error';
-        }
+        this.handleErrors(error);
+        this.requestStatus = 'error';
       },
     });
   }
 
-  findPermission(permission: string) {
-    const permissionOption = this.permissionOptions.find(
-      (option) => option.label === permission
-    );
-    if (permissionOption) {
-      return permissionOption.value;
-    }
-    return 1;
-  }
-
   updatePost() {
+    this.updatePostForm.markAllAsTouched();
+
     if (this.updatePostForm.valid) {
-      const post = this.updatePostForm.value;
-      return this.postService.updatePost(this.postId, post).subscribe({
+      const formValue = this.updatePostForm.value;
+      return this.postService.updatePost(this.postId, formValue).subscribe({
         next: () => {
           this.toastr.success('The post has been updated!', 'Success');
           this.router.navigate(['/post', this.postId]);
         },
         error: (error) => {
-          console.log(error);
+          this.toastr.error('The post could not be updated', 'Error');
+          this.handleErrors(error);
         },
       });
     }
-    this.updatePostForm.markAllAsTouched();
+
     return this.toastr.error('Fill out the form properly', 'Error');
   }
 }

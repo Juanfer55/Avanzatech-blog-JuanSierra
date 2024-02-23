@@ -10,10 +10,10 @@ export const PostMock = (): Post => {
     author: AuthorMock(),
     title: faker.lorem.sentence(),
     content: faker.lorem.paragraph(),
-    public_permission: 'read-and-edit',
-    authenticated_permission: 'read-and-edit',
-    team_permission: 'read-and-edit',
-    author_permission: 'read-and-edit',
+    public_permission: 3,
+    authenticated_permission: 3,
+    team_permission: 3,
+    author_permission: 3,
     created_at: faker.date.recent().toDateString(),
   };
 }
@@ -24,10 +24,10 @@ export const PostWithExcerptMock = (): PostWithExcerpt => {
     author: AuthorMock(),
     title: faker.lorem.sentence(),
     content_excerpt: faker.lorem.paragraph(),
-    public_permission: 'read-and-edit',
-    authenticated_permission: 'read-and-edit',
-    team_permission: 'read-and-edit',
-    author_permission: 'read-and-edit',
+    public_permission: 3,
+    authenticated_permission: 3,
+    team_permission: 3,
+    author_permission: 3,
     created_at: faker.date.recent().toDateString(),
   };
 }

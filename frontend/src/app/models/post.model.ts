@@ -5,10 +5,10 @@ export interface Post {
   title: string;
   author: Author;
   content: string;
-  public_permission: string;
-  authenticated_permission: string;
-  team_permission: string;
-  author_permission: string;
+  public_permission: number;
+  authenticated_permission: number;
+  team_permission: number;
+  author_permission: number;
   created_at: string;
 }
 

@@ -25,6 +25,7 @@
           formControlName="title"
           placeholder="Enter the title of the post"
           id="title"
+          name="title"
         />
       </div>
       <div
@@ -60,6 +61,7 @@
         placeholder="Enter the content of the post"
         formControlName="content"
         id="content"
+        name="content"
       >
       </textarea>
       <div
@@ -92,6 +94,7 @@
           id="public"
           formControlName="public_permission"
           class="access-options"
+          name="public_permission"
         >
           <option
             *ngFor="let option of permissionOptions"
@@ -107,6 +110,7 @@
           id="public"
           formControlName="authenticated_permission"
           class="access-options"
+          name="authenticated_permission"
         >
           <option
             class="form-options"
@@ -123,6 +127,7 @@
           id="public"
           formControlName="team_permission"
           class="access-options"
+          name="team_permission"
         >
           <option
             *ngFor="let option of permissionOptions"
@@ -138,6 +143,7 @@
           id="public"
           formControlName="author_permission"
           class="access-options"
+          name="author_permission"
         >
           <option
             *ngFor="let option of permissionOptions"

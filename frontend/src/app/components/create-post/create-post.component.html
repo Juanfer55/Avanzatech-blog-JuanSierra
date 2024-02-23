@@ -21,6 +21,7 @@
           formControlName="title"
           placeholder="Enter the title of the post"
           id="title"
+          name="title"
         />
       </div>
       <div
@@ -30,7 +31,10 @@
         "
       >
         <small
-          *ngIf="createPostForm.get('title')?.hasError('required') || createPostForm.get('title')?.hasError('fieldIsNotEmpty')"
+          *ngIf="
+            createPostForm.get('title')?.hasError('required') ||
+            createPostForm.get('title')?.hasError('fieldIsNotEmpty')
+          "
           class="error-msg"
           >*Title cannot be empty</small
         >
@@ -56,6 +60,7 @@
         placeholder="Enter the content of the post"
         formControlName="content"
         id="content"
+        name="content"
       >
       </textarea>
       <div
@@ -65,7 +70,10 @@
         "
       >
         <small
-          *ngIf="createPostForm.get('content')?.hasError('required') || createPostForm.get('content')?.hasError('fieldIsNotEmpty')"
+          *ngIf="
+            createPostForm.get('content')?.hasError('required') ||
+            createPostForm.get('content')?.hasError('fieldIsNotEmpty')
+          "
           class="error-msg"
           >*Content cannot be empty</small
         >
@@ -88,6 +96,7 @@
           id="public"
           formControlName="public_permission"
           class="access-options"
+          name="public_permission"
         >
           <option
             *ngFor="let option of permissionOptions"
@@ -103,6 +112,7 @@
           id="public"
           formControlName="authenticated_permission"
           class="access-options"
+          name="authenticated_permission"
         >
           <option
             class="form-options"
@@ -119,6 +129,7 @@
           id="public"
           formControlName="team_permission"
           class="access-options"
+          name="team_permission"
         >
           <option
             *ngFor="let option of permissionOptions"
@@ -134,6 +145,7 @@
           id="public"
           formControlName="author_permission"
           class="access-options"
+          name="author_permission"
         >
           <option
             *ngFor="let option of permissionOptions"

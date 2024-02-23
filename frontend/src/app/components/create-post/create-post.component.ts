@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
-import { CustomValidators } from '../customValidators/customValidators';
+import { CustomValidators } from '../../shared/customValidators/customValidators';
 
 @Component({
   selector: 'app-create-post',

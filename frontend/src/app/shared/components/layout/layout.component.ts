@@ -9,6 +9,9 @@ import { AuthService } from '../../../services/auth.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { UserProfile } from '../../../models/user.model';
+// angular cdk dialog
+import { Dialog } from '@angular/cdk/dialog';
+import { LogoutDialogComponent } from '../../../components/logout-dialog/logout-dialog.component';
 
 @Component({
   selector: 'app-layout',
@@ -21,11 +24,13 @@ export class LayoutComponent {
   userProfile$: Observable<UserProfile | null> = this.authService.userProfile$;
   isLoggedIn$: Observable<boolean> = this.authService.logStatus$;
 
-  showLogoutPopup = false;
-
   logOutIcon = faArrowRightFromBracket;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private dialog: Dialog
+  ) {}
 
   ngOnInit() {
     this.authService.getProfile()?.subscribe();
@@ -34,11 +39,9 @@ export class LayoutComponent {
   logOut() {
     return this.authService.logout().subscribe({
       next: () => {
-        this.showLogoutPopup = false;
         window.location.reload();
       },
       error: (err) => {
-        this.showLogoutPopup = false;
         if (err.status === 401) {
           window.location.reload();
         }
@@ -46,6 +49,16 @@ export class LayoutComponent {
           this.router.navigate(['/server-error']);
         }
       },
+    });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(LogoutDialogComponent);
+
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+        this.logOut();
+      }
     });
   }
 }

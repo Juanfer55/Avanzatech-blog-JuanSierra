@@ -2,7 +2,11 @@
   <div class="comments-tile">
     <h1>Comments</h1>
   </div>
-  <div *ngFor="let comment of comments" class="list-of-comments">
+  <div
+    *ngFor="let comment of comments"
+    class="list-of-comments"
+    data-testid="comment-list"
+  >
     <div class="comment-header">
       <div class="comment-info">
         <p class="info">{{ comment.user.username }}</p>
@@ -18,7 +22,11 @@
     </div>
   </div>
   <div>
-    <div *ngIf="commentsTotalPages > 1" class="comments-navigation">
+    <div
+      *ngIf="commentsTotalPages > 1"
+      class="comments-navigation"
+      data-testid="pagination"
+    >
       <div *ngIf="commentsPreviousPage">
         <fa-icon
           class="navigation-icon"

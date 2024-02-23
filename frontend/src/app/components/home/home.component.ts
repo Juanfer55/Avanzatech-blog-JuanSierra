@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 // models
 import { PostWithExcerpt } from '../../models/post.model';
 // components
-import { ListpostComponent } from '../listpost/listpost.component';
+import { ListpostComponent } from '../list-post/listpost.component';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';

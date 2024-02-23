@@ -142,4 +142,42 @@ fdescribe('CreatePostComponent', () => {
       expect(toastService.error).toHaveBeenCalled();
     });
   });
+  describe('render tests', () => {
+    it('should render the back icon', () => {
+      const backIcon = fixture.debugElement.nativeElement.querySelector('fa-icon');
+      expect(backIcon).toBeTruthy();
+    });
+    it('should render the title input', () => {
+      const titleInput = fixture.debugElement.nativeElement.querySelector('input[name="title"]');
+      expect(titleInput).toBeTruthy();
+    });
+    it('should render the content input', () => {
+      const contentInput = fixture.debugElement.nativeElement.querySelector('textarea[name="content"]');
+      expect(contentInput).toBeTruthy();
+    });
+    it('should render the public permission select', () => {
+      const publicPermissionSelect = fixture.debugElement.nativeElement.querySelector('select[name="public_permission"]');
+      expect(publicPermissionSelect).toBeTruthy();
+    });
+    it('should render the authenticated permission select', () => {
+      const authenticatedPermissionSelect = fixture.debugElement.nativeElement.querySelector('select[name="authenticated_permission"]');
+      expect(authenticatedPermissionSelect).toBeTruthy();
+    });
+    it('should render the team permission select', () => {
+      const teamPermissionSelect = fixture.debugElement.nativeElement.querySelector('select[name="team_permission"]');
+      expect(teamPermissionSelect).toBeTruthy();
+    });
+    it('should render the author permission select', () => {
+      const authorPermissionSelect = fixture.debugElement.nativeElement.querySelector('select[name="author_permission"]');
+      expect(authorPermissionSelect).toBeTruthy();
+    });
+    it('should render the submit button', () => {
+      const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+      expect(submitButton).toBeTruthy();
+    });
+    it('should have a router link to home', () => {
+      const routerLink = fixture.debugElement.nativeElement.querySelector('[class="cancel-button"]');
+      expect(routerLink.getAttribute('routerLink')).toBe('/');
+    });
+  });
 });

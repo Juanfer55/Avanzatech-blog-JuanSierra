@@ -80,7 +80,7 @@ fdescribe('DetailPostComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  describe('ngOnInit', () => {
+  describe('ngOnInit() tests', () => {
     it('should set user', () => {
       expect(component.user).toEqual(userProfile);
     });

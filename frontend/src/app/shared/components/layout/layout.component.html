@@ -27,13 +27,13 @@
     <div *ngIf="isLoggedIn$ | async">
       <p class="header-text" data-testid="user-username">welcome {{ (userProfile$ | async)?.username }}</p>
     </div>
-    <div *ngIf="isLoggedIn$ | async" class="log-out" (click)="showLogoutPopup = true">
+    <div *ngIf="isLoggedIn$ | async" class="log-out" (click)="openDialog()">
       <fa-icon [icon]="logOutIcon" size="2x" data-testid="logout-button">
       </fa-icon>
     </div>
   </div>
 </header>
-<div *ngIf="showLogoutPopup" class="logout-popup-container" data-testid="logout-popup">
+<!-- <div *ngIf="showLogoutPopup" class="logout-popup-container" data-testid="logout-popup">
   <div class="logout-popup-info">
     <div>
       <p class="logout-text">Are you sure you want to log out?</p>
@@ -47,5 +47,5 @@
       </button>
     </div>
   </div>
-</div>
+</div> -->
 <router-outlet />

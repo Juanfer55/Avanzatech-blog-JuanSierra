@@ -28,7 +28,7 @@ import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../models/api-respond.model';
 // custom validators
-import { CustomValidators } from '../customValidators/customValidators';
+import { CustomValidators } from '../../shared/customValidators/customValidators';
 
 
 @Component({

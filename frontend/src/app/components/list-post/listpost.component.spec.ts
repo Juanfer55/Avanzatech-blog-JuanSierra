@@ -185,12 +185,12 @@ fdescribe('ListpostComponent', () => {
   describe('hasEditPermission() tests', () => {
     it('should return true if the user is not logged in and the public permission is read-and-edit', () => {
       component.user = null;
-      component.post.public_permission = 'read-and-edit';
+      component.post.public_permission = 3;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is not logged in and the public permission is not read-and-edit', () => {
       component.user = null;
-      component.post.public_permission = 'read-only';
+      component.post.public_permission = 2;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return true if the user is an admin', () => {
@@ -201,7 +201,7 @@ fdescribe('ListpostComponent', () => {
     it('should return true if the user is the author and the author permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.id = component.post.author.id;
-      component.post.author_permission = 'read-and-edit';
+      component.post.author_permission = 3;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is the author and the author permission is not read-and-edit', () => {
@@ -209,53 +209,53 @@ fdescribe('ListpostComponent', () => {
       component.user.is_admin = false;
       component.user.id = 1;
       component.post.author.id = 1;
-      component.post.author_permission = 'read-only';
+      component.post.author_permission = 2;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return true if the user is in the same team and the team permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.team.id = component.post.author.team.id;
-      component.post.team_permission = 'read-and-edit';
+      component.post.team_permission = 3;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is in the same team and the team permission is not read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id;
-      component.post.team_permission = 'read-only';
-      component.post.authenticated_permission = 'read-only';
-      component.post.public_permission = 'read-only';
-      component.post.author_permission = 'read-only';
+      component.post.team_permission = 2;
+      component.post.authenticated_permission = 2;
+      component.post.public_permission = 2;
+      component.post.author_permission = 2;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return false if the user is on a different team and the team permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 'read-and-edit';
-      component.post.authenticated_permission = 'read-only';
-      component.post.public_permission = 'read-only';
-      component.post.author_permission = 'read-only';
+      component.post.team_permission = 3;
+      component.post.authenticated_permission = 2;
+      component.post.public_permission = 2;
+      component.post.author_permission = 2;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return true if the user is on a different team and the authenticated permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 'read-only';
-      component.post.authenticated_permission = 'read-and-edit';
-      component.post.public_permission = 'read-only';
-      component.post.author_permission = 'read-only';
+      component.post.team_permission = 2;
+      component.post.authenticated_permission = 3;
+      component.post.public_permission = 2;
+      component.post.author_permission = 2;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is on a different team and the authenticated permission is not read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 'read-only';
-      component.post.authenticated_permission = 'read-only';
-      component.post.public_permission = 'read-only';
-      component.post.author_permission = 'read-only';
+      component.post.team_permission = 2;
+      component.post.authenticated_permission = 2;
+      component.post.public_permission = 2;
+      component.post.author_permission = 2;
       expect(component.hasEditPermission()).toBeFalsy();
     });
   });

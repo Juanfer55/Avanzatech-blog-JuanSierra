@@ -16,11 +16,7 @@ export class LogoutDialogComponent {
     private dialogRef: DialogRef<boolean>,
   ) {}
 
-  closeModal() {
-    this.dialogRef.close();
-  }
-
-  sendConfirmationToComponent(confirmation: boolean) {
+  logoutConfirmation(confirmation: boolean) {
     this.dialogRef.close(confirmation);
   }
 }

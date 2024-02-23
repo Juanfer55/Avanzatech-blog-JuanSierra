@@ -159,7 +159,6 @@ export class ListpostComponent {
   openDeleteDialog() {
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: {
-        postId: this.post.id,
         postTitle: this.post.title,
       },
     });
@@ -178,7 +177,7 @@ export class ListpostComponent {
 
   hasEditPermission() {
     if (!this.user) {
-      return this.post.public_permission === 'read-and-edit';
+      return this.post.public_permission === 3;
     }
 
     if (this.user.is_admin) {
@@ -186,18 +185,18 @@ export class ListpostComponent {
     }
 
     if (this.user.id === this.post.author.id) {
-      return this.post.author_permission === 'read-and-edit';
+      return this.post.author_permission === 3;
     }
 
     if (
-      this.post.team_permission === 'read-and-edit' &&
+      this.post.team_permission === 3 &&
       (this.user.team.id === this.post.author.team.id)
     ) {
       return true;
     }
 
     return (
-      this.post.authenticated_permission === 'read-and-edit' &&
+      this.post.authenticated_permission === 3 &&
       (this.user.team.id !== this.post.author.team.id) &&
       (this.user.id !== this.post.author.id)
     );

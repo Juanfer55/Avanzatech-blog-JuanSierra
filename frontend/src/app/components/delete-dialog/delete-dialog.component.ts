@@ -4,6 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 // dialog
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { DeleteDialogData } from '../../models/deleteDialog.model';
 
 @Component({
   selector: 'app-delete-dialog',
@@ -15,11 +16,11 @@ import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 export class DeleteDialogComponent {
   warningIcon = faTriangleExclamation;
 
-  postInfo: any;
+  postInfo: DeleteDialogData;
 
   constructor(
     private dialogRef: DialogRef<boolean>,
-    @Inject(DIALOG_DATA) public data: any
+    @Inject(DIALOG_DATA) public data: DeleteDialogData
   ) {
     this.postInfo = data;
   }
