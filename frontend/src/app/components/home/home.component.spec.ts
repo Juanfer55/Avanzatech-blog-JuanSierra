@@ -17,8 +17,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-listpost',
-  template: '<div>ListpostComponent Stub</div>',
+  selector: 'app-subcomponent',
+  template: '<div>sub component</div>',
 })
 export class StubListpostComponent {}
 
@@ -34,7 +34,7 @@ fdescribe('HomeComponent', () => {
   const postWithExcerptMock = PostWithExcerptMock();
 
   beforeEach(async () => {
-    const postServiceSpy = jasmine.createSpyObj('PostService', ['getPosts']);
+    const postServiceSpy = jasmine.createSpyObj('PostService', ['getPosts', 'deletePost']);
     const authServiceSpy = jasmine.createSpyObj('AuthService', [
       'logStatus$',
       'userProfile$',
@@ -43,7 +43,9 @@ fdescribe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HomeComponent,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'server-error', component: StubListpostComponent},
+        ]),
         CommonModule,
         FontAwesomeModule,
       ],
@@ -80,9 +82,7 @@ fdescribe('HomeComponent', () => {
     postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>;
     likesService = TestBed.inject(LikesService) as jasmine.SpyObj<LikesService>;
     toastService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
-    commentsService = TestBed.inject(
-      CommentsService
-    ) as jasmine.SpyObj<CommentsService>;
+    commentsService = TestBed.inject(CommentsService) as jasmine.SpyObj<CommentsService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
     const mocks = {
@@ -107,42 +107,7 @@ fdescribe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  describe('render tests', () => {
-    it('should render the list post component', () => {
-      const listPostComponent = fixture.debugElement.query(
-        By.css('app-listpost')
-      );
-      expect(listPostComponent).toBeTruthy();
-    });
-    it('should render the previous page button', () => {
-      const previousPageButton = fixture.debugElement.query(
-        By.css('[data-testid="previous-page-button"]')
-      );
-      expect(previousPageButton).toBeTruthy();
-    })
-    it('should render the next page button', () => {
-      const nextPageButton = fixture.debugElement.query(
-        By.css('[data-testid="next-page-button"]')
-      );
-      expect(nextPageButton).toBeTruthy();
-    });
-    it('should not render the create post button if the user is not login', () => {
-      const createPostButton = fixture.debugElement.query(
-        By.css('[data-testid="create-post-button"]')
-      );
-      expect(createPostButton).toBeFalsy();
-    });
-    it('should render the create post button if the user is login', fakeAsync(() => {
-      component.logStatus$ = of(true);
-      fixture.detectChanges();
-      tick();
-      const createPostButton = fixture.debugElement.query(
-        By.css('[data-testid="create-post-button"]')
-      );
-      expect(createPostButton).toBeTruthy();
-    }));
-  });
-  describe('getPosts', () => {
+  describe('getPosts() tests', () => {
     it('should get posts', () => {
       expect(postService.getPosts).toHaveBeenCalled();
     });
@@ -186,5 +151,63 @@ fdescribe('HomeComponent', () => {
       component.getPosts();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
+  });
+  describe('deletePost() tests', () => {
+    it('should call the deletePost method', () => {
+      postService.deletePost.and.returnValue(of({}));
+      component.deletePost(1);
+      expect(postService.deletePost).toHaveBeenCalledWith(1);
+    });
+    it('should call the getPosts method', () => {
+      postService.deletePost.and.returnValue(of({}));
+      postService.getPosts.and.returnValue(of(ApiResponseMock([postWithExcerptMock])));
+      component.deletePost(1);
+      expect(postService.getPosts).toHaveBeenCalled();
+    });
+    it('should call the toastr success method', () => {
+      postService.deletePost.and.returnValue(of({}));
+      component.deletePost(1);
+      expect(toastService.success).toHaveBeenCalled();
+    });
+    it('should call the toastr error method', () => {
+      postService.deletePost.and.returnValue(throwError({ status: 500 }));
+      component.deletePost(1);
+      expect(toastService.error).toHaveBeenCalled();
+    });
+  });
+  describe('render tests', () => {
+    it('should render the list post component', () => {
+      const listPostComponent = fixture.debugElement.query(
+        By.css('app-listpost')
+      );
+      expect(listPostComponent).toBeTruthy();
+    });
+    it('should render the previous page button', () => {
+      const previousPageButton = fixture.debugElement.query(
+        By.css('[data-testid="previous-page-button"]')
+      );
+      expect(previousPageButton).toBeTruthy();
+    })
+    it('should render the next page button', () => {
+      const nextPageButton = fixture.debugElement.query(
+        By.css('[data-testid="next-page-button"]')
+      );
+      expect(nextPageButton).toBeTruthy();
+    });
+    it('should not render the create post button if the user is not login', () => {
+      const createPostButton = fixture.debugElement.query(
+        By.css('[data-testid="create-post-button"]')
+      );
+      expect(createPostButton).toBeFalsy();
+    });
+    it('should render the create post button if the user is login', fakeAsync(() => {
+      component.logStatus$ = of(true);
+      fixture.detectChanges();
+      tick();
+      const createPostButton = fixture.debugElement.query(
+        By.css('[data-testid="create-post-button"]')
+      );
+      expect(createPostButton).toBeTruthy();
+    }));
   });
 });
