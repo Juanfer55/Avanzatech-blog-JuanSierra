@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 // services
 import { AuthService } from '../../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 // icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +13,7 @@ import { UserProfile } from '../../../models/user.model';
 // angular cdk dialog
 import { Dialog } from '@angular/cdk/dialog';
 import { LogoutDialogComponent } from '../../../components/logout-dialog/logout-dialog.component';
+import { PostService } from '../../../services/postservice.service';
 
 @Component({
   selector: 'app-layout',
@@ -28,26 +30,51 @@ export class LayoutComponent {
 
   constructor(
     private authService: AuthService,
+    private toast: ToastrService,
     private router: Router,
-    private dialog: Dialog
+    private dialog: Dialog,
+    private postservice: PostService
   ) {}
 
   ngOnInit() {
-    this.authService.getProfile()?.subscribe();
+    this.getProfile();
+    this.getPosts();
   }
 
-  logOut() {
-    return this.authService.logout().subscribe({
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
+  }
+
+  getPosts() {
+    return this.postservice.getPosts().subscribe({
       next: () => {
-        window.location.reload();
+        window.scrollTo(0, 0);
       },
       error: (err) => {
-        if (err.status === 401) {
-          window.location.reload();
-        }
-        if (err.status === 0 || err.status === 500) {
-          this.router.navigate(['/server-error']);
-        }
+        this.handleErrors(err);
+      },
+    });
+  }
+
+  getProfile() {
+    return this.authService.getProfile()?.subscribe({
+      error: (err) => {
+        this.handleErrors(err);
+      },
+    });
+  }
+
+  logout() {
+    return this.authService.logout().subscribe({
+      next: () => {
+        this.toast.success('You have been logged out');
+        this.getPosts();
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.handleErrors(err);
       },
     });
   }
@@ -57,7 +84,7 @@ export class LayoutComponent {
 
     dialogRef.closed.subscribe((result) => {
       if (result) {
-        this.logOut();
+        this.logout();
       }
     });
   }

@@ -17,6 +17,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye as seeIcon} from '@fortawesome/free-regular-svg-icons';
 import { faEye as unSeeIcon} from '@fortawesome/free-solid-svg-icons';
 import { faX } from '@fortawesome/free-solid-svg-icons';
+import { PostService } from '../../../services/postservice.service';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class LoginComponent {
 
   constructor(
     private authService: AuthService,
+    private postService: PostService,
     private router: Router,
     private formBuilder: FormBuilder
   ) {
@@ -57,6 +59,24 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
+  }
+
+  getPosts() {
+    return this.postService.getPosts().subscribe({
+      next: () => {
+        window.scrollTo(0, 0);
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.handleErrors(err);
+      },
+    });
+  }
+
   login() {
     this.formSubmitted = true;
     if (this.loginForm.valid) {
@@ -65,14 +85,13 @@ export class LoginComponent {
 
       this.authService.login(username, password).subscribe({
         next: () => {
-          this.router.navigate(['/']);
+          this.getPosts();
         },
         error: (err) => {
           if (err.status === 400) {
             this.invalidCredentials = true;
-          }
-          if (err.status === 500 || err.status === 0) {
-            this.router.navigate(['/server-error']);
+          } else {
+            this.handleErrors(err);
           }
         },
       });

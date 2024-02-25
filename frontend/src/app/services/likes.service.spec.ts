@@ -1,15 +1,12 @@
-// angular
 import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-// service
 import { LikesService } from './likes.service';
-// mocks
 import { LikeMock } from '../testing/mocks/like.mocks';
 
-fdescribe('LikesService', () => {
+describe('LikesService', () => {
   let service: LikesService;
   let httpMock: HttpTestingController;
 

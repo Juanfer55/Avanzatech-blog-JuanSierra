@@ -9,7 +9,7 @@ import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-fdescribe('CreatePostComponent', () => {
+describe('CreatePostComponent', () => {
   let component: CreatePostComponent;
   let fixture: ComponentFixture<CreatePostComponent>;
   let postService: jasmine.SpyObj<PostService>;

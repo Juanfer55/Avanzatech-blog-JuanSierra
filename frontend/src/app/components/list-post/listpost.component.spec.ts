@@ -19,7 +19,7 @@ import { CommentMock } from '../../testing/mocks/comment.mocks';
 import { Comment } from '../../models/comments.model';
 import { Dialog } from '@angular/cdk/dialog';
 
-fdescribe('ListpostComponent', () => {
+describe('ListpostComponent', () => {
   let component: ListpostComponent;
   let fixture: ComponentFixture<ListpostComponent>;
   let authService: jasmine.SpyObj<AuthService>;

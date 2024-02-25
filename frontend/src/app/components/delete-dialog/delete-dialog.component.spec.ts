@@ -1,10 +1,9 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DeleteDialogComponent } from './delete-dialog.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 
-fdescribe('DeleteDialogComponent', () => {
+describe('DeleteDialogComponent', () => {
   let component: DeleteDialogComponent;
   let fixture: ComponentFixture<DeleteDialogComponent>;
   let dialogRef: jasmine.SpyObj<DialogRef>;

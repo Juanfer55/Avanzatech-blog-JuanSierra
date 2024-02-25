@@ -5,7 +5,7 @@ import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
 import { generateCommentsMock } from '../../testing/mocks/comment.mocks';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ListCommentsComponent', () => {
+describe('ListCommentsComponent', () => {
   let component: ListCommentsComponent;
   let fixture: ComponentFixture<ListCommentsComponent>;
   const comments = generateCommentsMock(10);

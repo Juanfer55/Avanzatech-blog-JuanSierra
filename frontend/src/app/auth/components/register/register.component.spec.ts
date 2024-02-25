@@ -1,19 +1,14 @@
-// angular
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-// components
 import { RegisterComponent } from './register.component';
-// services
 import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-// mocks
 import { UserProfileMock } from '../../../testing/mocks/user.mocks';
-// rxjs
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
-fdescribe('RegisterComponent', () => {
+describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authService: jasmine.SpyObj<AuthService>;

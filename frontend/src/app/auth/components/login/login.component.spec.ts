@@ -1,16 +1,12 @@
-// angular
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-// imports
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// component
 import { LoginComponent } from './login.component';
-// services
 import { AuthService } from '../../../services/auth.service';
 import { of, throwError } from 'rxjs';
 
-fdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: jasmine.SpyObj<AuthService>;

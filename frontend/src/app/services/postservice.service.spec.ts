@@ -1,15 +1,12 @@
-// angular
 import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-// service
 import { PostService } from './postservice.service';
-// mocks
 import { PostMock, PostWithExcerptMock } from '../testing/mocks/post.mocks';
 
-fdescribe('PostserviceService', () => {
+describe('PostserviceService', () => {
   let service: PostService;
   let httpMock: HttpTestingController;
 

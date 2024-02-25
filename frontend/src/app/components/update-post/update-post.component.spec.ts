@@ -8,9 +8,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { PostMock } from '../../testing/mocks/post.mocks';
-import { de } from '@faker-js/faker';
 
-fdescribe('UpdatePostComponent', () => {
+describe('UpdatePostComponent', () => {
   let component: UpdatePostComponent;
   let fixture: ComponentFixture<UpdatePostComponent>;
   let postService: jasmine.SpyObj<PostService>;

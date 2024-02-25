@@ -4,7 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
 import { LikeMock } from '../../testing/mocks/like.mocks';
 
-fdescribe('ListLikesComponent', () => {
+describe('ListLikesComponent', () => {
   let component: ListLikesComponent;
   let fixture: ComponentFixture<ListLikesComponent>;
   let likesResponse = ApiResponseMock([LikeMock()]);

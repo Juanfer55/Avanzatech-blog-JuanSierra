@@ -20,6 +20,8 @@ import { ToastrService } from 'ngx-toastr';
 // components
 import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
 import { CustomValidators } from '../../shared/customValidators/customValidators';
+// environment
+import { environment } from '../../environments/environment.api';
 
 @Component({
   selector: 'app-update-post',
@@ -45,6 +47,8 @@ export class UpdatePostComponent {
 
   post: Post | null = null;
 
+  postPage!: number;
+
   requestStatus!: 'loading' | 'success' | 'error';
 
   updatePostForm!: FormGroup;
@@ -62,6 +66,9 @@ export class UpdatePostComponent {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.postId = params['id'];
+    });
+    this.postService.posts$.subscribe((posts) => {
+      this.postPage = posts.current_page;
     });
     this.getPost();
   }
@@ -125,6 +132,7 @@ export class UpdatePostComponent {
       return this.postService.updatePost(this.postId, formValue).subscribe({
         next: () => {
           this.toastr.success('The post has been updated!', 'Success');
+          this.updatePostPage();
           this.router.navigate(['/post', this.postId]);
         },
         error: (error) => {
@@ -134,6 +142,18 @@ export class UpdatePostComponent {
       });
     }
 
-    return this.toastr.error('Fill out the form properly', 'Error');
+    return this.toastr.error('Fill out the form properly', 'Error', {
+      positionClass: 'toast-top-full-width',
+    });
+  }
+
+  updatePostPage() {
+    const currentPage = this.postPage;
+    const pagelink = `${environment.apiUrl}/post/?page=${currentPage}`;
+    return this.postService.getPosts(pagelink).subscribe({
+      error: (error) => {
+        this.handleErrors(error);
+      },
+    });
   }
 }

@@ -1,16 +1,13 @@
-// angular
 import { TestBed } from '@angular/core/testing';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-// services
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
-// mocks
 import { UserProfileMock } from '../testing/mocks/user.mocks';
 
-fdescribe('AuthService', () => {
+describe('AuthService', () => {
   let service: AuthService;
   let cookieService: CookieService;
   let httpMock: HttpTestingController;

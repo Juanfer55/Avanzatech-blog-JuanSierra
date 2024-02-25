@@ -14,6 +14,16 @@ import { BehaviorSubject, tap } from 'rxjs';
 export class PostService {
   private apiUrl = environment.apiUrl;
 
+  protected postsSubject: BehaviorSubject<ApiResponse<PostWithExcerpt>> = new BehaviorSubject<ApiResponse<PostWithExcerpt>>({
+    total_count: 0,
+    current_page: 0,
+    total_pages: 0,
+    next: null,
+    previous: null,
+    results: [],
+  });
+  public posts$ = this.postsSubject.asObservable();
+
   constructor(
     private http: HttpClient
   ) {}
@@ -23,7 +33,11 @@ export class PostService {
 
     return this.http.get<ApiResponse<PostWithExcerpt>>(requestLink, {
       withCredentials: true,
-    });
+    }).pipe(
+      tap((response) => {
+        this.postsSubject.next(response);
+      })
+    );
   }
 
   getPost(id: number) {

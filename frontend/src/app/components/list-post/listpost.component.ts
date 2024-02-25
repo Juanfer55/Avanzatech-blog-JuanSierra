@@ -74,11 +74,13 @@ export class ListpostComponent {
     this.authService.userProfile$.subscribe((userProfile) => {
       if (userProfile) {
         this.user = userProfile;
-        this.getUserLike();
       }
     });
     this.getLikes();
     this.getComments();
+    if (this.user) {
+      this.getUserLike();
+    }
   }
 
   private handleErrors(err: any) {
@@ -115,8 +117,7 @@ export class ListpostComponent {
   }
 
   getUserLike() {
-    return this.likeService
-      .getUserLike(this.user?.id!, this.post.id)
+    return this.likeService.getUserLike(this.user?.id!, this.post.id)
       .subscribe({
         next: (response) => {
           if (response.total_count === 1) {

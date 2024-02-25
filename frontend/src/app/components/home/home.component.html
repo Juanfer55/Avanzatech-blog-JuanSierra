@@ -1,5 +1,5 @@
-<div class="home-section">
-  <div *ngIf="posts.length >= 1" class="posts-container-wraper">
+<div class="home-section" *ngIf="postsLoaded && posts">
+  <div *ngIf="totalPosts !== null && totalPosts > 0" class="posts-container-wraper">
     <div class="posts-container">
       <app-listpost *ngFor="let post of posts" [post]="post" (deletePostId)="deletePost($event)" > </app-listpost>
     </div>
@@ -15,7 +15,7 @@
       </ng-container>
     </div>
   </div>
-  <div *ngIf="posts.length === 0 && requestStatus === 'success'" class="no-content">
+  <div *ngIf="totalPosts !== null && totalPosts < 1" class="no-content">
     <h1 class="title">No posts yet</h1>
     <p class="invitation">You should create the first post!!</p>
   </div>

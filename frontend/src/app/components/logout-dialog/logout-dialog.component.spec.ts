@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogoutDialogComponent } from './logout-dialog.component';
 import { DialogRef } from '@angular/cdk/dialog';
 
-fdescribe('LogoutDialogComponent', () => {
+describe('LogoutDialogComponent', () => {
   let component: LogoutDialogComponent;
   let fixture: ComponentFixture<LogoutDialogComponent>;
   let dialogRef: jasmine.SpyObj<DialogRef>;

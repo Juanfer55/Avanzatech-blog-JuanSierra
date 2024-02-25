@@ -1,4 +1,4 @@
-<div class="post" data-testid="page-container">
+<div class="post" data-testid="page-container" >
   <div class="post-header">
     <h1 class="title" data-testid="post-title">
       {{ post.title }}
@@ -87,8 +87,7 @@
       </div>
     </div>
   </div>
-</div>
-<ng-template
+  <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="likesOverlay"
   [cdkConnectedOverlayOpen]="likesIsOpen"
@@ -98,3 +97,4 @@
     (pageChange)="getLikes($event)"
   ></app-list-likes>
 </ng-template>
+</div>

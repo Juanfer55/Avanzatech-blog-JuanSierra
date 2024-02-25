@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ServerErrorComponent } from './server-error.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterTestingModule } from '@angular/router/testing';
 
-fdescribe('ServerErrorComponent', () => {
+describe('ServerErrorComponent', () => {
   let component: ServerErrorComponent;
   let fixture: ComponentFixture<ServerErrorComponent>;
 

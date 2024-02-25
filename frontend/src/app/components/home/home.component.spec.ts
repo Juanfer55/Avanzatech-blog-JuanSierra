@@ -22,7 +22,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class StubListpostComponent {}
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -112,9 +112,9 @@ fdescribe('HomeComponent', () => {
       expect(postService.getPosts).toHaveBeenCalled();
     });
     it('should set the posts', () => {
-      expect(component.posts.length).toBe(1);
-      expect(component.posts[0].id).toBe(postWithExcerptMock.id);
-      expect(component.posts[0].title).toBe(postWithExcerptMock.title);
+      expect(component?.posts?.length).toBe(1);
+      expect(component?.posts[0]?.id).toBe(postWithExcerptMock.id);
+      expect(component?.posts[0]?.title).toBe(postWithExcerptMock.title);
       expect(component.posts[0].content_excerpt).toBe(
         postWithExcerptMock.content_excerpt
       );

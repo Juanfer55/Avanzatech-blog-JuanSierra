@@ -6,7 +6,7 @@ import {
 import { CommentsService } from './comments.service';
 import { CommentMock } from '../testing/mocks/comment.mocks';
 
-fdescribe('CommentsService', () => {
+describe('CommentsService', () => {
   let service: CommentsService;
   let httpMock: HttpTestingController;
 

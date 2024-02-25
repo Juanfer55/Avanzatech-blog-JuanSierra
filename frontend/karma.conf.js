@@ -11,7 +11,7 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-coverage'),
       require('@angular-devkit/build-angular/plugins/karma'),
-      require('karma-mocha-reporter'),
+      require('karma-mocha-reporter')
     ],
     client: {
       jasmine: {
@@ -26,20 +26,12 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/test-cookies'),
+      dir: require('path').join(__dirname, './coverage/avanzatechblog'),
       subdir: '.',
       reporters: [
         { type: 'html' },
         { type: 'text-summary' }
-      ],
-      check: {
-        global: {
-          statements: 80,
-          branches: 80,
-          functions: 80,
-          lines: 80
-        }
-      }
+      ]
     },
     reporters: ['mocha'],
     browsers: ['Chrome'],

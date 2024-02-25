@@ -1,4 +1,3 @@
-// angular
 import {
   ComponentFixture,
   TestBed,
@@ -8,18 +7,26 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-// services
 import { AuthService } from '../../../services/auth.service';
-// rxjs
-import { of } from 'rxjs';
-
+import { of, throwError } from 'rxjs';
 import { LayoutComponent } from './layout.component';
 import { UserProfileMock } from '../../../testing/mocks/user.mocks';
+import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 
-fdescribe('LayoutComponent', () => {
+@Component({
+  selector: 'app-subcomponent',
+  template: '<div>sub component</div>',
+})
+export class ServerErrorStub {}
+
+describe('LayoutComponent', () => {
   let component: LayoutComponent;
   let fixture: ComponentFixture<LayoutComponent>;
   let authService: jasmine.SpyObj<AuthService>;
+  let router: jasmine.SpyObj<Router>;
+  let toast: jasmine.SpyObj<ToastrService>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -32,22 +39,83 @@ fdescribe('LayoutComponent', () => {
             'logout',
           ]),
         },
+        {
+          provide: ToastrService,
+          useValue: jasmine.createSpyObj('ToastrService', ['error', 'success']),
+        }
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    fixture.detectChanges();
-
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     component.isLoggedIn$ = of(false);
     component.userProfile$ = of(null);
+
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  describe('ngOnInit() tests', () => {
+    it('the authService should be called when the component is initialized', () => {
+      expect(authService.getProfile).toHaveBeenCalled();
+    });
+    it('sould set the user profile and the user logged in status', () => {
+      expect(component.isLoggedIn$).toBeTruthy();
+      expect(component.userProfile$).toBeTruthy();
+    });
+  });
+  describe('logout() tests', () => {
+    it('should call the authservice', fakeAsync(() => {
+      spyOn(window.location, 'reload');
+      authService.logout.and.returnValue(of());
+      component.logout();
+      tick();
+      expect(authService.logout).toHaveBeenCalled();
+    }));
+    it('should reload the page if the logout was successfull', fakeAsync(() => {
+      spyOn(window.location, 'reload');
+      authService.logout.and.returnValue(of({}));
+      component.logout();
+      tick();
+      expect(authService.logout).toHaveBeenCalled();
+    }));
+    describe('logout() tests', () => {
+      it('should call the authservice', fakeAsync(() => {
+        spyOn(window.location, 'reload');
+        authService.logout.and.returnValue(of());
+        component.logout();
+        tick();
+        expect(authService.logout).toHaveBeenCalled();
+      }));
 
+      it('should navigate to server-error page if the logout encountered a server error', fakeAsync(() => {
+        const error = { status: 500 };
+        authService.logout.and.returnValue(throwError(error));
+        component.logout();
+        expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+      }));
+
+      it('should reload the page if the logout encountered an unauthorized error', fakeAsync(() => {
+        spyOn(window.location, 'reload');
+        const error = { status: 401 };
+        authService.logout.and.returnValue(throwError(error));
+        component.logout();
+        expect(authService.logout).toHaveBeenCalled();
+      }));
+      it('should reload the page if the logout encountered a network error', () => {
+        spyOn(router, 'navigate')
+        const error = { status: 0 };
+        authService.logout.and.returnValue(throwError(error));
+        component.logout();
+        expect(authService.logout).toHaveBeenCalled();
+        expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+      });
+    });
+  });
   describe('render tests', () => {
     it('should render the header', () => {
       const header = fixture.debugElement.query(By.css('header'));
@@ -107,26 +175,6 @@ fdescribe('LayoutComponent', () => {
       const links = compiled.querySelectorAll('[data-testid="home-button"]');
       expect(links.length).toBe(1);
       expect(links[0].getAttribute('href')).toContain('/');
-    })
-    it('if the logout button has not been clicked, the logout pop-up window will not be displayed.', fakeAsync(() => {
-      component.isLoggedIn$ = of(true);
-      component.userProfile$ = of(UserProfileMock());
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-      const compiled = fixture.nativeElement;
-      const logoutPopup = compiled.querySelector('[data-testid="logout-popup"]');
-      expect(logoutPopup).toBeFalsy();
-    }));
-  });
-  describe('behaviour tests', () => {
-    it('the authService should be called when the component is initialized', fakeAsync(() => {
-      component.isLoggedIn$ = of(true);
-      component.userProfile$ = of(UserProfileMock());
-      fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
-      expect(authService.getProfile).toHaveBeenCalled();
-    }));
+    });
   });
 });

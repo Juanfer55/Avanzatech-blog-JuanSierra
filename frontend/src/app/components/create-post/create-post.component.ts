@@ -74,23 +74,39 @@ export class CreatePostComponent {
     });
   }
 
+  private handleErrors(err: any) {
+    if (err.status === 0 || err.status === 500) {
+      this.router.navigate(['/server-error']);
+    }
+  }
+
   createPost() {
     if (this.createPostForm.valid) {
       return this.postService.createPost(this.createPostForm.value).subscribe({
         next: () => {
           this.toastr.success('The post has been created!', 'Success');
-          this.router.navigate(['/']);
+          this.getPosts();
         },
         error: (err) => {
-          if (err.status === 500 || err.status === 0) {
-            this.router.navigate(['/server-error']);
-          }
+          this.handleErrors(err);
         },
       });
     }
     this.createPostForm.markAllAsTouched();
     return this.toastr.error('Fill out the form properly', 'Error', {
       positionClass: 'toast-top-full-width',
+    });
+  }
+
+  getPosts() {
+    return this.postService.getPosts().subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+        window.scrollTo(0, 0);
+      },
+      error: (err) => {
+        this.handleErrors(err);
+      },
     });
   }
 }

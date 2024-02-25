@@ -1,6 +1,5 @@
 <header data-testid="header">
-  <a href="/" data-testid="home-button">
-    <div class="home">
+    <div class="home" (click)="getPosts()">
       <div class="logo-img">
         <img
           src="./../../../assets/avanzatech-logo.jpg"
@@ -10,7 +9,6 @@
       </div>
       <p class="header-text">AvanzaBlog</p>
     </div>
-  </a>
   <div class="header-nav">
     <div *ngIf="!(isLoggedIn$ | async)">
       <button data-testid="login-button"
@@ -33,19 +31,4 @@
     </div>
   </div>
 </header>
-<!-- <div *ngIf="showLogoutPopup" class="logout-popup-container" data-testid="logout-popup">
-  <div class="logout-popup-info">
-    <div>
-      <p class="logout-text">Are you sure you want to log out?</p>
-    </div>
-    <div class="logout-buttons">
-      <button class="logout-button" (click)="logOut()" data-testid="logout-action">
-        Log Out
-      </button>
-      <button class="logout-button" (click)="showLogoutPopup = false" data-testid="cancel-button">
-        Cancel
-      </button>
-    </div>
-  </div>
-</div> -->
 <router-outlet />

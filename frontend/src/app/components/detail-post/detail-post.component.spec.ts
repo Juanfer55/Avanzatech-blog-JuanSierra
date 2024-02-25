@@ -16,7 +16,7 @@ import { CommentMock } from '../../testing/mocks/comment.mocks';
 import { AuthService } from '../../services/auth.service';
 import { UserProfileMock } from '../../testing/mocks/user.mocks';
 
-fdescribe('DetailPostComponent', () => {
+describe('DetailPostComponent', () => {
   let component: DetailPostComponent;
   let fixture: ComponentFixture<DetailPostComponent>;
   let postService: jasmine.SpyObj<PostService>;
@@ -98,7 +98,7 @@ fdescribe('DetailPostComponent', () => {
       expect(commentsService.getComments).toHaveBeenCalled();
     });
   });
-  describe('getPost', () => {
+  describe('getPost() tests', () => {
     it('should set post', () => {
       expect(component.post).toEqual(postMock);
     });
@@ -112,7 +112,7 @@ fdescribe('DetailPostComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
   });
-  describe('getLikes', () => {
+  describe('getLikes() tests', () => {
     it('should set totalLikes', () => {
       expect(component.likeCount).toEqual(1);
     });
@@ -123,7 +123,7 @@ fdescribe('DetailPostComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
   });
-  describe('getComments', () => {
+  describe('getComments() tests', () => {
     it('should set commentCount', () => {
       const response = ApiResponseMock([CommentMock()]);
       commentsService.getComments.and.returnValue(of(response));
