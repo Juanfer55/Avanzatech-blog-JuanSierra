@@ -4,14 +4,14 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { CommentsService } from './comments.service';
-import { CommentMock, generateCommentsMock } from '../testing/mocks/comment.mocks';
+import { CommentMock, CommentListMock } from '../testing/mocks/comment.mocks';
 import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
 import { environment } from '../environments/environment.api';
 
 fdescribe('CommentsService', () => {
   let service: CommentsService;
   let httpMock: HttpTestingController;
-  const commentResponse = ApiResponseMock(generateCommentsMock(5));
+  const commentResponse = ApiResponseMock(CommentListMock(5));
 
   beforeEach(() => {
     TestBed.configureTestingModule({

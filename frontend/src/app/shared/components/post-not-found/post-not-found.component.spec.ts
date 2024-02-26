@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PostNotFoundComponent } from './post-not-found.component';
 
-describe('PostNotFoundComponent', () => {
+fdescribe('PostNotFoundComponent', () => {
   let component: PostNotFoundComponent;
   let fixture: ComponentFixture<PostNotFoundComponent>;
 

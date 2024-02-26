@@ -3,7 +3,7 @@ import { ServerErrorComponent } from './server-error.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('ServerErrorComponent', () => {
+fdescribe('ServerErrorComponent', () => {
   let component: ServerErrorComponent;
   let fixture: ComponentFixture<ServerErrorComponent>;
 

@@ -5,10 +5,13 @@ import {
 } from '@angular/common/http/testing';
 import { LikesService } from './likes.service';
 import { LikeMock } from '../testing/mocks/like.mocks';
+import { environment } from '../environments/environment.api';
+import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
 
-describe('LikesService', () => {
+fdescribe('LikesService', () => {
   let service: LikesService;
   let httpMock: HttpTestingController;
+  const likeResponse = ApiResponseMock([]);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,16 +33,9 @@ describe('LikesService', () => {
   describe('getPostLikes() Tests', () => {
     it('should return an Observable when succesfully get likes', (doneFn) => {
       const postId = 1;
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [LikeMock()],
-      };
+      const responseMsg = likeResponse;
 
-      service.getPostLikes(postId).subscribe((response: any) => {
+      service.getPostLikes(postId).subscribe((response) => {
         expect(response).toEqual(responseMsg);
         expect(response.total_count).toEqual(responseMsg.total_count);
         expect(response.current_page).toEqual(responseMsg.current_page);
@@ -51,7 +47,7 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/like/?post=' + postId
+        `${environment.apiUrl}/like/?post=${postId}`
       );
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
@@ -74,7 +70,7 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/like/?post=' + postId
+        `${environment.apiUrl}/like/?post=${postId}`
       );
 
       expect(req.request.method).toBe('GET');
@@ -83,15 +79,8 @@ describe('LikesService', () => {
   });
   describe('getLikePage() Tests', () => {
     it('should return an Observable when succesfully get likes page', (doneFn) => {
-      const likePage = 'http://127.0.0.1:8000/api/like/?post=1/?page=2/';
-      const responseMsg = {
-        total_count: 2,
-        current_page: 2,
-        total_pages: 2,
-        next: null,
-        previous: 'http://127.0.0.1:8000/api/like/?page=1/',
-        results: [LikeMock()],
-      };
+      const likePage = `${environment.apiUrl}/like/?page=2`;
+      const responseMsg = likeResponse;
 
       service.getLikePage(likePage).subscribe((response) => {
         expect(response).toEqual(responseMsg);
@@ -110,7 +99,7 @@ describe('LikesService', () => {
     });
 
     it('should return an error if the post does not exist or the user has no read permission on it', (doneFn) => {
-      const likePage = 'http://127.0.0.1:8000/api/like/?post=1/?page=2/';
+      const likePage = `${environment.apiUrl}/like/?page=2`;
       const responseMsg = 'Not Found.';
       const errorMsg = {
         status: 404,
@@ -135,14 +124,7 @@ describe('LikesService', () => {
     it('should return an Observable when succesfully get user like for the post', (doneFn) => {
       const userId = 1;
       const postId = 1;
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [LikeMock()],
-      };
+      const responseMsg = ApiResponseMock([LikeMock()]);
 
       service.getUserLike(userId, postId).subscribe((response) => {
         expect(response).toEqual(responseMsg);
@@ -156,7 +138,7 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/like/?user=${userId}&post=${postId}`
+        `${environment.apiUrl}/like/?user=${userId}&post=${postId}`
       );
 
       expect(req.request.method).toBe('GET');
@@ -180,14 +162,14 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/like/?user=${userId}&post=${postId}`
+        `${environment.apiUrl}/like/?user=${userId}&post=${postId}`
       );
 
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg, errorMsg);
     });
   });
-  describe('likePost Tests', () => {
+  describe('likePost() Tests', () => {
     it('should return an Observable when succesfully create a like', (doneFn) => {
       const postId = 1;
       const responseMsg = LikeMock();
@@ -197,7 +179,7 @@ describe('LikesService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne(`http://127.0.0.1:8000/api/like/`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/like/`);
 
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
@@ -219,7 +201,7 @@ describe('LikesService', () => {
         },
       });
 
-      const req = httpMock.expectOne(`http://127.0.0.1:8000/api/like/`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/like/`);
 
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg, errorMsg);
@@ -238,7 +220,7 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/like/${likeId}`
+        `${environment.apiUrl}/like/${likeId}`
       );
 
       expect(req.request.method).toBe('DELETE');
@@ -261,7 +243,7 @@ describe('LikesService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/like/${likeId}`
+        `${environment.apiUrl}/like/${likeId}`
       );
       expect(req.request.method).toBe('DELETE');
       req.flush(responseMsg, errorMsg);

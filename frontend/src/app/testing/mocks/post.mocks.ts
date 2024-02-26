@@ -41,3 +41,11 @@ export const PostWithoutPermissionMock = (): PostWithoutPermission => {
     created_at: faker.date.recent().toDateString(),
   }
 }
+
+export const PostListMock = (count: number): PostWithExcerpt[] => {
+  const posts: PostWithExcerpt[] = [];
+  for (let i = 0; i < count; i++) {
+    posts.push(PostWithExcerptMock());
+  }
+  return posts;
+}

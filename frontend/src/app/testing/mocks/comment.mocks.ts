@@ -12,7 +12,7 @@ export const CommentMock = (): Comment => {
   };
 }
 
-export const generateCommentsMock = (n: number): Comment[] => {
+export const CommentListMock = (n: number): Comment[] => {
   const comments: Comment[] = [];
   for (let i = 0; i < n; i++) {
     comments.push(CommentMock());

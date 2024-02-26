@@ -46,17 +46,6 @@ export class LayoutComponent {
     }
   }
 
-  getPosts() {
-    return this.postservice.getPosts().subscribe({
-      next: () => {
-        window.scrollTo(0, 0);
-      },
-      error: (err) => {
-        this.handleErrors(err);
-      },
-    });
-  }
-
   getProfile() {
     return this.authService.getProfile()?.subscribe({
       error: (err) => {
@@ -74,6 +63,7 @@ export class LayoutComponent {
         this.router.navigate(['/']);
       },
       error: (err) => {
+        this.toast.error('An error occurred while logging out');
         this.handleErrors(err);
       },
     });

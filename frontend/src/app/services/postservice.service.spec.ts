@@ -4,11 +4,14 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { PostService } from './postservice.service';
-import { PostMock, PostWithExcerptMock } from '../testing/mocks/post.mocks';
+import { PostListMock, PostMock, PostWithExcerptMock, PostWithoutPermissionMock } from '../testing/mocks/post.mocks';
+import { environment } from '../environments/environment.api';
+import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
 
-describe('PostserviceService', () => {
+fdescribe('PostserviceService', () => {
   let service: PostService;
   let httpMock: HttpTestingController;
+  const postResponse = ApiResponseMock(PostListMock(10));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,16 +32,9 @@ describe('PostserviceService', () => {
 
   describe('getPosts() Tests', () => {
     it('should return an Observable when succesfully get posts', (doneFn) => {
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [PostWithExcerptMock()],
-      };
+      const responseMsg = postResponse;
 
-      service.getPosts().subscribe((response: any) => {
+      service.getPosts().subscribe((response) => {
         expect(response).toEqual(responseMsg);
         expect(response.total_count).toEqual(responseMsg.total_count);
         expect(response.current_page).toEqual(responseMsg.current_page);
@@ -49,20 +45,26 @@ describe('PostserviceService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/post/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
-    it('should return an Observable when succesfully get posts with page', (doneFn) => {
-      const link = 'http://127.0.0.1:8000/api/post/?page=2';
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [PostWithExcerptMock()],
-      };
+    it('should set the postpage and totalposts when succesfully get posts', (doneFn) => {
+      spyOn(service, 'setServiceinfo');
+      const responseMsg = ApiResponseMock([PostWithExcerptMock()]);
+
+      service.getPosts().subscribe((response) => {
+        expect(service.setServiceinfo).toHaveBeenCalled();
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush(responseMsg);
+    });
+    it('should return an Observable when succesfully get posts with link', (doneFn) => {
+      const link = `${environment.apiUrl}/post/?page=2`;
+      const responseMsg = postResponse;
 
       service.getPosts(link).subscribe((response) => {
         expect(response).toEqual(responseMsg);
@@ -96,9 +98,8 @@ describe('PostserviceService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/post/${postId}/`
+        `${environment.apiUrl}/post/${postId}/`
       );
-
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
@@ -119,7 +120,7 @@ describe('PostserviceService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/post/${postId}/`
+        `${environment.apiUrl}/post/${postId}/`
       );
       expect(req.request.method).toBe('GET');
       req.flush(errorMsg, error);
@@ -128,13 +129,7 @@ describe('PostserviceService', () => {
   describe('createPost() Tests', () => {
     it('should return an Observable when succesfully create post', (doneFn) => {
       const post = PostMock();
-      const responseMsg = {
-        id: post.id,
-        title: post.title,
-        content: post.content,
-        created_at: post.created_at,
-        author: post.author,
-      };
+      const responseMsg = PostWithoutPermissionMock();
 
       service.createPost(post).subscribe((response) => {
         expect(response).toEqual(responseMsg);
@@ -145,7 +140,7 @@ describe('PostserviceService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/post/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/`);
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
     });
@@ -165,7 +160,7 @@ describe('PostserviceService', () => {
         },
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/post/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/`);
       expect(req.request.method).toBe('POST');
       req.flush(errorMsg, error);
     });
@@ -190,6 +185,23 @@ describe('PostserviceService', () => {
       expect(req.request.method).toBe('DELETE');
       req.flush(responseMsg);
     });
+    it('should set the postpage after delete', (doneFn) => {
+      spyOn(service, 'setPostPageAfterDelete');
+      const postId = 1;
+      const responseMsg = {
+        status: 204,
+        statusText: 'No content',
+      };
+
+      service.deletePost(postId).subscribe((response) => {
+        expect(service.setPostPageAfterDelete).toHaveBeenCalled();
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/blog/${postId}/`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(responseMsg);
+    });
     it('should return an error if the post does not exist or the user has no delete permission on it', (doneFn) => {
       const postId = 1;
       const errorMsg = 'Not found.';
@@ -207,7 +219,7 @@ describe('PostserviceService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/blog/${postId}/`
+        `${environment.apiUrl}/blog/${postId}/`
       );
 
       expect(req.request.method).toBe('DELETE');
@@ -218,13 +230,7 @@ describe('PostserviceService', () => {
     it('should return an Observable when succesfully update post', (doneFn) => {
       const postId = 1;
       const post = PostMock();
-      const responseMsg = {
-        id: post.id,
-        title: post.title,
-        content: post.content,
-        created_at: post.created_at,
-        author: post.author,
-      };
+      const responseMsg = PostWithoutPermissionMock();
 
       service.updatePost(postId, post).subscribe((response) => {
         expect(response).toEqual(responseMsg);
@@ -236,7 +242,7 @@ describe('PostserviceService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/blog/${postId}/`
+        `${environment.apiUrl}/blog/${postId}/`
       );
 
       expect(req.request.method).toBe('PUT');
@@ -260,10 +266,69 @@ describe('PostserviceService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/blog/${postId}/`
+        `${environment.apiUrl}/blog/${postId}/`
       );
       expect(req.request.method).toBe('PUT');
       req.flush(errorMsg, error);
     });
   });
+  describe('setPostPageAfterDelete() Tests', () => {
+    it('should return the current page if the total count is greater than or equal to the min posts for the current page', (doneFn) => {
+      const response = ApiResponseMock(PostListMock(20), 20, 2, 2);
+      service.getPosts().subscribe(() => {
+        service.setServiceinfo(response);
+        service.setPostPageAfterDelete();
+        expect(service.getPostPage()).toBe(response.current_page);
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush(response);
+    });
+    it('should return the previous page if the total count is less than the min posts for the current page', (doneFn) => {
+      const response = ApiResponseMock(PostListMock(20), 11, 2, 2);
+      service.getPosts().subscribe(() => {
+        service.setServiceinfo(response);
+        service.setPostPageAfterDelete();
+        expect(service.getPostPage()).toBe(response.current_page - 1);
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush(response);
+    });
+    it('should return the page 1 if the actual page is 1', (doneFn) => {
+      const response = ApiResponseMock(PostListMock(20), 11, 1, 2);
+      service.getPosts().subscribe(() => {
+        service.setServiceinfo(response);
+        service.setPostPageAfterDelete();
+        expect(service.getPostPage()).toBe(1);
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush(response);
+    });
+  });
+  describe('onResetPostState() Tests', () => {
+    it('should return an Observable', () => {
+      const observable = service.onResetPostState();
+
+      expect(observable).toBeDefined();
+      expect(observable.subscribe).toBeDefined();
+    });
+  });
+  describe('resetPostState() Tests', () => {
+    it('should call next() on resetPostStateSubject', () => {
+      spyOn((service as any).resetPostStateSubject, 'next');
+
+      service.resetPostState();
+
+      expect((service as any).resetPostStateSubject.next).toHaveBeenCalled();
+    });
+  });
 });
+

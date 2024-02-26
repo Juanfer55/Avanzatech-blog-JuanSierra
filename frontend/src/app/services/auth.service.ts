@@ -77,8 +77,7 @@ export class AuthService {
       })
       .pipe(
         tap(() => {
-          this.deleteSesionCookie();
-          this.deleteUserProfile();
+          this.resetLoginStatus();
         })
       );
   }
@@ -99,8 +98,16 @@ export class AuthService {
     });
   }
 
+  resetLoginStatus() {
+    this.deleteSesionCookie();
+    this.deleteUserProfile();
+  }
+
   deleteSesionCookie() {
-    this.cookieService.delete('avanzablog');
+    const cookie = this.cookieService.get('avanzablog');
+    if (cookie) {
+      this.cookieService.delete('avanzablog');
+    }
   }
 
   setUserProfile(profile: UserProfile) {

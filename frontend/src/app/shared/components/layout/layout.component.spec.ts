@@ -12,21 +12,19 @@ import { of, throwError } from 'rxjs';
 import { LayoutComponent } from './layout.component';
 import { UserProfileMock } from '../../../testing/mocks/user.mocks';
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { PostService } from '../../../services/postservice.service';
+import { Dialog } from '@angular/cdk/dialog';
 
-@Component({
-  selector: 'app-subcomponent',
-  template: '<div>sub component</div>',
-})
-export class ServerErrorStub {}
 
-describe('LayoutComponent', () => {
+fdescribe('LayoutComponent', () => {
   let component: LayoutComponent;
   let fixture: ComponentFixture<LayoutComponent>;
   let authService: jasmine.SpyObj<AuthService>;
+  let postService: jasmine.SpyObj<PostService>;
   let router: jasmine.SpyObj<Router>;
   let toast: jasmine.SpyObj<ToastrService>;
+  let dialog: jasmine.SpyObj<Dialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -42,17 +40,28 @@ describe('LayoutComponent', () => {
         {
           provide: ToastrService,
           useValue: jasmine.createSpyObj('ToastrService', ['error', 'success']),
-        }
+        },
+        {
+          provide: PostService,
+          useValue: jasmine.createSpyObj('PostService', ['resetPostPage', 'resetPostState']),
+        },
+        {
+          provide: Dialog,
+          useValue: jasmine.createSpyObj('Dialog', ['open']),
+        },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LayoutComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+    toast = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
+    postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    dialog = TestBed.inject(Dialog) as jasmine.SpyObj<Dialog>;
+    spyOn(router, 'navigate');
     component.isLoggedIn$ = of(false);
     component.userProfile$ = of(null);
-
     fixture.detectChanges();
   });
 
@@ -60,6 +69,11 @@ describe('LayoutComponent', () => {
     expect(component).toBeTruthy();
   });
   describe('ngOnInit() tests', () => {
+    it('the getProfile method should be called when the component is initialized', () => {
+      spyOn(component, 'getProfile');
+      component.ngOnInit();
+      expect(component.getProfile).toHaveBeenCalled();
+    });
     it('the authService should be called when the component is initialized', () => {
       expect(authService.getProfile).toHaveBeenCalled();
     });
@@ -70,51 +84,49 @@ describe('LayoutComponent', () => {
   });
   describe('logout() tests', () => {
     it('should call the authservice', fakeAsync(() => {
-      spyOn(window.location, 'reload');
       authService.logout.and.returnValue(of());
       component.logout();
       tick();
       expect(authService.logout).toHaveBeenCalled();
     }));
-    it('should reload the page if the logout was successfull', fakeAsync(() => {
-      spyOn(window.location, 'reload');
+    it('should navigate to the home page if the logout was succesfull', fakeAsync(() => {
       authService.logout.and.returnValue(of({}));
       component.logout();
       tick();
-      expect(authService.logout).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/']);
     }));
-    describe('logout() tests', () => {
-      it('should call the authservice', fakeAsync(() => {
-        spyOn(window.location, 'reload');
-        authService.logout.and.returnValue(of());
-        component.logout();
-        tick();
-        expect(authService.logout).toHaveBeenCalled();
-      }));
-
-      it('should navigate to server-error page if the logout encountered a server error', fakeAsync(() => {
-        const error = { status: 500 };
-        authService.logout.and.returnValue(throwError(error));
-        component.logout();
-        expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
-      }));
-
-      it('should reload the page if the logout encountered an unauthorized error', fakeAsync(() => {
-        spyOn(window.location, 'reload');
-        const error = { status: 401 };
-        authService.logout.and.returnValue(throwError(error));
-        component.logout();
-        expect(authService.logout).toHaveBeenCalled();
-      }));
-      it('should reload the page if the logout encountered a network error', () => {
-        spyOn(router, 'navigate')
-        const error = { status: 0 };
-        authService.logout.and.returnValue(throwError(error));
-        component.logout();
-        expect(authService.logout).toHaveBeenCalled();
-        expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
-      });
-    });
+    it('should show a success message if the logout was succesfull', fakeAsync(() => {
+      authService.logout.and.returnValue(of({}));
+      component.logout();
+      tick();
+      expect(toast.success).toHaveBeenCalledWith('You have been logged out');
+    }));
+    it('should call the resetPostPage method from the postservice', fakeAsync(() => {
+      authService.logout.and.returnValue(of({}));
+      component.logout();
+      tick();
+      expect(postService.resetPostPage).toHaveBeenCalled();
+    }));
+    it('should call the resetPostState method from the postservice', fakeAsync(() => {
+      authService.logout.and.returnValue(of({}));
+      component.logout();
+      tick();
+      expect(postService.resetPostState).toHaveBeenCalled();
+    }));
+    it('should show an error message if the logout was unsuccesfull', fakeAsync(() => {
+      authService.logout.and.returnValue(throwError({}));
+      component.logout();
+      tick();
+      expect(toast.error).toHaveBeenCalledWith(
+        'An error occurred while logging out'
+      );
+    }));
+    it('should navigate to the server error page if the logout was unsuccesfull', fakeAsync(() => {
+      authService.logout.and.returnValue(throwError({ status: 0 }));
+      component.logout();
+      tick();
+      expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    }));
   });
   describe('render tests', () => {
     it('should render the header', () => {

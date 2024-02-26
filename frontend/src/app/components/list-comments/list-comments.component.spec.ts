@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListCommentsComponent } from './list-comments.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
-import { generateCommentsMock } from '../../testing/mocks/comment.mocks';
+import { CommentListMock } from '../../testing/mocks/comment.mocks';
 import { By } from '@angular/platform-browser';
 
 describe('ListCommentsComponent', () => {
   let component: ListCommentsComponent;
   let fixture: ComponentFixture<ListCommentsComponent>;
-  const comments = generateCommentsMock(10);
+  const comments = CommentListMock(10);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({

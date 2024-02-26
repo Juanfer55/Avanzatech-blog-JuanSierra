@@ -9,3 +9,11 @@ export const LikeMock = (): Like => {
     post: faker.number.int(),
   };
 }
+
+export const LikeListMock = (count: number): Like[] => {
+  const likes: Like[] = [];
+  for (let i = 0; i < count; i++) {
+    likes.push(LikeMock());
+  }
+  return likes;
+}

@@ -29,8 +29,7 @@ export class PostService {
       withCredentials: true,
     }).pipe(
       tap((response) => {
-        this.totalPosts = response.total_count;
-        this.postPage = response.current_page;
+        this.setServiceinfo(response);
       })
     );
   }
@@ -63,6 +62,11 @@ export class PostService {
     });
   }
 
+  setServiceinfo(response: ApiResponse<PostWithExcerpt>) {
+    this.totalPosts = response.total_count;
+    this.postPage = response.current_page;
+  }
+
   resetPostPage() {
     this.postPage = 1;
   }
@@ -71,7 +75,6 @@ export class PostService {
     const currentPage = this.postPage;
     const minPostsForCurrentPage = currentPage * 10 - 9;
     const totalCountAfterDelete = this.totalPosts - 1;
-    const postPage = `${environment.apiUrl}/post/`;
 
     if (currentPage! > 1) {
       if (totalCountAfterDelete >= minPostsForCurrentPage) {
@@ -79,7 +82,7 @@ export class PostService {
       }
       return this.postPage = currentPage - 1;
     }
-    return postPage;
+    return
   }
 
   resetPostState() {
@@ -88,5 +91,13 @@ export class PostService {
 
   onResetPostState() {
     return this.resetPostStateSubject.asObservable();
+  }
+
+  getPostPage() {
+    return this.postPage;
+  }
+
+  getTotalPosts() {
+    return this.totalPosts;
   }
 }
