@@ -34,7 +34,17 @@ describe('DeleteDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+  describe('delete method', () => {
+    it('should close the dialog with deletePost as true', () => {
+      component.delete(true);
+      expect(dialogRef.close).toHaveBeenCalledWith(true);
+    });
 
+    it('should close the dialog with deletePost as false', () => {
+      component.delete(false);
+      expect(dialogRef.close).toHaveBeenCalledWith(false);
+    });
+  });
   describe('render tests', () => {
     it('should render warning icon', () => {
       const compiled = fixture.nativeElement;
@@ -63,18 +73,6 @@ describe('DeleteDialogComponent', () => {
       const compiled = fixture.nativeElement;
       const cancelBtn = compiled.querySelector('[data-testid="cancel-btn"]');
       expect(cancelBtn).toBeTruthy();
-    });
-  });
-
-  describe('delete method', () => {
-    it('should close the dialog with deletePost as true', () => {
-      component.delete(true);
-      expect(dialogRef.close).toHaveBeenCalledWith(true);
-    });
-
-    it('should close the dialog with deletePost as false', () => {
-      component.delete(false);
-      expect(dialogRef.close).toHaveBeenCalledWith(false);
     });
   });
 });

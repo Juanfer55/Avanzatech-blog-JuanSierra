@@ -15,8 +15,9 @@ import { LikeMock } from '../../testing/mocks/like.mocks';
 import { CommentMock } from '../../testing/mocks/comment.mocks';
 import { AuthService } from '../../services/auth.service';
 import { UserProfileMock } from '../../testing/mocks/user.mocks';
+import { th } from '@faker-js/faker';
 
-describe('DetailPostComponent', () => {
+fdescribe('DetailPostComponent', () => {
   let component: DetailPostComponent;
   let fixture: ComponentFixture<DetailPostComponent>;
   let postService: jasmine.SpyObj<PostService>;
@@ -107,7 +108,11 @@ describe('DetailPostComponent', () => {
     });
     it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
-      postService.getPost.and.returnValue(throwError({status: 0}));
+      postService.getPost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getPost();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
@@ -118,7 +123,11 @@ describe('DetailPostComponent', () => {
     });
     it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
-      LikeService.getPostLikes.and.returnValue(throwError({status: 0}));
+      LikeService.getPostLikes.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getLikes();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
@@ -132,7 +141,11 @@ describe('DetailPostComponent', () => {
     });
     it('should call router.navigate if server error', () => {
       spyOn(router, 'navigate');
-      commentsService.getComments.and.returnValue(throwError({status: 0}));
+      commentsService.getComments.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getComments();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });

@@ -9,7 +9,7 @@ import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
-describe('CreatePostComponent', () => {
+fdescribe('CreatePostComponent', () => {
   let component: CreatePostComponent;
   let fixture: ComponentFixture<CreatePostComponent>;
   let postService: jasmine.SpyObj<PostService>;
@@ -27,7 +27,7 @@ describe('CreatePostComponent', () => {
       providers: [
         {
           provide: PostService,
-          useValue: jasmine.createSpyObj('PostService', ['createPost']),
+          useValue: jasmine.createSpyObj('PostService', ['createPost', 'resetPostPage']),
         },
         {
           provide: ToastrService,
@@ -124,13 +124,18 @@ describe('CreatePostComponent', () => {
       component.createPostForm.get('content')?.setValue('Test Content');
       postService.createPost.and.returnValue(of(PostWithoutPermissionMock()));
       component.createPost();
+      expect(postService.resetPostPage).toHaveBeenCalled();
       expect(postService.createPost).toHaveBeenCalled();
       expect(toastService.success).toHaveBeenCalled();
     });
-    it('should call createPost() and returna server error', () => {
+    it('should call createPost(), return a server error and navigate to the server error component', () => {
       component.createPostForm.get('title')?.setValue('Test Title');
       component.createPostForm.get('content')?.setValue('Test Content');
-      postService.createPost.and.returnValue(throwError({ status: 500 }));
+      postService.createPost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.createPost();
       expect(postService.createPost).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);

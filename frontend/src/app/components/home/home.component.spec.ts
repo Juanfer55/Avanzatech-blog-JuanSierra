@@ -1,9 +1,14 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { AuthService } from '../../services/auth.service';
 import { PostService } from '../../services/postservice.service';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
-import { PostWithExcerptMock } from '../../testing/mocks/post.mocks';
+import { PostListMock } from '../../testing/mocks/post.mocks';
 import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommonModule } from '@angular/common';
@@ -16,13 +21,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
-@Component({
-  selector: 'app-subcomponent',
-  template: '<div>sub component</div>',
-})
-export class StubListpostComponent {}
 
-describe('HomeComponent', () => {
+fdescribe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -31,32 +31,31 @@ describe('HomeComponent', () => {
   let toastService: jasmine.SpyObj<ToastrService>;
   let commentsService: jasmine.SpyObj<CommentsService>;
   let router: jasmine.SpyObj<Router>;
-  const postWithExcerptMock = PostWithExcerptMock();
+  const postResponse = ApiResponseMock(PostListMock(20), 20, 2, 2);
 
   beforeEach(async () => {
-    const postServiceSpy = jasmine.createSpyObj('PostService', ['getPosts', 'deletePost']);
-    const authServiceSpy = jasmine.createSpyObj('AuthService', [
-      'logStatus$',
-      'userProfile$',
-    ]);
-
     await TestBed.configureTestingModule({
       imports: [
         HomeComponent,
-        RouterTestingModule.withRoutes([
-          { path: 'server-error', component: StubListpostComponent},
-        ]),
+        RouterTestingModule,
         CommonModule,
         FontAwesomeModule,
       ],
       providers: [
         {
           provide: AuthService,
-          useValue: authServiceSpy,
+          useValue: jasmine.createSpyObj('AuthService', [
+            'logStatus$',
+            'userProfile$',
+          ]),
         },
         {
           provide: PostService,
-          useValue: postServiceSpy,
+          useValue: jasmine.createSpyObj('PostService', [
+            'getPosts',
+            'deletePost',
+            'onResetPostState',
+          ]),
         },
         {
           provide: LikesService,
@@ -81,20 +80,17 @@ describe('HomeComponent', () => {
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>;
     likesService = TestBed.inject(LikesService) as jasmine.SpyObj<LikesService>;
-    toastService = TestBed.inject(ToastrService) as jasmine.SpyObj<ToastrService>;
-    commentsService = TestBed.inject(CommentsService) as jasmine.SpyObj<CommentsService>;
+    toastService = TestBed.inject(
+      ToastrService
+    ) as jasmine.SpyObj<ToastrService>;
+    commentsService = TestBed.inject(
+      CommentsService
+    ) as jasmine.SpyObj<CommentsService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
 
-    const mocks = {
-      total_count: 1,
-      current_page: 1,
-      total_pages: 1,
-      next: 'link',
-      previous: 'link',
-      results: [postWithExcerptMock],
-    };
+    postService.onResetPostState.and.returnValue(of());
     component.logStatus$ = of(false);
-    postService.getPosts.and.returnValue(of(mocks));
+    postService.getPosts.and.returnValue(of(postResponse));
     likesService.getPostLikes.and.returnValue(
       of(ApiResponseMock([LikeMock()]))
     );
@@ -109,22 +105,19 @@ describe('HomeComponent', () => {
   });
   describe('getPosts() tests', () => {
     it('should set the posts', () => {
-      expect(component?.posts?.length).toBe(1);
-      expect(component?.posts?.[0]?.id).toBe(postWithExcerptMock.id);
-      expect(component?.posts?.[0]?.title).toBe(postWithExcerptMock.title);
-      expect(component?.posts?.[0]?.content_excerpt).toBe(
-        postWithExcerptMock.content_excerpt
-      );
-      expect(component?.posts?.[0]?.author.id).toBe(postWithExcerptMock.author.id);
+      expect(component.posts).toEqual(postResponse.results);
     });
     it('should set the next page', () => {
-      expect(component.nextPage).toBe('link');
+      expect(component.nextPage).toBe(postResponse.next);
+    });
+    it('should set the previous page', () => {
+      expect(component.previousPage).toBe(postResponse.previous);
     });
     it('should set the current page', () => {
-      expect(component.currentPage).toBe(1);
+      expect(component.currentPage).toBe(postResponse.current_page);
     });
     it('should set the total pages', () => {
-      expect(component.totalPages).toBe(1);
+      expect(component.totalPages).toBe(postResponse.total_pages);
     });
     it('it should send the input to the list post component', () => {
       const listPostComponent = fixture.debugElement.query(
@@ -151,7 +144,9 @@ describe('HomeComponent', () => {
     });
     it('should call the getPosts method', () => {
       postService.deletePost.and.returnValue(of({}));
-      postService.getPosts.and.returnValue(of(ApiResponseMock([postWithExcerptMock])));
+      postService.getPosts.and.returnValue(
+        of(postResponse)
+      );
       component.deletePost(1);
       expect(postService.getPosts).toHaveBeenCalled();
     });
@@ -178,7 +173,7 @@ describe('HomeComponent', () => {
         By.css('[data-testid="previous-page-button"]')
       );
       expect(previousPageButton).toBeTruthy();
-    })
+    });
     it('should render the next page button', () => {
       const nextPageButton = fixture.debugElement.query(
         By.css('[data-testid="next-page-button"]')

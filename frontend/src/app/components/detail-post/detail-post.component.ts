@@ -81,7 +81,6 @@ export class DetailPostComponent {
       if (user) {
         this.user = user;
       }
-
     });
     this.route.paramMap.subscribe(params => {
       this.postId = Number(params.get('id'));

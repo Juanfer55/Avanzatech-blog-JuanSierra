@@ -175,8 +175,7 @@ fdescribe('RegisterComponent', () => {
         passwordConfirm: 'test123456',
       });
 
-      authService.register.and.returnValue(
-        throwError(() => {
+      authService.register.and.returnValue(throwError(() => {
           const error = new Error('Server Error');
           (error as any).status = 500;
           return error;
