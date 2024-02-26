@@ -13,13 +13,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { PostWithExcerptMock } from '../../testing/mocks/post.mocks';
 import { UserProfileMock } from '../../testing/mocks/user.mocks';
 import { Observable, of, throwError } from 'rxjs';
-import { LikeMock } from '../../testing/mocks/like.mocks';
+import { LikeListMock, LikeMock } from '../../testing/mocks/like.mocks';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
-import { CommentMock } from '../../testing/mocks/comment.mocks';
+import { CommentListMock, CommentMock } from '../../testing/mocks/comment.mocks';
 import { Comment } from '../../models/comments.model';
 import { Dialog } from '@angular/cdk/dialog';
+import { nonePermission, readAndEditPermission, readOnlyPermission } from '../../shared/utilities/constants';
 
-describe('ListpostComponent', () => {
+fdescribe('ListpostComponent', () => {
   let component: ListpostComponent;
   let fixture: ComponentFixture<ListpostComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -27,8 +28,9 @@ describe('ListpostComponent', () => {
   let commentsService: jasmine.SpyObj<CommentsService>;
   let dialog: jasmine.SpyObj<Dialog>;
   let router: jasmine.SpyObj<Router>;
-  let commentMock: Comment = CommentMock();
-  let like = LikeMock();
+  const commentResponse = ApiResponseMock([CommentListMock(10)], 2, 2, 2);
+  const likeResponse = ApiResponseMock([LikeListMock(30)], 2, 2, 2);
+  const userLike = ApiResponseMock([LikeMock()], 1, 1, 1);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -75,10 +77,10 @@ describe('ListpostComponent', () => {
     component.post = PostWithExcerptMock();
     component.user = UserProfileMock();
     authService.userProfile$ = of(UserProfileMock());
-    likesService.getPostLikes.and.returnValue(of(ApiResponseMock([like])));
-    likesService.getUserLike.and.returnValue(of(ApiResponseMock([like])));
+    likesService.getPostLikes.and.returnValue(of(likeResponse));
+    likesService.getUserLike.and.returnValue(of(userLike));
     commentsService.getComments.and.returnValue(
-      of(ApiResponseMock([commentMock]))
+      of(commentResponse)
     );
     spyOn(router, 'navigate');
     fixture.detectChanges();
@@ -90,21 +92,26 @@ describe('ListpostComponent', () => {
   describe('getLikes() tests', () => {
     it('should get the likes and set the total likes', () => {
       component.getLikes();
-      expect(component.totalLikes).toBe(1);
+      expect(component.totalLikes).toBe(likeResponse.total_count);
     });
     it('should set the likes response', () => {
-      expect(component.likesResponse).toEqual(ApiResponseMock([like]));
+      expect(component.likesResponse).toEqual(likeResponse);
     });
     it('should get the likes with a link', fakeAsync(() => {
-      const mockdata = ApiResponseMock([like]);
+      const mockdata = likeResponse;
       likesService.getLikePage.and.returnValue(of(mockdata));
-      component.getLikes('link');
+      component.getLikes(likeResponse.next!);
       fixture.detectChanges();
       tick();
-      expect(likesService.getLikePage).toHaveBeenCalledWith('link');
+      expect(likesService.getLikePage).toHaveBeenCalledWith(likeResponse.next!);
     }));
     it('should handle server errors', fakeAsync(() => {
-      likesService.getPostLikes.and.returnValue(throwError({ status: 500 }));
+      likesService.getPostLikes.and.returnValue(throwError(() => {
+          const error = new Error('Server Error');
+          (error as any).status = 500;
+          return error;
+        })
+      );
       component.getLikes();
       fixture.detectChanges();
       tick();
@@ -114,10 +121,14 @@ describe('ListpostComponent', () => {
   describe('getComments() tests', () => {
     it('should get the comments and set the comment count', () => {
       component.getComments();
-      expect(component.commentCount).toBe(1);
+      expect(component.commentCount).toBe(commentResponse.total_count);
     });
     it('should handle server errors', fakeAsync(() => {
-      commentsService.getComments.and.returnValue(throwError({ status: 500 }));
+      commentsService.getComments.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getComments();
       fixture.detectChanges();
       tick();
@@ -126,14 +137,18 @@ describe('ListpostComponent', () => {
   });
   describe('getUserLike() tests', () => {
     it('should get the user like and set the user like', () => {
-      const mokcData = ApiResponseMock([like]);
+      const mokcData = userLike;
       likesService.getUserLike.and.returnValue(of(mokcData));
       component.getUserLike();
-      expect(component.like).toEqual(like);
+      expect(component.like).toEqual(userLike.results[0]);
       expect(component.postIsLiked).toBeTruthy();
     });
     it('should handle server errors', fakeAsync(() => {
-      likesService.getUserLike.and.returnValue(throwError({ status: 500 }));
+      likesService.getUserLike.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getUserLike();
       fixture.detectChanges();
       tick();
@@ -143,15 +158,20 @@ describe('ListpostComponent', () => {
   describe('likePost() tests', () => {
     it('should like the post, set the like status and get the likes', fakeAsync(() => {
       spyOn(component, 'getLikes');
-      const mockDta = like;
+      const mockDta = LikeMock();
       likesService.likePost.and.returnValue(of(mockDta));
       component.likePost();
       expect(likesService.likePost).toHaveBeenCalled();
       expect(component.postIsLiked).toBeTruthy();
       expect(component.getLikes).toHaveBeenCalled();
+      expect(component.like).toEqual(mockDta);
     }));
     it('should handle server errors', fakeAsync(() => {
-      likesService.likePost.and.returnValue(throwError({ status: 500 }));
+      likesService.likePost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.likePost();
       fixture.detectChanges();
       tick();
@@ -166,9 +186,14 @@ describe('ListpostComponent', () => {
       expect(likesService.UnlikePost).toHaveBeenCalled();
       expect(component.postIsLiked).toBeFalsy();
       expect(component.getLikes).toHaveBeenCalled();
+      expect(component.like).toBeNull();
     }));
     it('should handle server errors', fakeAsync(() => {
-      likesService.UnlikePost.and.returnValue(throwError({ status: 500 }));
+      likesService.UnlikePost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.unlikePost();
       fixture.detectChanges();
       tick();
@@ -185,12 +210,12 @@ describe('ListpostComponent', () => {
   describe('hasEditPermission() tests', () => {
     it('should return true if the user is not logged in and the public permission is read-and-edit', () => {
       component.user = null;
-      component.post.public_permission = 3;
+      component.post.public_permission = readAndEditPermission;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is not logged in and the public permission is not read-and-edit', () => {
       component.user = null;
-      component.post.public_permission = 2;
+      component.post.public_permission = nonePermission;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return true if the user is an admin', () => {
@@ -201,7 +226,7 @@ describe('ListpostComponent', () => {
     it('should return true if the user is the author and the author permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.id = component.post.author.id;
-      component.post.author_permission = 3;
+      component.post.author_permission = readAndEditPermission;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is the author and the author permission is not read-and-edit', () => {
@@ -209,53 +234,50 @@ describe('ListpostComponent', () => {
       component.user.is_admin = false;
       component.user.id = 1;
       component.post.author.id = 1;
-      component.post.author_permission = 2;
+      component.post.author_permission = readOnlyPermission;
       expect(component.hasEditPermission()).toBeFalsy();
     });
-    it('should return true if the user is in the same team and the team permission is read-and-edit', () => {
+    it('should return true if the user is on the same team as the author of the entry and the team permission is read and edit.', () => {
       component.user = UserProfileMock();
       component.user.team.id = component.post.author.team.id;
-      component.post.team_permission = 3;
+      component.post.team_permission = readAndEditPermission;
       expect(component.hasEditPermission()).toBeTruthy();
     });
-    it('should return false if the user is in the same team and the team permission is not read-and-edit', () => {
+    it('should return false if the user is on the same team as the author but the team permission is not read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id;
-      component.post.team_permission = 2;
-      component.post.authenticated_permission = 2;
-      component.post.public_permission = 2;
-      component.post.author_permission = 2;
+      component.post.team_permission = readOnlyPermission;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return false if the user is on a different team and the team permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 3;
-      component.post.authenticated_permission = 2;
-      component.post.public_permission = 2;
-      component.post.author_permission = 2;
+      component.post.team_permission = readAndEditPermission;
+      component.post.authenticated_permission = readOnlyPermission;
+      component.post.public_permission = readOnlyPermission;
+      component.post.author_permission = readOnlyPermission;
       expect(component.hasEditPermission()).toBeFalsy();
     });
     it('should return true if the user is on a different team and the authenticated permission is read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 2;
-      component.post.authenticated_permission = 3;
-      component.post.public_permission = 2;
-      component.post.author_permission = 2;
+      component.post.team_permission = readOnlyPermission;
+      component.post.authenticated_permission = readAndEditPermission;
+      component.post.public_permission = readOnlyPermission;
+      component.post.author_permission = readOnlyPermission;
       expect(component.hasEditPermission()).toBeTruthy();
     });
     it('should return false if the user is on a different team and the authenticated permission is not read-and-edit', () => {
       component.user = UserProfileMock();
       component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id + 1;
-      component.post.team_permission = 2;
-      component.post.authenticated_permission = 2;
-      component.post.public_permission = 2;
-      component.post.author_permission = 2;
+      component.post.team_permission = readOnlyPermission;
+      component.post.authenticated_permission = readOnlyPermission;
+      component.post.public_permission = readOnlyPermission;
+      component.post.author_permission = readOnlyPermission;
       expect(component.hasEditPermission()).toBeFalsy();
     });
   });

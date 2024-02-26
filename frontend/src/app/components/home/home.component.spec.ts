@@ -17,10 +17,15 @@ import { LikesService } from '../../services/likes.service';
 import { CommentsService } from '../../services/comments.service';
 import { LikeMock } from '../../testing/mocks/like.mocks';
 import { By } from '@angular/platform-browser';
-import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Component } from '@angular/core';
 
+@Component({
+  selector: 'app-StubComponent',
+  template: '<h1>stub component</h1>',
+})
+class StubComponent {}
 
 fdescribe('HomeComponent', () => {
   let component: HomeComponent;
@@ -37,7 +42,9 @@ fdescribe('HomeComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         HomeComponent,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'server-error', component: StubComponent },
+        ]),
         CommonModule,
         FontAwesomeModule,
       ],
@@ -131,7 +138,11 @@ fdescribe('HomeComponent', () => {
     });
     it('should navigate to the server error component if there was a server error', () => {
       spyOn(router, 'navigate');
-      postService.getPosts.and.returnValue(throwError({ status: 500 }));
+      postService.getPosts.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getPosts();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
@@ -144,9 +155,7 @@ fdescribe('HomeComponent', () => {
     });
     it('should call the getPosts method', () => {
       postService.deletePost.and.returnValue(of({}));
-      postService.getPosts.and.returnValue(
-        of(postResponse)
-      );
+      postService.getPosts.and.returnValue(of(postResponse));
       component.deletePost(1);
       expect(postService.getPosts).toHaveBeenCalled();
     });
@@ -156,7 +165,11 @@ fdescribe('HomeComponent', () => {
       expect(toastService.success).toHaveBeenCalled();
     });
     it('should call the toastr error method', () => {
-      postService.deletePost.and.returnValue(throwError({ status: 500 }));
+      postService.deletePost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.deletePost(1);
       expect(toastService.error).toHaveBeenCalled();
     });

@@ -2,12 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListLikesComponent } from './list-likes.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
-import { LikeMock } from '../../testing/mocks/like.mocks';
+import { LikeListMock, LikeMock } from '../../testing/mocks/like.mocks';
+import { By } from '@angular/platform-browser';
 
-describe('ListLikesComponent', () => {
+fdescribe('ListLikesComponent', () => {
   let component: ListLikesComponent;
   let fixture: ComponentFixture<ListLikesComponent>;
-  let likesResponse = ApiResponseMock([LikeMock()]);
+  let likesResponse = ApiResponseMock(LikeListMock(45), 45, 3, 3);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -55,6 +56,17 @@ describe('ListLikesComponent', () => {
     it('should render', () => {
       const compiled = fixture.nativeElement;
       expect(compiled).toBeTruthy();
+    });
+    it('should render the list of likes', () => {
+      const compiled = fixture.debugElement
+      const listLikes = compiled.queryAll(By.css('.list-likes'));
+      expect(listLikes).toBeTruthy();
+    });
+    it('should render navigation buttons', () => {
+      const compiled = fixture.debugElement
+      const previousButton = compiled.queryAll(By.css('.like-navigation-icon'));
+      expect(previousButton).toBeTruthy();
+      expect(previousButton.length).toEqual(2);
     });
   });
 });
