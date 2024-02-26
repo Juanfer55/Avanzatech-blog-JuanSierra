@@ -38,7 +38,6 @@ export class LayoutComponent {
 
   ngOnInit() {
     this.getProfile();
-    this.getPosts();
   }
 
   private handleErrors(err: any) {
@@ -70,7 +69,8 @@ export class LayoutComponent {
     return this.authService.logout().subscribe({
       next: () => {
         this.toast.success('You have been logged out');
-        this.getPosts();
+        this.postservice.resetPostPage();
+        this.postservice.resetPostState();
         this.router.navigate(['/']);
       },
       error: (err) => {

@@ -65,18 +65,6 @@ export class LoginComponent {
     }
   }
 
-  getPosts() {
-    return this.postService.getPosts().subscribe({
-      next: () => {
-        window.scrollTo(0, 0);
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        this.handleErrors(err);
-      },
-    });
-  }
-
   login() {
     this.formSubmitted = true;
     if (this.loginForm.valid) {
@@ -85,7 +73,8 @@ export class LoginComponent {
 
       this.authService.login(username, password).subscribe({
         next: () => {
-          this.getPosts();
+          this.postService.resetPostPage();
+          this.router.navigate(['/']);
         },
         error: (err) => {
           if (err.status === 400) {

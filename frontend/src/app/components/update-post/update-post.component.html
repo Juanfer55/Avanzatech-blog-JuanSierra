@@ -97,7 +97,7 @@
           name="public_permission"
         >
           <option
-            *ngFor="let option of permissionOptions"
+            *ngFor="let option of options"
             [value]="option.value"
           >
             {{ option.label }}
@@ -114,7 +114,7 @@
         >
           <option
             class="form-options"
-            *ngFor="let option of permissionOptions"
+            *ngFor="let option of options"
             [value]="option.value"
           >
             {{ option.label }}
@@ -130,7 +130,7 @@
           name="team_permission"
         >
           <option
-            *ngFor="let option of permissionOptions"
+            *ngFor="let option of options"
             [value]="option.value"
           >
             {{ option.label }}
@@ -146,7 +146,7 @@
           name="author_permission"
         >
           <option
-            *ngFor="let option of permissionOptions"
+            *ngFor="let option of options"
             [value]="option.value"
           >
             {{ option.label }}

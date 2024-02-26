@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { CustomValidators } from '../../shared/customValidators/customValidators';
+// constants
+import { permissionOptions, readAndEditPermission, readOnlyPermission } from '../../shared/utilities/constants';
 
 @Component({
   selector: 'app-create-post',
@@ -28,11 +30,8 @@ import { CustomValidators } from '../../shared/customValidators/customValidators
   styleUrl: './create-post.component.sass',
 })
 export class CreatePostComponent {
-  permissionOptions = [
-    { value: 1, label: 'None' },
-    { value: 2, label: 'read-only' },
-    { value: 3, label: 'read-and-edit' },
-  ];
+
+  options = permissionOptions;
 
   createPostForm!: FormGroup;
 
@@ -67,10 +66,10 @@ export class CreatePostComponent {
           Validators.maxLength(10000),
         ],
       ],
-      public_permission: [2, [Validators.required]],
-      authenticated_permission: [2, [Validators.required]],
-      team_permission: [3, [Validators.required]],
-      author_permission: [3, [Validators.required]],
+      public_permission: [readOnlyPermission, [Validators.required]],
+      authenticated_permission: [readOnlyPermission, [Validators.required]],
+      team_permission: [readAndEditPermission, [Validators.required]],
+      author_permission: [readAndEditPermission, [Validators.required]],
     });
   }
 
@@ -85,7 +84,8 @@ export class CreatePostComponent {
       return this.postService.createPost(this.createPostForm.value).subscribe({
         next: () => {
           this.toastr.success('The post has been created!', 'Success');
-          this.getPosts();
+          this.postService.resetPostPage();
+          this.router.navigate(['/']);
         },
         error: (err) => {
           this.handleErrors(err);
@@ -95,18 +95,6 @@ export class CreatePostComponent {
     this.createPostForm.markAllAsTouched();
     return this.toastr.error('Fill out the form properly', 'Error', {
       positionClass: 'toast-top-full-width',
-    });
-  }
-
-  getPosts() {
-    return this.postService.getPosts().subscribe({
-      next: () => {
-        this.router.navigate(['/']);
-        window.scrollTo(0, 0);
-      },
-      error: (err) => {
-        this.handleErrors(err);
-      },
     });
   }
 }

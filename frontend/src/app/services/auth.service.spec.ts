@@ -6,8 +6,9 @@ import {
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserProfileMock } from '../testing/mocks/user.mocks';
+import { environment } from '../environments/environment.api';
 
-describe('AuthService', () => {
+fdescribe('AuthService', () => {
   let service: AuthService;
   let cookieService: CookieService;
   let httpMock: HttpTestingController;
@@ -31,7 +32,7 @@ describe('AuthService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('Login Tests', () => {
+  describe('login() Tests', () => {
     it('should return an Observable when succesfully login', (doneFn) => {
       const username = 'test@test.com';
       const password = 'test123456';
@@ -45,7 +46,7 @@ describe('AuthService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login/`);
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
     });
@@ -64,7 +65,7 @@ describe('AuthService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login/`);
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
     });
@@ -86,7 +87,7 @@ describe('AuthService', () => {
         },
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login/`);
       expect(req.request.method).toBe('POST');
       req.flush(errormsg, error);
     });
@@ -101,21 +102,21 @@ describe('AuthService', () => {
       };
 
       service.login(username, password).subscribe({
-        error: (err) => {
+        error: () => {
           const sessionCookie = cookieService.get('avanzablog');
           expect(sessionCookie).toBeFalsy();
           doneFn();
         },
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/login/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/login/`);
       expect(req.request.method).toBe('POST');
       req.flush(errormsg, error);
     });
 
   });
 
-  describe('Register Tests', () => {
+  describe('register() Tests', () => {
     it('should return an Observable when succesfully register', (doneFn) => {
       const username = 'test@test.com';
       const password = 'test123456';
@@ -129,9 +130,7 @@ describe('AuthService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/auth/register/'
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/register/`);
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
     });
@@ -154,14 +153,14 @@ describe('AuthService', () => {
       });
 
       const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/auth/register/'
+        `${environment.apiUrl}/auth/register/`
       );
       expect(req.request.method).toBe('POST');
       req.flush(errormsg, error);
     });
   });
 
-  describe('Get Profile Tests', () => {
+  describe('getProfile() Tests', () => {
     it('should return an Observable when succesfully get profile and sesion cookie is set', (doneFn) => {
       service.setSesionCookie();
       const responseMsg = UserProfileMock();
@@ -171,7 +170,7 @@ describe('AuthService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/user/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/user/`);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
@@ -192,7 +191,7 @@ describe('AuthService', () => {
         },
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/user/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/user/`);
       expect(req.request.method).toBe('GET');
       req.flush(errormsg, error);
     });
@@ -202,7 +201,7 @@ describe('AuthService', () => {
       const responseMsg = UserProfileMock();
       service.getProfile()?.subscribe();
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/user/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/user/`);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
 
@@ -214,7 +213,7 @@ describe('AuthService', () => {
     });
   });
 
-  describe('Logout Tests', () => {
+  describe('logout Tests', () => {
     it('should return an Observable when succesfully logout and reset observables', (doneFn) => {
       service.setSesionCookie();
       const responseMsg = {
@@ -227,7 +226,7 @@ describe('AuthService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/logout/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/logout/`);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
 
@@ -255,13 +254,13 @@ describe('AuthService', () => {
         },
       });
 
-      const req = httpMock.expectOne('http://127.0.0.1:8000/api/auth/logout/');
+      const req = httpMock.expectOne(`${environment.apiUrl}/auth/logout/`);
       expect(req.request.method).toBe('GET');
       req.flush(errormsg, error);
     });
   });
 
-  describe('Validate email Tests', () => {
+  describe('validateemail() Tests', () => {
     it('should return an Observable when succesfully validate email', (doneFn) => {
       const email = 'test@test.com';
       const responseMsg = {
@@ -274,7 +273,7 @@ describe('AuthService', () => {
       });
 
       const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/auth/validate-username/'
+        `${environment.apiUrl}/auth/validate-username/`
       );
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
@@ -292,7 +291,7 @@ describe('AuthService', () => {
       });
 
       const req = httpMock.expectOne(
-        'http://127.0.0.1:8000/api/auth/validate-username/'
+        `${environment.apiUrl}/auth/validate-username/`
       );
 
       expect(req.request.method).toBe('POST');

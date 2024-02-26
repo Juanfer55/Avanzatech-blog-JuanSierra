@@ -6,7 +6,7 @@ import { environment } from '../environments/environment.api';
 // models
 import { Post, PostWithExcerpt, PostWithoutPermission } from '../models/post.model';
 import { ApiResponse } from '../models/api-respond.model';
-import { BehaviorSubject, tap } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,28 +14,23 @@ import { BehaviorSubject, tap } from 'rxjs';
 export class PostService {
   private apiUrl = environment.apiUrl;
 
-  protected postsSubject: BehaviorSubject<ApiResponse<PostWithExcerpt>> = new BehaviorSubject<ApiResponse<PostWithExcerpt>>({
-    total_count: 0,
-    current_page: 0,
-    total_pages: 0,
-    next: null,
-    previous: null,
-    results: [],
-  });
-  public posts$ = this.postsSubject.asObservable();
+  private postPage: number = 1;
+  private totalPosts: number = 0;
+  private resetPostStateSubject = new Subject<void>();
 
   constructor(
     private http: HttpClient
   ) {}
 
   getPosts(link?: string){
-    const requestLink = link ? link : `${this.apiUrl}/post/`;
+    const requestLink = link ? link : `${this.apiUrl}/post/?page=${this.postPage}`;
 
     return this.http.get<ApiResponse<PostWithExcerpt>>(requestLink, {
       withCredentials: true,
     }).pipe(
       tap((response) => {
-        this.postsSubject.next(response);
+        this.totalPosts = response.total_count;
+        this.postPage = response.current_page;
       })
     );
   }
@@ -55,12 +50,43 @@ export class PostService {
   deletePost(id: number) {
     return this.http.delete(`${this.apiUrl}/blog/${id}/`, {
       withCredentials: true,
-    })
+    }).pipe(
+      tap(() => {
+        this.setPostPageAfterDelete();
+      })
+    );
   }
 
   updatePost(id: number, post: Post) {
     return this.http.put<PostWithoutPermission>(`${this.apiUrl}/blog/${id}/`, post, {
       withCredentials: true,
     });
+  }
+
+  resetPostPage() {
+    this.postPage = 1;
+  }
+
+  setPostPageAfterDelete() {
+    const currentPage = this.postPage;
+    const minPostsForCurrentPage = currentPage * 10 - 9;
+    const totalCountAfterDelete = this.totalPosts - 1;
+    const postPage = `${environment.apiUrl}/post/`;
+
+    if (currentPage! > 1) {
+      if (totalCountAfterDelete >= minPostsForCurrentPage) {
+        return this.postPage = currentPage;
+      }
+      return this.postPage = currentPage - 1;
+    }
+    return postPage;
+  }
+
+  resetPostState() {
+    this.resetPostStateSubject.next();
+  }
+
+  onResetPostState() {
+    return this.resetPostStateSubject.asObservable();
   }
 }

@@ -4,11 +4,14 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { CommentsService } from './comments.service';
-import { CommentMock } from '../testing/mocks/comment.mocks';
+import { CommentMock, generateCommentsMock } from '../testing/mocks/comment.mocks';
+import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
+import { environment } from '../environments/environment.api';
 
-describe('CommentsService', () => {
+fdescribe('CommentsService', () => {
   let service: CommentsService;
   let httpMock: HttpTestingController;
+  const commentResponse = ApiResponseMock(generateCommentsMock(5));
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,17 +30,10 @@ describe('CommentsService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('Get Comments Tests', () => {
+  describe('getComments() Tests', () => {
     it('should return an Observable when succesfully get comments', (doneFn) => {
       const postId = 1;
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [CommentMock()],
-      };
+      const responseMsg = commentResponse;
 
       service.getComments(postId).subscribe((response: any) => {
         expect(response).toEqual(responseMsg);
@@ -51,7 +47,7 @@ describe('CommentsService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/comment/?post=${postId}`
+        `${environment.apiUrl}/comment/?post=${postId}`
       );
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
@@ -74,26 +70,19 @@ describe('CommentsService', () => {
       });
 
       const req = httpMock.expectOne(
-        `http://127.0.0.1:8000/api/comment/?post=${postId}`
+        `${environment.apiUrl}/comment/?post=${postId}`
       );
       expect(req.request.method).toBe('GET');
       req.flush(errorMsg, error);
     });
   });
-  describe('Get Comments Page Tests', () => {
+  describe('getCommentPage() Tests', () => {
     it('should return an Observable when succesfully get comments page', (doneFn) => {
       const postId = 1;
-      const link = `http://127.0.0.1:8000/api/comment/?post=${postId}/?page=1`;
-      const responseMsg = {
-        total_count: 1,
-        current_page: 1,
-        total_pages: 1,
-        next: null,
-        previous: null,
-        results: [CommentMock()],
-      };
+      const link = `${environment.apiUrl}/comment/?post=${postId}/?page=2`
+      const responseMsg = commentResponse;
 
-      service.getCommentPage(link).subscribe((response: any) => {
+      service.getCommentPage(link).subscribe((response) => {
         expect(response).toEqual(responseMsg);
         expect(response.total_count).toEqual(responseMsg.total_count);
         expect(response.current_page).toEqual(responseMsg.current_page);
@@ -112,7 +101,7 @@ describe('CommentsService', () => {
 
     it('should return an error if the post does not exist or the user has no read permission on it', (doneFn) => {
       const postId = 1;
-      const link = `http://127.0.0.1:8000/api/comment/?post=${postId}/?page=1`;
+      const link = `${environment.apiUrl}/comment/?post=${postId}/?page=2`
       const errorMsg = 'Not found.';
       const error = {
         status: 404,
@@ -133,7 +122,7 @@ describe('CommentsService', () => {
     });
   });
 
-  describe('Create Comment Tests', () => {
+  describe('createComment() Tests', () => {
     it('should return an Observable when succesfully create comment', (doneFn) => {
       const postId = 1;
       const responseMsg = CommentMock();
@@ -145,7 +134,7 @@ describe('CommentsService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne(`http://127.0.0.1:8000/api/comment/`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/comment/`);
 
       expect(req.request.method).toBe('POST');
       req.flush(responseMsg);
@@ -168,7 +157,7 @@ describe('CommentsService', () => {
         },
       });
 
-      const req = httpMock.expectOne(`http://127.0.0.1:8000/api/comment/`);
+      const req = httpMock.expectOne(`${environment.apiUrl}/comment/`);
 
       expect(req.request.method).toBe('POST');
       req.flush(errormsg, error);

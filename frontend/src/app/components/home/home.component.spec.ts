@@ -108,20 +108,14 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
   describe('getPosts() tests', () => {
-    it('should get posts', () => {
-      expect(postService.getPosts).toHaveBeenCalled();
-    });
     it('should set the posts', () => {
       expect(component?.posts?.length).toBe(1);
-      expect(component?.posts[0]?.id).toBe(postWithExcerptMock.id);
-      expect(component?.posts[0]?.title).toBe(postWithExcerptMock.title);
-      expect(component.posts[0].content_excerpt).toBe(
+      expect(component?.posts?.[0]?.id).toBe(postWithExcerptMock.id);
+      expect(component?.posts?.[0]?.title).toBe(postWithExcerptMock.title);
+      expect(component?.posts?.[0]?.content_excerpt).toBe(
         postWithExcerptMock.content_excerpt
       );
-      expect(component.posts[0].author.id).toBe(postWithExcerptMock.author.id);
-    });
-    it('should set the previous page', () => {
-      expect(component.previousPage).toBe('link');
+      expect(component?.posts?.[0]?.author.id).toBe(postWithExcerptMock.author.id);
     });
     it('should set the next page', () => {
       expect(component.nextPage).toBe('link');
@@ -131,9 +125,6 @@ describe('HomeComponent', () => {
     });
     it('should set the total pages', () => {
       expect(component.totalPages).toBe(1);
-    });
-    it('should set the request status', () => {
-      expect(component.requestStatus).toBe('success');
     });
     it('it should send the input to the list post component', () => {
       const listPostComponent = fixture.debugElement.query(

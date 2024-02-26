@@ -17,9 +17,6 @@
   import { faAnglesRight } from '@fortawesome/free-solid-svg-icons';
   // rxjs
   import { Observable } from 'rxjs';
-  // environment
-  import { environment } from '../../environments/environment.api';
-  import { ApiResponse } from '../../models/api-respond.model';
 
   @Component({
     selector: 'app-home',
@@ -35,7 +32,6 @@
   })
   export class HomeComponent {
     logStatus$: Observable<boolean> = this.authService.logStatus$;
-    posts$: Observable<ApiResponse<PostWithExcerpt>> = this.postService.posts$;
 
     previousPage: string | null = null;
     nextPage: string | null = null;
@@ -55,18 +51,13 @@
       private authService: AuthService,
       private router: Router,
       private toast: ToastrService
-    ) {
-      this.posts$.subscribe((posts) => {
-        if (posts) {
-          this.previousPage = posts.previous;
-          this.nextPage = posts.next;
-          this.currentPage = posts.current_page;
-          this.totalPages = posts.total_pages;
-          this.totalPosts = posts.total_count;
-          this.posts = posts.results;
-          this.postsLoaded = true;
-        }
+    ) {}
+
+    ngOnInit() {
+      this.postService.onResetPostState().subscribe(() => {
+        this.getPosts();
       });
+      this.getPosts();
     }
 
     private handleErrors(err: any) {
@@ -75,9 +66,16 @@
       }
     }
 
-    getPosts(link: string) {
+    getPosts(link?: string) {
       return this.postService.getPosts(link).subscribe({
-        next: () => {
+        next: (response) => {
+          this.posts = response.results;
+          this.previousPage = response.previous;
+          this.nextPage = response.next;
+          this.currentPage = response.current_page;
+          this.totalPages = response.total_pages;
+          this.totalPosts = response.total_count;
+          this.postsLoaded = true;
           window.scrollTo(0, 0);
         },
         error: (err) => {
@@ -90,28 +88,12 @@
       return this.postService.deletePost(postId).subscribe({
         next: () => {
           this.toast.success('The Post was deleted successfully!');
-          const postPage = this.setPostPage();
-          this.getPosts(postPage);
+          this.getPosts();
         },
         error: (err) => {
           this.toast.error('Something went wrong!');
           this.handleErrors(err);
         },
       });
-    }
-
-    setPostPage() {
-      const currentPage = this.currentPage;
-      const minPostsForCurrentPage = this.currentPage! * 10 - 9;
-      const totalCountAfterDelete = this.totalPosts! - 1;
-      const postPage = `${environment.apiUrl}/post/`;
-
-      if (currentPage! > 1) {
-        if (totalCountAfterDelete >= minPostsForCurrentPage) {
-          return `${postPage}?page=${currentPage}`;
-        }
-        return `${postPage}?page=${currentPage! - 1}`;
-      }
-      return postPage;
     }
   }

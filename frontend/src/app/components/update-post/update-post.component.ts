@@ -20,8 +20,8 @@ import { ToastrService } from 'ngx-toastr';
 // components
 import { PostNotFoundComponent } from '../../shared/components/post-not-found/post-not-found.component';
 import { CustomValidators } from '../../shared/customValidators/customValidators';
-// environment
-import { environment } from '../../environments/environment.api';
+// constants
+import { permissionOptions } from '../../shared/utilities/constants';
 
 @Component({
   selector: 'app-update-post',
@@ -37,11 +37,8 @@ import { environment } from '../../environments/environment.api';
   styleUrl: './update-post.component.sass',
 })
 export class UpdatePostComponent {
-  permissionOptions = [
-    { value: 1, label: 'none' },
-    { value: 2, label: 'read-only' },
-    { value: 3, label: 'read-and-edit' },
-  ];
+
+  options = permissionOptions;
 
   postId!: number;
 
@@ -66,9 +63,6 @@ export class UpdatePostComponent {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.postId = params['id'];
-    });
-    this.postService.posts$.subscribe((posts) => {
-      this.postPage = posts.current_page;
     });
     this.getPost();
   }
@@ -132,7 +126,6 @@ export class UpdatePostComponent {
       return this.postService.updatePost(this.postId, formValue).subscribe({
         next: () => {
           this.toastr.success('The post has been updated!', 'Success');
-          this.updatePostPage();
           this.router.navigate(['/post', this.postId]);
         },
         error: (error) => {
@@ -144,16 +137,6 @@ export class UpdatePostComponent {
 
     return this.toastr.error('Fill out the form properly', 'Error', {
       positionClass: 'toast-top-full-width',
-    });
-  }
-
-  updatePostPage() {
-    const currentPage = this.postPage;
-    const pagelink = `${environment.apiUrl}/post/?page=${currentPage}`;
-    return this.postService.getPosts(pagelink).subscribe({
-      error: (error) => {
-        this.handleErrors(error);
-      },
     });
   }
 }
