@@ -1,0 +1,23 @@
+services:  
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: avanzablog_backend
+    command: sh -c "cd backend && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py shell < create_default_data.py && python3 manage.py shell < create_post.py && python3 manage.py runserver 0.0.0.0:8000"
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: avanzablog_frontend
+    command: sh -c "cd frontend && ng serve --host 0.0.0.0"
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "4200:4200"

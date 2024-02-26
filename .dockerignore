@@ -1,0 +1,7 @@
+# help me with ignoring all migration files except the __init__.py file 
+# Ignore migration files
+**/migrations/*.py
+**/migrations/*.pyc
+
+# Ignore db.sqlite3
+db.sqlite3
