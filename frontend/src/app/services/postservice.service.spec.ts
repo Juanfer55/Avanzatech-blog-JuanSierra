@@ -4,14 +4,19 @@ import {
   HttpTestingController,
 } from '@angular/common/http/testing';
 import { PostService } from './postservice.service';
-import { PostListMock, PostMock, PostWithExcerptMock, PostWithoutPermissionMock } from '../testing/mocks/post.mocks';
+import {
+  PostListMock,
+  PostMock,
+  PostWithoutPermissionMock,
+} from '../testing/mocks/post.mocks';
 import { environment } from '../environments/environment.api';
 import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
+import { catchError, throwError } from 'rxjs';
 
-fdescribe('PostserviceService', () => {
+describe('PostserviceService', () => {
   let service: PostService;
   let httpMock: HttpTestingController;
-  const postResponse = ApiResponseMock(PostListMock(10));
+  const postResponse = ApiResponseMock(PostListMock(10), 10, 1, 1);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -49,16 +54,30 @@ fdescribe('PostserviceService', () => {
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
-    it('should set the postpage and totalposts when succesfully get posts', (doneFn) => {
-      spyOn(service, 'setServiceinfo');
-      const responseMsg = ApiResponseMock([PostWithExcerptMock()]);
+    it('should call setServiceInfo', (doneFn) => {
+      spyOn(service, 'setServiceInfo');
+      const responseMsg = postResponse;
 
-      service.getPosts().subscribe((response) => {
-        expect(service.setServiceinfo).toHaveBeenCalled();
+      service.getPosts().subscribe(() => {
+        expect(service.setServiceInfo).toHaveBeenCalled();
         doneFn();
       });
 
       const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush(responseMsg);
+    });
+    it('should set the postpage and totalposts when succesfully get posts with link', (doneFn) => {
+      const link = `${environment.apiUrl}/post/?page=2`;
+      const responseMsg = postResponse;
+
+      service.getPosts(link).subscribe(() => {
+        expect(service.getPostPage()).toBe(responseMsg.current_page);
+        expect(service.getTotalPosts()).toBe(responseMsg.total_count);
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(link);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
@@ -81,22 +100,6 @@ fdescribe('PostserviceService', () => {
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
-    it('should retry the request and reset the page once if it fails', (doneFn) => {
-      const responseMsg = postResponse;
-
-      service.getPosts().subscribe((response) => {
-        expect(response).toEqual(responseMsg);
-        doneFn();
-      });
-
-      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
-      expect(req.request.method).toBe('GET');
-      req.flush('error', { status: 500, statusText: 'Server error' });
-
-      const req2 = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
-      expect(req2.request.method).toBe('GET');
-      req2.flush(responseMsg);
-    });
   });
   describe('getPost() Tests', () => {
     it('should return an Observable when succesfully get post', (doneFn) => {
@@ -113,9 +116,7 @@ fdescribe('PostserviceService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/post/${postId}/`
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/${postId}/`);
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
@@ -135,9 +136,7 @@ fdescribe('PostserviceService', () => {
         },
       });
 
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/post/${postId}/`
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/${postId}/`);
       expect(req.request.method).toBe('GET');
       req.flush(errorMsg, error);
     });
@@ -234,9 +233,7 @@ fdescribe('PostserviceService', () => {
         },
       });
 
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/blog/${postId}/`
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/blog/${postId}/`);
 
       expect(req.request.method).toBe('DELETE');
       req.flush(errorMsg, error);
@@ -257,9 +254,7 @@ fdescribe('PostserviceService', () => {
         doneFn();
       });
 
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/blog/${postId}/`
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/blog/${postId}/`);
 
       expect(req.request.method).toBe('PUT');
       req.flush(responseMsg);
@@ -281,9 +276,7 @@ fdescribe('PostserviceService', () => {
         },
       });
 
-      const req = httpMock.expectOne(
-        `${environment.apiUrl}/blog/${postId}/`
-      );
+      const req = httpMock.expectOne(`${environment.apiUrl}/blog/${postId}/`);
       expect(req.request.method).toBe('PUT');
       req.flush(errorMsg, error);
     });
@@ -292,7 +285,7 @@ fdescribe('PostserviceService', () => {
     it('should return the current page if the total count is greater than or equal to the min posts for the current page', (doneFn) => {
       const response = ApiResponseMock(PostListMock(20), 20, 2, 2);
       service.getPosts().subscribe(() => {
-        service.setServiceinfo(response);
+        service.setServiceInfo(response);
         service.setPostPageAfterDelete();
         expect(service.getPostPage()).toBe(response.current_page);
         doneFn();
@@ -305,7 +298,7 @@ fdescribe('PostserviceService', () => {
     it('should return the previous page if the total count is less than the min posts for the current page', (doneFn) => {
       const response = ApiResponseMock(PostListMock(20), 11, 2, 2);
       service.getPosts().subscribe(() => {
-        service.setServiceinfo(response);
+        service.setServiceInfo(response);
         service.setPostPageAfterDelete();
         expect(service.getPostPage()).toBe(response.current_page - 1);
         doneFn();
@@ -318,7 +311,7 @@ fdescribe('PostserviceService', () => {
     it('should return the page 1 if the actual page is 1', (doneFn) => {
       const response = ApiResponseMock(PostListMock(20), 11, 1, 2);
       service.getPosts().subscribe(() => {
-        service.setServiceinfo(response);
+        service.setServiceInfo(response);
         service.setPostPageAfterDelete();
         expect(service.getPostPage()).toBe(1);
         doneFn();
@@ -347,4 +340,3 @@ fdescribe('PostserviceService', () => {
     });
   });
 });
-

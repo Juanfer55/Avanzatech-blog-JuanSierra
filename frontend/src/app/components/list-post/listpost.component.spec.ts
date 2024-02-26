@@ -20,7 +20,7 @@ import { Comment } from '../../models/comments.model';
 import { Dialog } from '@angular/cdk/dialog';
 import { nonePermission, readAndEditPermission, readOnlyPermission } from '../../shared/utilities/constants';
 
-fdescribe('ListpostComponent', () => {
+describe('ListpostComponent', () => {
   let component: ListpostComponent;
   let fixture: ComponentFixture<ListpostComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -239,6 +239,7 @@ fdescribe('ListpostComponent', () => {
     });
     it('should return true if the user is on the same team as the author of the entry and the team permission is read and edit.', () => {
       component.user = UserProfileMock();
+      component.user.is_admin = false;
       component.user.team.id = component.post.author.team.id;
       component.post.team_permission = readAndEditPermission;
       expect(component.hasEditPermission()).toBeTruthy();

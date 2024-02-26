@@ -5,7 +5,7 @@ import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
 import { LikeListMock, LikeMock } from '../../testing/mocks/like.mocks';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ListLikesComponent', () => {
+describe('ListLikesComponent', () => {
   let component: ListLikesComponent;
   let fixture: ComponentFixture<ListLikesComponent>;
   let likesResponse = ApiResponseMock(LikeListMock(45), 45, 3, 3);
@@ -43,6 +43,15 @@ fdescribe('ListLikesComponent', () => {
     });
     it('should set likesIsOpen', () => {
       expect(component.likesIsOpen).toEqual(false);
+    });
+    it('should set default values if likesResponse is null', () => {
+      component.likesResponse = null;
+      component.ngOnChanges();
+      expect(component.likes).toEqual([]);
+      expect(component.likesTotalPages).toEqual(0);
+      expect(component.likesCurrentPage).toEqual(0);
+      expect(component.likesPreviousPage).toEqual(null);
+      expect(component.likesNextPage).toEqual(null);
     });
   });
   describe('likePageChange', () => {

@@ -7,7 +7,7 @@ import { AuthService } from '../../../services/auth.service';
 import { of, throwError } from 'rxjs';
 import { PostService } from '../../../services/postservice.service';
 
-fdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -100,6 +100,23 @@ fdescribe('LoginComponent', () => {
       component.login();
 
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    });
+    it('should mark all form fields as touched', () => {
+      component.login();
+      expect(component.loginForm.get('username')?.touched).toBeTrue();
+      expect(component.loginForm.get('password')?.touched).toBeTrue();
+    });
+  });
+  describe('togglePasswordVisibility() tests', () => {
+    it('should set passwordVisible to true', () => {
+      component.showPassword = false;
+      component.togglePasswordVisibility();
+      expect(component.showPassword).toBeTrue();
+    });
+    it('should set passwordVisible to false', () => {
+      component.showPassword = true;
+      component.togglePasswordVisibility();
+      expect(component.showPassword).toBeFalse();
     });
   });
   describe('render test', () => {

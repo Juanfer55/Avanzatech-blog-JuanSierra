@@ -36,7 +36,7 @@ export class PostService {
         return throwError(() => error);
       }),
       tap((response) => {
-        this.setServiceinfo(response);
+        this.setServiceInfo(response);
       })
     );
   }
@@ -69,7 +69,7 @@ export class PostService {
     });
   }
 
-  setServiceinfo(response: ApiResponse<PostWithExcerpt>) {
+  setServiceInfo(response: ApiResponse<PostWithExcerpt>) {
     this.totalPosts = response.total_count;
     this.postPage = response.current_page;
   }

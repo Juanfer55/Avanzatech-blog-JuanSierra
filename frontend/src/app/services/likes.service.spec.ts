@@ -8,7 +8,7 @@ import { LikeMock } from '../testing/mocks/like.mocks';
 import { environment } from '../environments/environment.api';
 import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
 
-fdescribe('LikesService', () => {
+describe('LikesService', () => {
   let service: LikesService;
   let httpMock: HttpTestingController;
   const likeResponse = ApiResponseMock([]);

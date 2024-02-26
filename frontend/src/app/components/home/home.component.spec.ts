@@ -27,7 +27,7 @@ import { Component } from '@angular/core';
 })
 class StubComponent {}
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -172,6 +172,17 @@ fdescribe('HomeComponent', () => {
       }));
       component.deletePost(1);
       expect(toastService.error).toHaveBeenCalled();
+    });
+  });
+  describe('onResetPostState()suubscription test', () => {
+    it('should call the getPosts method if the onResetPostState change state', () => {
+      postService.onResetPostState.and.callFake(() => {
+        return of();
+      });
+      postService.getPosts.and.returnValue(of(postResponse));
+      postService.onResetPostState().subscribe(() => {
+        expect(postService.getPosts).toHaveBeenCalled();
+      });
     });
   });
   describe('render tests', () => {

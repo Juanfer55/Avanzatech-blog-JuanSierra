@@ -17,7 +17,7 @@ import { PostService } from '../../../services/postservice.service';
 import { Dialog } from '@angular/cdk/dialog';
 
 
-fdescribe('LayoutComponent', () => {
+describe('LayoutComponent', () => {
   let component: LayoutComponent;
   let fixture: ComponentFixture<LayoutComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -81,6 +81,31 @@ fdescribe('LayoutComponent', () => {
       expect(component.isLoggedIn$).toBeTruthy();
       expect(component.userProfile$).toBeTruthy();
     });
+  });
+  describe('getProfile() tests', () => {
+    it('should call the authservice', fakeAsync(() => {
+      authService.getProfile.and.returnValue(of());
+      component.getProfile();
+      tick();
+      expect(authService.getProfile).toHaveBeenCalled();
+    }));
+    it('should set the user profile and the user logged in status', fakeAsync(() => {
+      authService.getProfile.and.returnValue(of(UserProfileMock()));
+      component.getProfile();
+      tick();
+      expect(component.isLoggedIn$).toBeTruthy();
+      expect(component.userProfile$).toBeTruthy();
+    }));
+    it('should navigate to the server error page if server error', fakeAsync(() => {
+      authService.getProfile.and.returnValue(throwError(() => {
+        const error = new Error();
+        (error as any).status = 500;
+        return error;
+      }));
+      component.getProfile();
+      tick();
+      expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    }));
   });
   describe('logout() tests', () => {
     it('should call the authservice', fakeAsync(() => {

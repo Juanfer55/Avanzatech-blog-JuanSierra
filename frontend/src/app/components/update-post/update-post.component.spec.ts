@@ -78,7 +78,6 @@ describe('UpdatePostComponent', () => {
         author_permission: post.author_permission,
       });
     });
-
     it('should set title as valid', () => {
       component.updatePostForm.get('title')?.setValue('valid title');
       expect(component.updatePostForm.get('title')?.valid).toBeTruthy();
@@ -145,12 +144,20 @@ describe('UpdatePostComponent', () => {
       expect(component.requestStatus).toEqual('success');
     });
     it('should set requestStatus to error if error', () => {
-      postService.getPost.and.returnValue(throwError({ status: 0 }));
+      postService.getPost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getPost();
       expect(component.requestStatus).toEqual('error');
     });
     it('should call router.navigate if server error', () => {
-      postService.getPost.and.returnValue(throwError({ status: 0 }));
+      postService.getPost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.getPost();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
     });
@@ -167,7 +174,11 @@ describe('UpdatePostComponent', () => {
     it('should call updatePost() and return a server error', () => {
       component.updatePostForm.get('title')?.setValue('Test Title');
       component.updatePostForm.get('content')?.setValue('Test Content');
-      postService.updatePost.and.returnValue(throwError({ status: 500 }));
+      postService.updatePost.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
       component.updatePost();
       expect(postService.updatePost).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);

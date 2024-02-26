@@ -15,9 +15,8 @@ import { LikeMock } from '../../testing/mocks/like.mocks';
 import { CommentMock } from '../../testing/mocks/comment.mocks';
 import { AuthService } from '../../services/auth.service';
 import { UserProfileMock } from '../../testing/mocks/user.mocks';
-import { th } from '@faker-js/faker';
 
-fdescribe('DetailPostComponent', () => {
+describe('DetailPostComponent', () => {
   let component: DetailPostComponent;
   let fixture: ComponentFixture<DetailPostComponent>;
   let postService: jasmine.SpyObj<PostService>;
@@ -162,6 +161,51 @@ fdescribe('DetailPostComponent', () => {
       component.postId = 1;
       component.addComment();
       expect(commentsService.createComment).toHaveBeenCalledWith(1, 'comment');
+    });
+  });
+  describe('addComment() tests', () => {
+    it('should call getComments', () => {
+      spyOn(component, 'getComments');
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      commentsService.createComment.and.returnValue(of(CommentMock()));
+      component.addComment();
+      expect(component.getComments).toHaveBeenCalled();
+    });
+    it('should call toastrService.success', () => {
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      commentsService.createComment.and.returnValue(of(CommentMock()));
+      component.addComment();
+      expect(toastrService.success).toHaveBeenCalled();
+    });
+    it('should call toastrService.error', () => {
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      commentsService.createComment.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 400;
+        return error;
+      }));
+      component.addComment();
+      expect(toastrService.error).toHaveBeenCalled();
+    });
+    it('should call router.navigate if server error', () => {
+      spyOn(router, 'navigate');
+      component.commentForm.get('comment')?.setValue('comment');
+      component.postId = 1;
+      commentsService.createComment.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
+      component.addComment();
+      expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    });
+    it('should call toast error if comment is not valid', () => {
+      component.commentForm.get('comment')?.setValue('');
+      component.addComment();
+      expect(toastrService.error).toHaveBeenCalled();
     });
   });
   describe('form tests', () => {

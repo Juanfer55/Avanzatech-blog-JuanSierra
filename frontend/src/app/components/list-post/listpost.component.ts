@@ -27,6 +27,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { ApiResponse } from '../../models/api-respond.model';
 // component
 import { ListLikesComponent } from '../list-likes/list-likes.component';
+import { readAndEditPermission } from '../../shared/utilities/constants';
 
 
 @Component({
@@ -74,13 +75,11 @@ export class ListpostComponent {
     this.authService.userProfile$.subscribe((userProfile) => {
       if (userProfile) {
         this.user = userProfile;
+        this.getUserLike();
       }
     });
     this.getLikes();
     this.getComments();
-    if (this.user) {
-      this.getUserLike();
-    }
   }
 
   private handleErrors(err: any) {
@@ -178,7 +177,7 @@ export class ListpostComponent {
 
   hasEditPermission() {
     if (!this.user) {
-      return this.post.public_permission === 3;
+      return this.post.public_permission === readAndEditPermission;
     }
 
     if (this.user.is_admin) {
@@ -186,7 +185,7 @@ export class ListpostComponent {
     }
 
     if (this.user.id === this.post.author.id) {
-      return this.post.author_permission === 3;
+      return this.post.author_permission === readAndEditPermission;
     }
 
     if (
@@ -197,7 +196,7 @@ export class ListpostComponent {
     }
 
     return (
-      this.post.authenticated_permission === 3 &&
+      this.post.authenticated_permission === readAndEditPermission &&
       (this.user.team.id !== this.post.author.team.id) &&
       (this.user.id !== this.post.author.id)
     );

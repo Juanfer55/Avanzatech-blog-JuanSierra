@@ -8,7 +8,7 @@ import { CommentMock, CommentListMock } from '../testing/mocks/comment.mocks';
 import { ApiResponseMock } from '../testing/mocks/apiResponse.mocks';
 import { environment } from '../environments/environment.api';
 
-fdescribe('CommentsService', () => {
+describe('CommentsService', () => {
   let service: CommentsService;
   let httpMock: HttpTestingController;
   const commentResponse = ApiResponseMock(CommentListMock(5));

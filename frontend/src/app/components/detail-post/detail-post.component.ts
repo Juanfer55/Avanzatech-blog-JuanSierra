@@ -156,10 +156,12 @@ export class DetailPostComponent {
       const content = this.commentForm.get('comment')?.value;
       return this.commentService.createComment(this.postId, content).subscribe({
         next: () => {
+          this.toastService.success('The comment has been created');
           this.getComments();
           this.cleanForm();
         },
         error: (err) => {
+          this.toastService.error('The comment has not been created')
           this.handleErrors(err);
         },
       });

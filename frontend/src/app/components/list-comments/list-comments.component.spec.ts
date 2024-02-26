@@ -5,7 +5,7 @@ import { ApiResponseMock } from '../../testing/mocks/apiResponse.mocks';
 import { CommentListMock } from '../../testing/mocks/comment.mocks';
 import { By } from '@angular/platform-browser';
 
-fdescribe('ListCommentsComponent', () => {
+describe('ListCommentsComponent', () => {
   let component: ListCommentsComponent;
   let fixture: ComponentFixture<ListCommentsComponent>;
   const comments = CommentListMock(10);
@@ -44,6 +44,16 @@ fdescribe('ListCommentsComponent', () => {
     });
     it('should set commentsNextPage', () => {
       expect(component.commentsNextPage).toEqual('link-next-page');
+    });
+    it('should set default values if commentsResponse is null', () => {
+      component.commentsResponse = null;
+      component.ngOnChanges();
+      expect(component.comments).toEqual([]);
+      expect(component.commentCount).toEqual(0);
+      expect(component.commentsTotalPages).toEqual(0);
+      expect(component.commentsCurrentPage).toEqual(0);
+      expect(component.commentsPreviousPage).toEqual(null);
+      expect(component.commentsNextPage).toEqual(null);
     });
   });
   describe('commentPageChange', () => {

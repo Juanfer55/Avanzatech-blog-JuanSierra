@@ -8,7 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { UserProfileMock } from '../testing/mocks/user.mocks';
 import { environment } from '../environments/environment.api';
 
-fdescribe('AuthService', () => {
+describe('AuthService', () => {
   let service: AuthService;
   let cookieService: CookieService;
   let httpMock: HttpTestingController;
@@ -210,6 +210,15 @@ fdescribe('AuthService', () => {
 
       expect(userProfile).toEqual(responseMsg);
       expect(logStatus).toBe(true);
+    });
+    it('should return null if there is no sesion cookie', () => {
+      const cookie = cookieService.get('avanzablog');
+      expect(cookie).toBeFalsy();
+      const userProfile = service.getProfile();
+      const logStatus = service.getLogStatus();
+
+      expect(userProfile).toEqual(null);
+      expect(logStatus).toBe(false);
     });
   });
 

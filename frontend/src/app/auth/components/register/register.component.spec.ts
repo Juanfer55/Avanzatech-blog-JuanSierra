@@ -8,7 +8,7 @@ import { UserProfileMock } from '../../../testing/mocks/user.mocks';
 import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
-fdescribe('RegisterComponent', () => {
+describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let authService: jasmine.SpyObj<AuthService>;
@@ -201,6 +201,12 @@ fdescribe('RegisterComponent', () => {
       );
       component.register();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    });
+    it('should mark all form fields as touched', () => {
+      component.register();
+      expect(component.registerForm.get('username')?.touched).toBeTrue();
+      expect(component.registerForm.get('password')?.touched).toBeTrue();
+      expect(component.registerForm.get('passwordConfirm')?.touched).toBeTrue();
     });
   });
   describe('render test', () => {

@@ -11,7 +11,7 @@ from permissions.models import PermissionLevels
 
 class PostCategory(BaseModel, models.Model):
     """
-    Permission model for blog_avanzatech project.
+    PostCategory model.
 
     Defines PostCategory object with post, category and permission.
     """
