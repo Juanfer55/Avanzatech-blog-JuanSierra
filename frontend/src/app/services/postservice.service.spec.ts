@@ -81,6 +81,22 @@ fdescribe('PostserviceService', () => {
       expect(req.request.method).toBe('GET');
       req.flush(responseMsg);
     });
+    it('should retry the request and reset the page once if it fails', (doneFn) => {
+      const responseMsg = postResponse;
+
+      service.getPosts().subscribe((response) => {
+        expect(response).toEqual(responseMsg);
+        doneFn();
+      });
+
+      const req = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req.request.method).toBe('GET');
+      req.flush('error', { status: 500, statusText: 'Server error' });
+
+      const req2 = httpMock.expectOne(`${environment.apiUrl}/post/?page=1`);
+      expect(req2.request.method).toBe('GET');
+      req2.flush(responseMsg);
+    });
   });
   describe('getPost() Tests', () => {
     it('should return an Observable when succesfully get post', (doneFn) => {

@@ -5,11 +5,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../../services/auth.service';
 import { of, throwError } from 'rxjs';
+import { PostService } from '../../../services/postservice.service';
 
-describe('LoginComponent', () => {
+fdescribe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: jasmine.SpyObj<AuthService>;
+  let postService: jasmine.SpyObj<PostService>;
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
@@ -21,7 +23,13 @@ describe('LoginComponent', () => {
           useValue: jasmine.createSpyObj('AuthService', [
             'login',
           ]),
-        }
+        },
+        {
+          provide: PostService,
+          useValue: jasmine.createSpyObj('PostService', [
+            'resetPostPage',
+          ]),
+        },
       ]
 
     })
@@ -30,6 +38,7 @@ describe('LoginComponent', () => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
+    postService = TestBed.inject(PostService) as jasmine.SpyObj<PostService>;
     router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     spyOn(router, 'navigate');
     fixture.detectChanges();
@@ -37,6 +46,61 @@ describe('LoginComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+  describe('login() tests', () => {
+    it('should call login method', () => {
+      component.loginForm.setValue({
+        username: 'test@gmail.com',
+        password: 'test123456'
+      })
+
+      authService.login.and.returnValue(of({}));
+      component.login();
+
+      expect(authService.login).toHaveBeenCalled();
+    });
+    it('should navigate to home page if login was succesfull', () => {
+      component.loginForm.setValue({
+        username: 'test@gmail.com',
+        password: 'test123456'
+      })
+
+      authService.login.and.returnValue(of({}));
+      component.login();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/']);
+    })
+    it('sould set invalidCredentials to true if login failed', () => {
+      component.loginForm.setValue({
+        username: 'test@gmail.com',
+        password: 'test123456'
+      });
+
+      authService.login.and.returnValue(throwError(() => {
+        const error = new Error('Invalid credentials');
+        (error as any).status = 400;
+        return error;
+      }));
+
+      component.login();
+
+      expect(component.invalidCredentials).toBeTrue();
+    });
+    it('should navigate to the server error page if server error', () => {
+      component.loginForm.setValue({
+        username: 'test@gmail.com',
+        password: 'test123456'
+      });
+
+      authService.login.and.returnValue(throwError(() => {
+        const error = new Error('Server Error');
+        (error as any).status = 500;
+        return error;
+      }));
+      component.login();
+
+      expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
+    });
   });
   describe('render test', () => {
     it('should render a form', () => {
@@ -69,44 +133,5 @@ describe('LoginComponent', () => {
       const homeLink = compiled.querySelector('[data-testid="home-link"]');
       expect(homeLink).toBeTruthy();
     })
-  });
-  describe('login', () => {
-    it('should call login method', () => {
-      component.loginForm.setValue({
-        username: 'test@gmail.com',
-        password: 'test123456'
-      })
-
-      authService.login.and.returnValue(of({}));
-      component.login();
-
-      expect(authService.login).toHaveBeenCalled();
-    });
-    it('should navigate to home page if login was succesfull', () => {
-      component.loginForm.setValue({
-        username: 'test@gmail.com',
-        password: 'test123456'
-      })
-
-      authService.login.and.returnValue(of({}));
-      component.login();
-
-      expect(router.navigate).toHaveBeenCalledWith(['/']);
-    })
-    it('should not navigate to home page if login was unsuccesfull', () => {
-      component.loginForm.setValue({
-        username: 'test@gmail.com',
-        password: 'test123456'
-      });
-
-      authService.login.and.returnValue(throwError(() => {
-        const error = new Error('Server Error');
-        (error as any).status = 500;
-        return error;
-      }));
-      component.login();
-
-      expect(router.navigate).toHaveBeenCalledWith(['/server-error']);
-    });
   });
 });

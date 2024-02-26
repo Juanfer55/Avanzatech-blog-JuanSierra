@@ -101,12 +101,6 @@ fdescribe('LayoutComponent', () => {
       tick();
       expect(toast.success).toHaveBeenCalledWith('You have been logged out');
     }));
-    it('should call the resetPostPage method from the postservice', fakeAsync(() => {
-      authService.logout.and.returnValue(of({}));
-      component.logout();
-      tick();
-      expect(postService.resetPostPage).toHaveBeenCalled();
-    }));
     it('should call the resetPostState method from the postservice', fakeAsync(() => {
       authService.logout.and.returnValue(of({}));
       component.logout();
@@ -114,15 +108,23 @@ fdescribe('LayoutComponent', () => {
       expect(postService.resetPostState).toHaveBeenCalled();
     }));
     it('should show an error message if the logout was unsuccesfull', fakeAsync(() => {
-      authService.logout.and.returnValue(throwError({}));
+      authService.logout.and.returnValue(throwError(() => {
+        const error = new Error();
+        (error as any).status = 400;
+        return error;
+      }));
       component.logout();
       tick();
       expect(toast.error).toHaveBeenCalledWith(
         'An error occurred while logging out'
       );
     }));
-    it('should navigate to the server error page if the logout was unsuccesfull', fakeAsync(() => {
-      authService.logout.and.returnValue(throwError({ status: 0 }));
+    it('should navigate to the server error page if server error', fakeAsync(() => {
+      authService.logout.and.returnValue(throwError(() => {
+        const error = new Error();
+        (error as any).status = 500;
+        return error;
+      }));
       component.logout();
       tick();
       expect(router.navigate).toHaveBeenCalledWith(['/server-error']);

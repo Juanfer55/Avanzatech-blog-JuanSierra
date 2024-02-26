@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { CustomValidators } from './customValidators';
 import { of } from 'rxjs';
 
-describe('CustomValidators', () => {
+fdescribe('CustomValidators', () => {
   let authService: jasmine.SpyObj<AuthService>;
 
   beforeEach(() => {

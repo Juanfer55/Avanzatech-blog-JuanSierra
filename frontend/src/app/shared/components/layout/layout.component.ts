@@ -58,7 +58,6 @@ export class LayoutComponent {
     return this.authService.logout().subscribe({
       next: () => {
         this.toast.success('You have been logged out');
-        this.postservice.resetPostPage();
         this.postservice.resetPostState();
         this.router.navigate(['/']);
       },

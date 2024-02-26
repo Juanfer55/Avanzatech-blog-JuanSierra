@@ -6,7 +6,7 @@ import { environment } from '../environments/environment.api';
 // models
 import { Post, PostWithExcerpt, PostWithoutPermission } from '../models/post.model';
 import { ApiResponse } from '../models/api-respond.model';
-import { Subject, tap } from 'rxjs';
+import { Subject, catchError, retry, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +28,13 @@ export class PostService {
     return this.http.get<ApiResponse<PostWithExcerpt>>(requestLink, {
       withCredentials: true,
     }).pipe(
+      retry(1),
+      catchError((error) => {
+        if (error.status === 404) {
+          this.resetPostPage();
+        }
+        return throwError(() => error);
+      }),
       tap((response) => {
         this.setServiceinfo(response);
       })
@@ -69,6 +76,7 @@ export class PostService {
 
   resetPostPage() {
     this.postPage = 1;
+    this.totalPosts = 0;
   }
 
   setPostPageAfterDelete() {
@@ -76,7 +84,7 @@ export class PostService {
     const minPostsForCurrentPage = currentPage * 10 - 9;
     const totalCountAfterDelete = this.totalPosts - 1;
 
-    if (currentPage! > 1) {
+    if (currentPage > 1) {
       if (totalCountAfterDelete >= minPostsForCurrentPage) {
         return this.postPage = currentPage;
       }
@@ -86,6 +94,7 @@ export class PostService {
   }
 
   resetPostState() {
+    this.resetPostPage();
     this.resetPostStateSubject.next();
   }
 
