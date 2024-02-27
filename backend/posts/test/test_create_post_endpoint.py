@@ -9,7 +9,7 @@ from testing_utilities.factories import UserFactory
 from testing_utilities.utils import set_up_test_environment
 import json
 # models
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 
 
 class CreatePostsEndpoint(APITestCase):

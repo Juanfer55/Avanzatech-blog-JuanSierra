@@ -6,23 +6,25 @@ This is the documentation of the Blog avanzatech API created by Juan Fernando Si
 The project is composed of 8 modules that contain different functionalities:
 
 
-- avanzatech_blog: It is the main module, it contains the configuration files for the djando project and the main root of the urls.
+- avanzatech_blog: It is the main module, it contains the configuration files of the djando project and the main root of the urls.
 
 - api: Contains the url addresses of the api.
 
-- base_models: Contains base models used in the project, reducing code repetition.
+- shared: Contains utilities used in the project, reducing code repetition.
 
-- users: Contains the custom user model and two previously supplied views for login and logout.
+- users: Contains the custom user model with views for login, register and logout.
 
-- posts: Contains the posts model, the serializers and the views.
+- posts: Contains the posts model, serializers and views.
 
-- comments: Contains the comments model, serializers and views.
+- permissions: Contains the permission levels model.
 
-- likes: Contains the likes model, serializers and views templates.
+- postCategory: Contains the post permission for each category.
 
-- tests: Contains the tests for each api endpoint.
+- comments: Contains the comments, serializers and views model.
 
+- likes: Contains the likes, serializers and views model.
 
+- testing_utilities: Contains factories and utilities to configure the testing environments.
 
 ## Set up
 
@@ -105,8 +107,10 @@ The request body should be an "application/json" encoded object, containing all 
 {
     "title": "Post title",
     "content": "Post Content",
-    "read_permission": 1,
-    "edit_permission": 1
+    "public_permission": 1,
+    "authenticated_permission": 1,
+    "team_permission": 1,
+    "author_permission": 1
 }
 ```
 
@@ -115,25 +119,20 @@ Important: All fields are mandatory. If any of the fields are not sent the serve
 Details of each field:
 
 - title:  cannot be an empty string or longer than 50 characters.
-- content: cannot be an empty string or longer than 200 characters.
-- read_permission: value must be a numeric value between 1 and 4. 
-- edit_permission: value must be a numeric value between 1 and 4.
+- content: cannot be an empty string or longer than 10000 characters.
+- public_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- authenticated_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- team_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- author_permission: a numerical value between 1 and 3 that represent a permission level for the category.
 
-The following read permissions are available in the project:
+The following permission levels are available in the project:
 
-- 1 = Public: The post is public and can be read by anyone.
-- 2 = Authenticated: The post can be read only by authenticated users.
-- 3 = Team: The post can be read only by users belonging to the same team.
-- 4 = Author: The post can be read only by the author of the post.
+- 1 = None => cannot read or edit
+- 2 = read-only => Only can read
+- 3 = Team: => can read and edit the post
 
-The following edit permissions are available in the project:
+The permission level are created by default in the data base and each category must have one of the valid permission level.
 
-- 1 = Public: The post is public and can be edited by anyone.
-- 2 = Authenticated: The post can be edited only by authenticated users.
-- 3 = Team: The post can be edited only by users belonging to the same team.
-- 4 = Author: The post can be edited only by the author of the post.
-
-Important: The edit permission can't be lower than the read permission. Users whit edit permission should have read permissions on the post.
 
 If one of the submitted fields does not meet these specifications the server will not create the post and will return a 400 badrequest status specifying the error.
 
@@ -149,7 +148,7 @@ A user must be logged in or authenticated to create a post. If the user is not a
 
 The Author is automatically set as the logged-in user.
 
-If the request was successful the server will return the 201 created status with the post created:
+If the request was successful the server will return the 201 created status with the post created without the permissions:
 
 ```
 {
@@ -158,62 +157,40 @@ If the request was successful the server will return the 201 created status with
     "author": {
         "id": 1,
         "username": "user@gmail.com",
-        "team": "team name"
+        "team": {
+            "id": 1
+            "name": 'Default'
+        }
     }
     "content": "Content",
-    "read_permission": 1,
-    "edit_permission": 1,
     "created_at": "2023-12-19T20:24:52.025909Z"
 }
 ```
+
+The permission will be created in the post_category table.
 
 
 ## Endpoint 2: Blog Post Editing and Permission Modification  
 
 Endpoint: http://127.0.0.1:8000/api/blog/post_id/
 
-Method: PATCH
+Method: P
 
-This endpoint can be used to modify the title, content, read_permission and edit_permission of a blog post.
+This endpoint can be used to modify the title, content and permissions of a blog post.
 Admin users can edit any posts regardless of the permissions.
 
 The request body should be a "application/json" encoded object, containing the the following items:
 
--- for updating the title:
-```
-{
-    "title": "Change title"
-}
-```
 
--- for updating the content:
-```
-{
-    "content": "Change Content"
-}
-```
 
--- for updating the read_permission:
-```
-{
-    "read_permission": 2
-}
-```
-
--- for updating the edit_permission:
-```
-{
-    "edit_permission": 3
-}
-```
-
--- for updating all fields:
 ```
 {
     "title": "Change title",
     "content": "Change Content",
-    "read_permission": 2,
-    "edit_permission": 3
+    "public_permission": 2,
+    "authenticated_permission": 2,
+    "team_permission": 2,
+    "author_permission": 2
 }
 ```
 
@@ -221,8 +198,10 @@ Note that the fields that can be updated through this endpoint are:
 
 - title:  cannot be an empty string or longer than 50 characters.
 - content: cannot be an empty string or longer than 200 characters.
-- read_permission: value must be a numeric value between 1 and 4. 
-- edit_permission: value must be a numeric value between 1 and 4.
+- public_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- authenticated_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- team_permission: a numerical value between 1 and 3 that represent a permission level for the category.
+- author_permission: a numerical value between 1 and 3 that represent a permission level for the category.
 
 If one of the submitted fields does not meet these specifications the server will not update the post and will return a 400 badrequest status specifying the error.
 
@@ -234,7 +213,7 @@ If one of the submitted fields does not meet these specifications the server wil
 }
 ```
 
-If the request was successful the server will return the 200 ok status with the updated post:
+If the request was successful the server will return the 200 ok status with the updated post without the permissions:
 
 ```
 {
@@ -243,11 +222,12 @@ If the request was successful the server will return the 200 ok status with the 
     "author": {
         "id": 1,
         "username": "user@gmail.com",
-        "team": "team name"
+        "team": {
+            "id": 1
+            "name": "Deafault"
+        }
     }
     "content": "Change content",
-    "read_permission": 2,
-    "edit_permission": 2,
     "created_at": "2023-12-19T20:36:32.058658Z"
 }
 ```
@@ -281,16 +261,22 @@ If the submitting user has posts to view the server will return a 200 ok status 
             "author": {
                 "id": 1,
                 "username": "user@gmail.com",
-                "team": "team name"
+                "team": {
+                    "id": 1
+                    "name": "Default"
+                }
             }
-            "content": "Content",
-            "read_permission": 1,
-            "edit_permission": 1,
+            "content_excerpt": "Content excerpt",
+            "public_permission": 2,
+            "authenticated_permission": 2,
+            "team_permission": 2,
+            "author_permission": 2
             "created_at": "2023-12-19T20:24:52.025909Z"
         }
     ]
 }
 ```
+This endpoint returns the post with the excerpt of the content.
 
 Pagination is implemented to limit the number of posts per page to 10.
 Pagination include the following information: current page, total pages, total count, next page URL, previous page URL.
@@ -308,6 +294,8 @@ If the user sending the request has no posts to display the server will return a
 }
 ```
 
+## Endpoint 3.1: Viewing and Interacting with Posts Based on Permissions, detail view
+
 Detail Posts Endpoint = http://127.0.0.1:8000/api/post/post_id/
 
 Method = GET
@@ -323,11 +311,16 @@ If the user has permission to view the post the server will return a 200 ok stat
     "author": {
         "id": 1,
         "username": "user@gmail.com",
-        "team": "team name"
+        "team": {
+            "id": 1
+            "name": "Default"
+        }
     }
     "content": "Content",
-    "read_permission": 2,
-    "edit_permission": 1,
+    "public_permission": 2,
+    "authenticated_permission": 2,
+    "team_permission": 2,
+    "author_permission": 2
     "created_at": "2023-12-19T20:24:52.025909Z"
 }
 ```
@@ -335,14 +328,22 @@ If the user has permission to view the post the server will return a 200 ok stat
 
 ## Endpoint  4: Adding Likes to a Blog Post
 
-Endpoint: http://127.0.0.1:8000/api/like/post_id/
+Endpoint: http://127.0.0.1:8000/api/like/
 
-Methods: POST, DELETE
+Methods: POST
 
-At this enpoint a logged in user can give likes and remove likes on posts to which he has read permission.
+At this enpoint a logged in user can give likes on posts to which he has read permission.
 
 To create a like the user must be logged in and send a POST request to the endpoint.
-The post to which the like is added is the one that was sent as an argument.
+
+The request body should be a "application/json" encoded object, containing the the following items:
+
+```
+{
+    "post": 1
+}
+```
+
 
 If the user does not have read permission on the post or the post does not exist the server returns a 404 not found status. 
 
@@ -362,26 +363,40 @@ If the like request was succesfull the server will return the 201 created status
         "username": "user@gmail.com",
         "team": "team name"
     }
-    "post": {
-        "id": 1,
-        "title": "Post",
-    }
+    "post": 1
 }
 ```
 
-If the user tries to unlike on a post that has not been liked the server returns a 400 badrequest status.
+If the user tries to like a post that he already like, the server returns a 400 badrequest status.
 
 ```
 {
-    "detail": "The user has not liked this post."
+    "detail": "User already liked this post"
 }
 ```
+
+## Endpoint  4.1: Adding Likes to a Blog Post
+
+Endpoint: http://127.0.0.1:8000/api/like/like_id
+
+Methods: DELETE
+
+At this enpoint a logged in user can unlike posts to which he has read permission.
+The like id must be send as a url parameter.
 
 If unlike request was succesfull the server will return the 204 no content status with the next message:
 
 ```
 {
     "detail": "Successfully unliked the post."
+}
+```
+
+If the user has not previously liked the post, the server returns a 404 not found status with the next message:    
+
+```
+{
+    "detail": "Not found."
 }
 ```
 
@@ -399,7 +414,7 @@ If the request is successful the server returns status 200 ok with the list of l
 
 ```
 {
-    "total_count": 3,
+    "total_count": 1,
     "current_page": 1,
     "total_pages": 1,
     "next": null,
@@ -407,25 +422,21 @@ If the request is successful the server returns status 200 ok with the list of l
     "results": [
         {
             "id": 1,
-            "user": "user1@gmail.com",
+            "user": {
+                "id": 1,
+                "username": "test@gmail.com",
+                "team": {
+                    "id": 1,
+                    "name": default
+                }
+            }
             "post": "Post 1"
         },
-        {
-            "id": 2,
-            "user": "user2@gmail.com",
-            "post": "Post 2"
-        },
-        {
-            "id": 3,
-            "user": "user3@gmail.com",
-            "post": "Post 3"
-        }
     ]
 }
 ```
-The message contains the id of the like, the username of the user who gave the like and the title of the post that was liked.
 
-Pagination is implemented to limit the number of likes per page to 20.
+Pagination is implemented to limit the number of likes per page to 15.
 Pagination include the following information: current page, total pages, total count, next page URL, previous page URL.
 
 
@@ -442,20 +453,20 @@ If a user has no likes to view an empty list is returned.
 }
 ```
 
-This endpoint supports filtering by the username of the user and the title of the post:
+This endpoint supports filtering by the id of the user and the id of the post:
 
 Examples:
 
-- Endpoint: http://127.0.0.1:8000/api/like/?user=username@gmail.com&post=title
-- Endpoint: http://127.0.0.1:8000/api/like/?user=username@gmail
-- Endpoint: http://127.0.0.1:8000/api/like/?post=title
+- Endpoint: http://127.0.0.1:8000/api/like/?user=1&post=2
+- Endpoint: http://127.0.0.1:8000/api/like/?user=1
+- Endpoint: http://127.0.0.1:8000/api/like/?post=3
 
 
 ## Endpoint 6: Commenting on a Blog Post 
 
-Endpoint: http://127.0.0.1:8000/api/comment/post_id/
+Endpoint: http://127.0.0.1:8000/api/comment/
 
-Method: POST, DELETE
+Method: POST
 
 This endpoint allows a user to comment on a post to which he has read permission.
 The user must be logged in and send a POST request to the endpoint.

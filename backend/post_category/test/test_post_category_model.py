@@ -1,7 +1,7 @@
 # from django
 from django.test import TestCase
 # models
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 # testing - utils
 from testing_utilities.factories import UserFactory, PostFactory
 from testing_utilities.utils import set_up_test_environment

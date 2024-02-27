@@ -4,7 +4,7 @@ from permissions.models import PermissionLevels
 from categories.models import Categories
 from user.models import CustomUser
 from posts.models import Posts
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 
 # create a default team
 Teams.objects.create(name='Default')

@@ -1,7 +1,7 @@
 # from django
 from rest_framework.exceptions import NotFound
 # models
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 # constants
 from shared.constants import Category, Permission
 

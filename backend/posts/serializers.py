@@ -5,7 +5,7 @@ from django.db.models import Q, When, Case, Value, IntegerField, F
 from rest_framework import serializers
 # Modela
 from .models import Posts
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 from permissions.models import PermissionLevels
 # Serializers
 from user.serializers import AuthorSerializer

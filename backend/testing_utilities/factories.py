@@ -11,7 +11,7 @@ from comments.models import Comments
 from teams.models import Teams
 from permissions.models import PermissionLevels
 from categories.models import Categories
-from postCategory.models import PostCategory
+from post_category.models import PostCategory
 
 class CategoriesFactory(DjangoModelFactory):
     """Factory for Categories model."""
