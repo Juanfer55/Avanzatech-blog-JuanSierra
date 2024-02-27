@@ -36,7 +36,7 @@ class LogoutView(APIView):
     View to log out an authenticated user.
 
     If the user is authenticated, log them out and return a 200 response. 
-    If the user is not authenticated, return a 400 error.
+    If the user is not authenticated, return a 401 error.
     """
     def get(self, request):
         if request.user.is_authenticated:

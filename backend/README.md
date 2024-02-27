@@ -3,7 +3,7 @@
 This is the documentation of the Blog avanzatech API created by Juan Fernando Sierra. This API contains endpoints to create, modify, delete, list, like and comment blog posts.
 
 
-The project is composed of 8 modules that contain different functionalities:
+The project is composed of 10 modules that contain different functionalities:
 
 
 - avanzatech_blog: It is the main module, it contains the configuration files of the djando project and the main root of the urls.
@@ -18,6 +18,8 @@ The project is composed of 8 modules that contain different functionalities:
 
 - permissions: Contains the permission levels model.
 
+- Categories: Contains the different categories for the post permissions. 
+
 - postCategory: Contains the post permission for each category.
 
 - comments: Contains the comments, serializers and views model.
@@ -26,14 +28,14 @@ The project is composed of 8 modules that contain different functionalities:
 
 - testing_utilities: Contains factories and utilities to configure the testing environments.
 
-## Set up
+    ## Set up
 
-In order to install and run the project on your machine you must do the following:
+    In order to install and run the project on your machine you must do the following:
 
 1. Clone the repository on your computer.
 
 ```
-$ git clone git@github.com:Juanfer55/etapa7_django_juanfer.git
+$ git git@github.com:Juanfer55/Avanzatech-blog-JuanSierra.git
 ```
 
 2. Verify that you have pipenv installed, otherwise install it:
@@ -330,7 +332,7 @@ If the user has permission to view the post the server will return a 200 ok stat
 
 Endpoint: http://127.0.0.1:8000/api/like/
 
-Methods: POST
+Method: POST
 
 At this enpoint a logged in user can give likes on posts to which he has read permission.
 
@@ -375,11 +377,11 @@ If the user tries to like a post that he already like, the server returns a 400 
 }
 ```
 
-## Endpoint  4.1: Adding Likes to a Blog Post
+## Endpoint  4.1: Unlike a blog post
 
 Endpoint: http://127.0.0.1:8000/api/like/like_id
 
-Methods: DELETE
+Method: DELETE
 
 At this enpoint a logged in user can unlike posts to which he has read permission.
 The like id must be send as a url parameter.
@@ -430,7 +432,7 @@ If the request is successful the server returns status 200 ok with the list of l
                     "name": default
                 }
             }
-            "post": "Post 1"
+            "post": 1
         },
     ]
 }
@@ -471,19 +473,21 @@ Method: POST
 This endpoint allows a user to comment on a post to which he has read permission.
 The user must be logged in and send a POST request to the endpoint.
 
-The request body should be a "application/json" encoded object, containing only a content field:
+The request body should be a "application/json" encoded object, containing the next fields:
 
 ```
 {
-    "content": "Comment content"
+    "content": "Comment content",
+    "post": 1
 }
 ```
 
-Details of the field:
+Details of the fields:
 
 - content: cannot be an empty string or longer than 200 characters.
+- post: Must be the id of an existing post in the database, to which the user has read permission.
 
-If the submitted field does not meet these specifications the server will not create the comment and will return a 400 badrequest status specifying the error.
+If the fields does not meet these specifications the server will not create the comment and will return a 400 badrequest status specifying the error.
 
 ```
 {
@@ -506,31 +510,37 @@ If the request was successful the server returns a 201 created status with the c
 ```
 {
     "id": 1,
-    "user": "request_user@gmail.com",
-    "post": "Post",
+    "user": {
+        "id": 1,
+        "username": "test@gmail.com",
+        "team": {
+            "id": 1,
+            "name": "test@gmail.com"
+        }
+    }
+    "post": 1,
     "content": "Comment content"
 }
 ```
 
-The delete method is used to delete the las comment made in a post.
+## Endpoint 6.1: Remove a comment from a post.
+
+Endpoint: http://127.0.0.1:8000/api/comment/comment_id
+
+Method: DELETE
+
+This endpoint allows a user to delete comments on a post to which he has read permission.
 The user must be logged in and send a DELETE request to the endpoint.
 
-If the user has not comments it would return a 404 not found status.
+If the comment not exist or not belong to the user, the server would return a 404 not found status.
 
 ```
 {
-    "detail": "The user has not comment this post."
+    "detail": "Not found."
 }
 ```
 
-If the delete was successful the server returns a 204 no content status with the next message:
-
-```
-{
-    "detail": "Successfully Delete the post."
-}
-```
-
+If the delete was successful the server returns a 204 no content status.
 
 ## Endpoint 7: Viewing Comments on a Blog Post
 
@@ -545,7 +555,7 @@ If the request is successful the server returns status 200 ok with the list of c
 
 ```
 {
-    "total_count": 2,
+    "total_count": 1,
     "current_page": 1,
     "total_pages": 1,
     "next": null,
@@ -553,24 +563,24 @@ If the request is successful the server returns status 200 ok with the list of c
     "results": [
         {
             "id": 2,
-            "user": "user_1@gmail.com",
-            "post": "Post",
+            "user": {
+                "id": 1,
+                "username": "test@gmail.com",
+                "team": {
+                    "id": 1,
+                    "name": "test@gmail.com"
+                }
+            },
+            "post": 1,
             "content": "Test content 2",
             "created_at": "2023-12-19T22:35:50.599652Z"
         },
-        {
-            "id": 1,
-            "user": "user_2@gmail.com",
-            "post": "Post",
-            "content": "Test content 1",
-            "created_at": "2023-12-19T22:35:47.644476Z"
-        }
     ]
 }
 ```
-The message contains the id of the comment, the username of the user who comment and the title of the post that was commented.
+The message contains the id of the comment, the information of the user who comment, the id of the post that was commented and the timestamp.
 
-Pagination is implemented to limit the number of likes per page to 10.
+Pagination is implemented to limit the number of comments per page to 5.
 Pagination include the following information: current page, total pages, total count, next page URL, previous page URL.
 
 
@@ -587,22 +597,22 @@ If a user has no comments to view an empty list is returned.
 }
 ```
 
-This endpoint supports filtering by the username of the user and the title of the post:
+This endpoint supports filtering by the id of the user and the id of the post:
 
 Examples:
 
-- Endpoint: http://127.0.0.1:8000/api/comment/?user=username@gmail.com&post=title
-- Endpoint: http://127.0.0.1:8000/api/comment/?user=username@gmail
-- Endpoint: http://127.0.0.1:8000/api/comment/?post=title
+- Endpoint: http://127.0.0.1:8000/api/comment/?user=1&post=2
+- Endpoint: http://127.0.0.1:8000/api/comment/?user=1
+- Endpoint: http://127.0.0.1:8000/api/comment/?post=2
 
 
 ## Endpoint 8: Deleting a Blog Post
 
-Endpoint: http://127.0.0.1:8000/api/blog/post_id/delete/
+Endpoint: http://127.0.0.1:8000/api/blog/post_id/
 
 Method: DELETE
 
-This method allows a user to delete a post if they have edit permission on the post.
+This endpoint allows a user to delete a post if they have edit permission on the post.
 Admin users can delete any post regardless of the permissions.
 
 If the user does not have edit permission or the posts does not exist the server will return a 404 not found status.
@@ -615,4 +625,171 @@ If the user does not have edit permission or the posts does not exist the server
 
 If the delete request was successful the server returns a 204 no content status with and empy message.
 
-For more details you can enter the next url in the browser once youre insede the api: http://127.0.0.1:8000/docs/
+## Endpoint 9: Login
+
+Endpoint: http://127.0.0.1:8000/api/auth/login
+
+Method: POST
+
+This endpoint allows users to log in and set session cookies in the browser.
+
+The request body should be a "application/json" encoded object, containing the next fields:
+
+```
+{
+    "username": "test@gmail.com",
+    "password": "test123456"
+}
+```
+
+Details of the fields:
+
+- username: text with email formatting.
+- password: text of at least eight characters in length.
+
+Both fields must represent a valid user in the data base.
+
+If the login is successful, the server will return a status 200 ok and the next message:
+
+```
+{
+    "success": "Successful login"
+}
+```
+
+If the user does not exist or the credentials provided are invalid, the server will return a 400 bad request status with the following message:
+
+```
+{
+    "error": "Incorrect username or password"
+}
+```
+
+## Endpoint 10: Register
+
+Endpoint: http://127.0.0.1:8000/api/auth/register
+
+Method: POST
+
+This endpoint allows users to create a profile to log into the application.
+
+The request body should be a "application/json" encoded object, containing the next fields:
+
+```
+{
+    "username": "test@gmail.com",
+    "password": "test123456"
+}
+```
+
+Details of the fields:
+
+- username: text with email formatting.
+- password: text of at least eight characters in length, it cannot not be all numeric.
+
+If the register is successful, the server will return a status 200 ok and the next message:
+
+```
+{
+    "success": "Successfully registered"
+}
+```
+
+If the fields does not meet these specifications the server will not create the new user and will return a 400 badrequest status specifying the error.
+
+```
+{
+    "error": {
+        "username": [
+            "Enter a valid email address."
+        ]
+    }
+}
+```
+
+## Endpoint 11: Get user profile
+
+Endpoint: http://127.0.0.1:8000/api/auth/user
+
+Method: GET
+
+This endpoint allows a user to access his or her profile data. 
+The user must be login and have the session cookies in the browser in order to get his or her profile data. 
+
+If the get profile was successful, the server will return a 200 ok status and the next message:
+
+```
+{
+    "id": 2,
+    "username": "user1@gmail.com",
+    "team": {
+        "name": "Default"
+    },
+    "is_admin": false
+}
+```
+
+If the user is not login, the server will return a 401 Unauthorized status and the next message:
+
+```
+{
+    "error": "Authentication credentials were not provided"
+}
+```
+
+## Endpoint 12: Validate Email
+
+Endpoint: http://127.0.0.1:8000/api/auth/validate-username/
+
+Method: GET
+
+This endpoint allows a user to know if his email is valid or has already been registered on the page.
+
+The request body should be a "application/json" encoded object, containing the next field:
+
+```
+{
+    "username": "test@gmail.com"
+}
+```
+
+If the username is available, the server will return a 200 ok status and the next message: 
+
+```
+{
+    "IsAvailable": true
+}
+```
+
+If the user name is not available, the server will return a 200 ok status and the next message:
+
+```
+{
+    "IsAvailable": false
+}
+```
+
+## Endpoint 13: Logout
+
+Endpoint: http://127.0.0.1:8000/api/auth/logout
+
+Method: GET
+
+This endpoint allows the user to log out of the application and clear the browser's session cookies.
+The user must be login and have the session cookies in the browser in order to logout.
+
+If the get logout was successful, the server will return a 200 ok status and the next message:
+
+```
+{
+    "success": "Successfully logged out"
+}
+```
+
+If the user was not login previously, the server will return a 401 badrequest status and the next message:
+
+```
+{
+"error": "Authentication credentials were not provided"
+}
+```
