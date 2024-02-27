@@ -50,7 +50,7 @@ $ python manage.py migrate
 
 -- Inside your virtual environment run the following commands:
 ```
-$ python manage.py shell <  python manage.py shell < create_default_data.py
+$ python manage.py shell < create_default_data.py
 ```
 
 This would do the following:
@@ -60,23 +60,23 @@ This would do the following:
 - Creates default categories: Public, authenticated, team and author.
 - Creates 3 adicional teams: Bravo, Alpha and Charlie.
 - Creates 10 users for each team:
-    The usernames for the users are the team name follow by a number between 1 and 10: 
+    - The usernames for the users are the team name follow by a number between 1 and 10: 
         bravo1@gmail.com... bravo10@gmail.com, alpha1@gmail.com... alpha10@gmail.com, charlie1@gmail.com... charlie10@gmail.com
-    The password for all the users is: test123456
-    There are 30 users in total, and you can log into the platform using the one you want to test the web application in different scenarios.
+    - The password for all the users is: test123456
+    - There are 30 users in total, and you can log into the platform using the one you want to test the web application in different scenarios.
 - Create 5 admin users:
-    The usernames for the admin users are admin follow by a number between 1 and 5:
+    - The usernames for the admin users are admin follow by a number between 1 and 5:
         admin1@gmail.com... admin5@gmail.com
-    The password for all the admin users is: test123456
-    You can log into the platform using the one you want to test the web application in different scenarios.
+    - The password for all the admin users is: test123456
+    - You can log into the platform using the one you want to test the web application in different scenarios.
 - Create a super user:
-    username: super@gmail.com
-    password: test123456
-    With the superuser you can access the django administration site and make the modifications you need.
+    - username: super@gmail.com
+    - password: test123456
+    - With the superuser you can access the django administration site and make the modifications you need.
 - Create a post for each user:
-    The post will have a default content and title.
-    The post will be like for the first 20 users.
-    The post will have a default comment made by the author of the pots.
+    - The post will have a default content and title.
+    - The post will be like for the first 20 users.
+    - The post will have a default comment made by the author of the pots.
 
 6. Run test:
 
@@ -93,7 +93,6 @@ This command will run all unittests and show the results.
 ```
 python manage.py runserver 8000
 ```
-
 
 8. Go to the admin panel and login with the superuser credentials created in the previous step.
 
