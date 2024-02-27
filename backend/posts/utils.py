@@ -1,4 +1,4 @@
-""" Creates a content excerpt from a given content. """
+""" Creates a content excerpt from a given content """
 
 def create_content_excerpt(content):
     

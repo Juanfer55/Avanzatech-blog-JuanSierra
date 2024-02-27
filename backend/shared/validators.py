@@ -19,7 +19,7 @@ def validate_user_read_permissions(user, post):
         permission__id__gte=Permission.READ_ONLY
     )
 
-    # I iterate each reault and validate if the user has the read permission
+    # I iterate the results and validate if the user has the read permission
     for post_permission in post_read_permission:
 
         if post_permission.category_id == Category.AUTHENTICATED:

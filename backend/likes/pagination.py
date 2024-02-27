@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 class LikesPagination(PageNumberPagination):
     """
-    Custom pagination class for paginating posts requests.
+    Custom pagination class for paginating like requests.
     """
     page_size = 15
     max_page_size = 100

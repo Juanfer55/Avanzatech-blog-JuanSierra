@@ -6,7 +6,7 @@ from categories.models import Categories
 
 class CategoriesAdmin(admin.ModelAdmin):
     """
-    Registers the Posts model with the Django admin site.
+    Registers the categories model with the Django admin site.
     """
     list_display = ['id', 'name', 'created_at',]
     search_fields = ['name']

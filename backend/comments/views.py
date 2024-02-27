@@ -19,7 +19,7 @@ class CommentListFilterCreateView(
         CommentsPermissionQuerySet,
         generics.ListCreateAPIView):
     """
-    View for listing and filtering Comments.
+    View to create, list and filter comments. 
 
     Inherits from CommentsPermissionQuerySet to apply read permissions.
     Uses CommentsPagination for custom pagination.

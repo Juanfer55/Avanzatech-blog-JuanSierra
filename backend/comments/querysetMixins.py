@@ -6,7 +6,7 @@ from .models import Comments
 
 class CommentsPermissionQuerySet():
     """
-    Configures the like queryset according to the request user login status 
+    Configures the comments queryset according to the request user login status 
     and read permissions for each post.
     """
 

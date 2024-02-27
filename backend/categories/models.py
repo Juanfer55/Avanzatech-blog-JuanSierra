@@ -6,6 +6,9 @@ from django.utils.translation import gettext_lazy as _
 from shared.base_model import BaseModel
 
 class Categories(BaseModel, models.Model):
+    """
+    Categories model.
+    """
 
     name = models.CharField(_('Name'), max_length=50, validators=[
         validators.MinLengthValidator(1), validators.MaxLengthValidator(50)])

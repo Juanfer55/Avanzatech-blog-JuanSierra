@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 class CommentsPagination(PageNumberPagination):
     """
-    Custom pagination class for paginating posts requests.
+    Custom pagination class for paginating comment requests.
     """
     page_size = 5
     max_page_size = 100

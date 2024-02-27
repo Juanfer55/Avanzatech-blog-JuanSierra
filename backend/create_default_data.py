@@ -67,7 +67,7 @@ def create_default_post():
         post = Posts.objects.create(title=f'Default post {i}', content=text, author_id=i)
         for j in range(1, 5):
             PostCategory.objects.create(post=post, category_id=j, permission_id=3)
-        for k in range(1, 20):
+        for k in range(1, 21):
             Likes.objects.create(post=post, user_id=k)
         Comments.objects.create(post=post, user_id=i, content=comment)
     # post for each alpha team member
@@ -75,7 +75,7 @@ def create_default_post():
         post = Posts.objects.create(title=f'Default post {i}', content=text, author_id=i)
         for j in range(1, 5):
             PostCategory.objects.create(post=post, category_id=j, permission_id=3)
-        for k in range(1, 20):
+        for k in range(1, 21):
             Likes.objects.create(post=post, user_id=k)
         Comments.objects.create(post=post, user_id=i, content=comment)
         # post for each charlie team member
@@ -83,7 +83,7 @@ def create_default_post():
         post = Posts.objects.create(title=f'Default post {i}', content=text, author_id=i)
         for j in range(1, 5):
             PostCategory.objects.create(post=post, category_id=j, permission_id=3)
-        for k in range(1, 20):
+        for k in range(1, 21):
             Likes.objects.create(post=post, user_id=k)
         Comments.objects.create(post=post, user_id=i, content=comment)
 

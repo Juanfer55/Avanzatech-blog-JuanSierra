@@ -35,7 +35,7 @@ def read_permission_querySet(user):
 
     return Posts.objects.filter(public_publications)
 
-# --- THIS AND EXAMPLE OF THE QUERY PERFORM ---
+# --- EXAMPLE OF THE QUERY PERFORM ---
 # SELECT *
 # FROM posts
 # JOIN post_category ON post.id = post_category.post
@@ -75,7 +75,7 @@ def edit_permission_queryset(user):
 
     return Posts.objects.filter(public_publications)
 
-# --- THIS AND EXAMPLE OF THE QUERY PERFORM ---
+# --- EXAMPLE OF THE QUERY PERFORM ---
 # SELECT *
 # FROM posts
 # JOIN post_category ON post.id = post_category.post

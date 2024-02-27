@@ -16,8 +16,8 @@ class LoginView(APIView):
     Logs in a user.
 
     If authentication succeeds, log the user in and return a 200 response.
-    If authentication fails due to incorrect password, return a 401 error with a specific message.
-    If authentication fails due to an invalid username, return a 401 error with a specific message.
+    If authentication fails due to incorrect password, return a 400 error with a specific message.
+    If authentication fails due to an invalid username, return a 400 error with a specific message.
     """
     def post(self, request):
         username = request.data.get("username")

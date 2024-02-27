@@ -16,15 +16,13 @@ from shared.validators import validate_user_read_permissions
 from likes.models import Likes
 # permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class LikesListFilterCreateView(
         LikesPermissionQuerySet,
         generics.ListCreateAPIView):
     """
-    View for listing and filtering likes.
+    View to create, list and filter likes.
 
     Inherits from LikesPerimissionQuerySet to apply read permissions.
     Uses LikesPagination for custom pagination.
@@ -48,7 +46,7 @@ class LikesListFilterCreateView(
         validate_user_read_permissions(user, post)
         serializer.save(user=user)
 
-@method_decorator(csrf_exempt, name='dispatch')
+
 class UnlikeView(
         LikesPermissionQuerySet,
         generics.DestroyAPIView):

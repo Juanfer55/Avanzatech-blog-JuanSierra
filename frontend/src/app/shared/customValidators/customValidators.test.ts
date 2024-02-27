@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { CustomValidators } from './customValidators';
 
 fdescribe('CustomValidators', () => {
